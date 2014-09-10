@@ -10,8 +10,8 @@
 
 #include "GL/glut.h"  //glut has all ogl relevant .h files included 
 
-int screen_width=800;
-int screen_height=600;
+int screen_width=1200;
+int screen_height=720;
 
 //angle of rotation
 float xpos = 0, ypos = 0, zpos = 0, xrot = 0, yrot = 0, angle=0.0;
