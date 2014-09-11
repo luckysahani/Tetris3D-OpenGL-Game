@@ -7,8 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "base.h"
-#include "block.h"
+#include "chessboard.h"
+#include "pawn.h"
 #include "placer.h"
 #include "table.h"
 #include "viewer.h"
@@ -18,18 +18,18 @@
 #define WIDTH 800
 
 Chessboard *chessboard;
-Block *block[2][16];
+Pawn *pawn[2][16];
 Table *table;
 
 /* some lighting */
 GLfloat ambientLightA[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
-GLfloat diffuseLightA[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+GLfloat diffuseLightA[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
 
 GLfloat ambientLightB[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 GLfloat diffuseLightB[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
 
-GLfloat specularLightA[4] = { 0.3f, 0.3f, 0.3f, 0.4f };
-GLfloat specularLightB[4] = { 0.0f, 0.0f, 0.0f, 0.4f };
+GLfloat specularLightA[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
+GLfloat specularLightB[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 GLfloat lightPositionA[4] = { -100.0f, 100.0f, -100.0f, 1.0f };
 GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
@@ -48,52 +48,46 @@ void init() {
 	viewer = create_viewer((Placeable *)chessboard);
 
 	/* the chess set */
-	int player, i,i1;
+	int player, i;
 	for (player = 0; player < PLAYER_TYPE_COUNT; player++) {
-		for (i=0;  i<8;  i++) block[player][i] = create_block(PAWN_TYPE_PAWN, player);
-		for (i=8;  i<10; i++) block[player][i] = create_block(PAWN_TYPE_ROOK, player);
-		for (i=10; i<12; i++) block[player][i] = create_block(PAWN_TYPE_KNIGHT, player);
-		for (i=12; i<14; i++) block[player][i] = create_block(PAWN_TYPE_BISHOP, player);
-		block[player][14] = create_block(PAWN_TYPE_QUEEN, player);
-		block[player][15] = create_block(PAWN_TYPE_KING, player);
+		for (i=0;  i<8;  i++) pawn[player][i] = create_pawn(PAWN_TYPE_PAWN, player);
+		for (i=8;  i<10; i++) pawn[player][i] = create_pawn(PAWN_TYPE_ROOK, player);
+		for (i=10; i<12; i++) pawn[player][i] = create_pawn(PAWN_TYPE_KNIGHT, player);
+		for (i=12; i<14; i++) pawn[player][i] = create_pawn(PAWN_TYPE_BISHOP, player);
+		pawn[player][14] = create_pawn(PAWN_TYPE_QUEEN, player);
+		pawn[player][15] = create_pawn(PAWN_TYPE_KING, player);
 	}
-	// for (i1 = 0; i1 < 15; ++i1)
-	// {
-	// 	glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
-	// 	glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
-	}
-	//glmScale(block[PLAYER_TYPE_WHITE][12],0.5);
 	
 	/* place all the pieces */
 	int x, y;
 	/* -- white -- */
-	y=0; chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][8],  CELL(0, y)); /* rooks */
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][9],  CELL(7, y));
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][10], CELL(1, y)); /* knight */
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(6, y));
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, y)); /* bishop */
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, y));
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][14], CELL(3, y)); /* queen */
-	     //chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(4, y)); /* king */
-	y=1; for (x=0; x<8; x++) chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][x], CELL(x, y));
+	y=7; chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][8], 0, y); /* rooks */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][9], 7, y);
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][10], 1, y); /* knight */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][11], 6, y);
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][12], 2, y); /* bishop */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][13], 5, y);
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][14], 3, y); /* queen */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][15], 4, y); /* king */
+	y=6; for (x=0; x<8; x++) chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_WHITE][x], x, y);
 	
 	/* -- black -- */
-	y=7; chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][8],  CELL(0, y)); /* rooks */
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][9],  CELL(7, y));
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][10], CELL(1, y)); /* knight */
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][11], CELL(6, y));
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][12], CELL(2, y)); /* bishop */
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][13], CELL(5, y));
-	     chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][14], CELL(3, y)); /* queen */
-	     //chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][15], CELL(4, y)); /* king */
-	y=6; for (x=0; x<8; x++) chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][x], CELL(x, y));
+	y=0; chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][8], 0, y); /* rooks */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][9], 7, y);
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][10], 1, y); /* knight */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][11], 6, y);
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][12], 2, y); /* bishop */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][13], 5, y);
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][14], 3, y); /* queen */
+	     chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][15], 4, y); /* king */
+	y=1; for (x=0; x<8; x++) chessboard_place_pawn(chessboard, pawn[PLAYER_TYPE_BLACK][x], x, y);
 	
     /* opengl initialisations */
-	glClearColor (0.0f,0.2f,0.2f, 1.0);
+	glClearColor (0.8, 0.8, 1.0, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	// glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
@@ -102,6 +96,7 @@ void init() {
 	glEnable(GL_LINE_SMOOTH);
 	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+
 }
 
 void end() {
@@ -128,7 +123,7 @@ void display() {
    
    observe_from_viewer(viewer);
 
-   //display_table(table);
+   display_table(table);
    display_chessboard(chessboard);
 
    glFlush();
@@ -154,11 +149,10 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'w') { viewer->pos[2]-=0.05; }
 	if (key == 'a') { viewer->pos[0]-=0.05; }
 	if (key == 'd') { viewer->pos[0]+=0.05; }
-	if (key == 'f') { highlight_cell_left(chessboard); }
-	if (key == 'g') { highlight_cell_down(chessboard); }
-	if (key == 'h') { highlight_cell_right(chessboard); }
-	if (key == 't') { highlight_cell_up(chessboard); }
-	if (key == 'p') { select_cell(chessboard, CELL_CURRENT); }
+	if (key == 'f') { select_cell_left(chessboard); }
+	if (key == 'g') { select_cell_down(chessboard); }
+	if (key == 'h') { select_cell_right(chessboard); }
+	if (key == 't') { select_cell_up(chessboard); }
     if (key == 'x') { exit(0); }
 }
 
@@ -167,7 +161,7 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize (800, 800);
 	glutInitWindowPosition (100,100);
-	glutCreateWindow ("3D-Tetris");
+	glutCreateWindow ("gl-smochess");
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
     glutKeyboardFunc(keypressed);

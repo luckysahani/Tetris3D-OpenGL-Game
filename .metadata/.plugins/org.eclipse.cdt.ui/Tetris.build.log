@@ -1,0 +1,6 @@
+19:27:56 **** Incremental Build of configuration Debug for project Tetris ****
+make all 
+make: Nothing to be done for `all'.
+
+19:27:56 Build Finished (took 62ms)
+
