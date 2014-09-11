@@ -8,7 +8,7 @@ char* _get_model_name(Block *block, PlayerType player)
 	char *model_name = NULL;
     switch (block->type) {
         case PAWN_TYPE_PAWN: 
-			model_name = "objs/block.obj";
+			model_name = "objs/tshape.obj";
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_ROOK: 
@@ -76,7 +76,7 @@ Block* create_block(BlockType type, PlayerType player)
 
 
 void display_block(Block *block, BlockState state) {
-    glPushMatrix();
+     glPushMatrix();
 
     /* draw block*/
     glTranslated(block->pos[0], block->pos[1], block->pos[2]);
