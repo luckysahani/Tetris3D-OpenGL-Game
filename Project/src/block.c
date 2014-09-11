@@ -12,19 +12,19 @@ char* _get_model_name(Block *block, PlayerType player)
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_ROOK: 
-			model_name = "objs/rook.obj";
+			model_name = "objs/icapshape.obj";
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_KNIGHT: 
-			model_name = "objs/knight.obj";
+			model_name = "objs/sqtshape.obj";
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_BISHOP: 
-			model_name = "objs/bishop.obj";
+			model_name = "objs/squareshape.obj";
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_QUEEN: 
-			model_name = "objs/queen.obj";
+			model_name = "objs/nshape.obj";
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_KING: 
