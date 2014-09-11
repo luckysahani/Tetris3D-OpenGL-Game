@@ -23,7 +23,7 @@ Table *table;
 
 /* some lighting */
 GLfloat ambientLightA[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
-GLfloat diffuseLightA[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
+GLfloat diffuseLightA[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 GLfloat ambientLightB[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 GLfloat diffuseLightB[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
@@ -83,7 +83,7 @@ void init() {
 	y=6; for (x=0; x<8; x++) chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][x], CELL(x, y));
 	
     /* opengl initialisations */
-	glClearColor (0.0, 0.0, 1.0, 1.0);
+	glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
