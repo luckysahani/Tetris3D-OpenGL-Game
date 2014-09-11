@@ -48,7 +48,7 @@ void init() {
 	viewer = create_viewer((Placeable *)chessboard);
 
 	/* the chess set */
-	int player, i;
+	int player, i,i1;
 	for (player = 0; player < PLAYER_TYPE_COUNT; player++) {
 		for (i=0;  i<8;  i++) block[player][i] = create_block(PAWN_TYPE_PAWN, player);
 		for (i=8;  i<10; i++) block[player][i] = create_block(PAWN_TYPE_ROOK, player);
@@ -57,6 +57,12 @@ void init() {
 		block[player][14] = create_block(PAWN_TYPE_QUEEN, player);
 		block[player][15] = create_block(PAWN_TYPE_KING, player);
 	}
+	for (i1 = 0; i1 < 15; ++i1)
+	{
+		glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
+		glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
+	}
+	//glmScale(block[PLAYER_TYPE_WHITE][12],0.5);
 	
 	/* place all the pieces */
 	int x, y;
