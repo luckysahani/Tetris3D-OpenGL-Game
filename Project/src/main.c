@@ -57,10 +57,10 @@ void init() {
 		block[player][14] = create_block(PAWN_TYPE_QUEEN, player);
 		block[player][15] = create_block(PAWN_TYPE_KING, player);
 	}
-	for (i1 = 0; i1 < 15; ++i1)
-	{
-		glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
-		glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
+	// for (i1 = 0; i1 < 15; ++i1)
+	// {
+	// 	glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
+	// 	glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
 	}
 	//glmScale(block[PLAYER_TYPE_WHITE][12],0.5);
 	
