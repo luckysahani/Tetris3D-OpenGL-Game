@@ -1,5 +1,6 @@
 # Blender v2.71 (sub 0) OBJ File: 'squareshape.blend'
 # www.blender.org
+mtllib squareshape.mtl
 o Cube
 v 2.000000 0.000000 -2.000000
 v 2.000000 0.000000 2.000000
@@ -15,6 +16,7 @@ vn 1.000000 0.000000 0.000000
 vn -0.000000 -0.000000 1.000000
 vn -1.000000 -0.000000 -0.000000
 vn 0.000000 0.000000 -1.000000
+usemtl Material
 s off
 f 1//1 2//1 3//1 4//1
 f 5//2 8//2 7//2 6//2
