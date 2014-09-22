@@ -74,7 +74,10 @@ void chessboard_place_block(Chessboard *cboard, Block *p, int cell ) {
 // }
 void update_z(Chessboard *cboard, Block *p, int cell)
 {
-	p->pos[1] -= 0.1; 
+	if(p->pos[1]>0)
+	{
+		p->pos[1] -= 0.1; 
+	}
 }
 
 
