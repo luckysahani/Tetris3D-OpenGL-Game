@@ -50,10 +50,14 @@ void chessboard_place_block(Chessboard *cboard, Block *p, int cell ) {
 	/* invert the position of the pieces along the y-axis */
 
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-	p->pos[1] = ((double) rand() / (RAND_MAX))/8;
+	p->pos[1] = 0.5;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
 
 	cboard->board[cell] = p;
+}
+void change_z(Chessboard *cboard, Block *p, int cell,int z_val)
+{
+	p->pos[1] = z_val;
 }
 
 void highlight_cell(Chessboard* c, int x, int y) {

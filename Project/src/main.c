@@ -67,13 +67,13 @@ void init() {
 	/* place all the pieces */
 	int x, y;
 	/* -- white -- */
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][8],  CELL(0, rand()/RAND_MAX*8));  /*rooks */
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][9],  CELL(7, rand()/RAND_MAX*8));
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][10], CELL(1, rand()/RAND_MAX*8)); /* knight */
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(6, rand()/RAND_MAX*8));
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, rand()/RAND_MAX*8));
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][8],  CELL(0, rand()/RAND_MAX*8));  /*rooks */
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][9],  CELL(7, rand()/RAND_MAX*8));
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][10], CELL(1, rand()/RAND_MAX*8));  knight 
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(6, rand()/RAND_MAX*8));
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, rand()/RAND_MAX*8));
+	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
 	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(4, rand()/RAND_MAX*8)); /* king */
 //	for (x=0; x<5; x++){chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][x], CELL(x, rand()/RAND_MAX*8));}
 	
