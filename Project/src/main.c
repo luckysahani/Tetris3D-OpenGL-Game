@@ -154,16 +154,14 @@ void reshape (int w, int h) {
 }
 void create_now(int k)
 {
-	x1=rand()%8+1;
-	y_temp=rand()%8+1;
+	x1=rand()%8 ;
+	y_temp=rand()%8 ;
 	//block[player][15] = create_block(PAWN_TYPE_KING, player);
 	switch(k)
 	{
 		case 1:
-			while(x1>6)
-			{
-				x1=rand()%8+1;
-			}
+			
+			// printf("x1==%d,y1==%d\n",x1,y_temp );
 			count_bishop++;
 			printf("entered\n");
 			block[PLAYER_TYPE_WHITE][count_bishop] = create_block(PAWN_TYPE_BISHOP, 0);
@@ -177,6 +175,11 @@ void create_now(int k)
 		// 	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
 		// 	break;
 		case 2:
+			while(y_temp>5)
+			{
+				y_temp=rand()%8+1;
+			}
+			printf("x1==%d,y1==%d\n",x1,y_temp );
 			count_king++;
 			block[PLAYER_TYPE_WHITE][count_king] = create_block(PAWN_TYPE_KING, 0);
 			//glmScale(block[PLAYER_TYPE_WHITE][count_king]->model,0.6);
@@ -238,9 +241,9 @@ void timer(int extra) {
 	// glutTimerFunc(1000, reduce_z, 0);
 	// reduce_z();
 
-	glutTimerFunc(10, timer, 0);
+	glutTimerFunc(100, timer, 0);
 
-	glutTimerFunc(10, update_z1,0);
+	glutTimerFunc(100, update_z1,0);
 	
 	
 }
