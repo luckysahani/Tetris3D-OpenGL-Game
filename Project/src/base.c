@@ -55,7 +55,11 @@ void chessboard_place_block(Chessboard *cboard, Block *p, int cell ) {
 
 	cboard->board[cell] = p;
 }
-void change_z(Chessboard *cboard, Block *p, int cell,int z_val)
+float return_z(Chessboard *cboard, Block *p, int cell)
+{
+	return p->pos[1];
+}
+void change_z(Chessboard *cboard, Block *p, int cell,float z_val)
 {
 	p->pos[1] = z_val;
 }

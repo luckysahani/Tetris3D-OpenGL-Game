@@ -74,7 +74,7 @@ void init() {
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, rand()/RAND_MAX*8));
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(4, rand()/RAND_MAX*8)); /* king */
+	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15],CELL(3,1)); /* king */
 //	for (x=0; x<5; x++){chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][x], CELL(x, rand()/RAND_MAX*8));}
 	
 	/* -- black -- */
@@ -143,10 +143,23 @@ void reshape (int w, int h) {
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity ();
 }
-
+void reduce_z(float t1){
+	// printf("hi\n");
+	float t2=return_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3, 1));
+	if(t2!=0){
+		printf("t2==%f\n",t2);
+		change_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3, 1),t2-t1);
+	}
+}
 void timer(int extra) {
 	glutPostRedisplay();
+	reduce_z(0.0);
+	// glutTimerFunc(10000, reduce_z, 0);
+	// reduce_z();
+
 	glutTimerFunc(30, timer, 0);
+	
+	
 }
 
 void keypressed(unsigned char key, int x, int y) {
