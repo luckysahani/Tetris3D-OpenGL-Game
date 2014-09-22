@@ -38,6 +38,7 @@ typedef enum block_type_t {
 typedef struct {
 	/* An object always starts with these fields */
 	GLdouble pos[3];
+	float z;
     GLMmodel *model;
 
 	BlockType type;

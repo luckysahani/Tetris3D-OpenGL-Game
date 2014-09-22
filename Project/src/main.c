@@ -143,21 +143,28 @@ void reshape (int w, int h) {
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity ();
 }
-void reduce_z(float t1){
+void reduce_z(){
 	// printf("hi\n");
-	float t2=return_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3, 1));
-	if(t2!=0){
-		printf("t2==%f\n",t2);
-		change_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3, 1),t2-t1);
-	}
+	GLdouble t2=return_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1));
+	GLdouble k=0.01;
+	//if(t2!=0){
+		printf("t2==%lf\n",t2);
+		change_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1),return_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1))-k);
+	//}
+}
+void update_z1()
+{
+	update_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1));
 }
 void timer(int extra) {
 	glutPostRedisplay();
-	reduce_z(0.0);
-	// glutTimerFunc(10000, reduce_z, 0);
+	// reduce_z(0.0);
+	// glutTimerFunc(1000, reduce_z, 0);
 	// reduce_z();
 
-	glutTimerFunc(30, timer, 0);
+	glutTimerFunc(1000, timer, 0);
+
+	glutTimerFunc(1000, update_z1,0);
 	
 	
 }
