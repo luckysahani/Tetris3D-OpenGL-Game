@@ -28,7 +28,7 @@ char* _get_model_name(Block *block, PlayerType player)
 			block->height = 0.05;
 		break;
         case PAWN_TYPE_KING: 
-			model_name = "objs/king.obj";
+			model_name = "objs/ishape.obj";
 			block->height = 0.05;
 		break;
     }
