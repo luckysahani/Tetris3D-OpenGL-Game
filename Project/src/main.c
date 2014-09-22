@@ -37,6 +37,15 @@ GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 /* the viewer */
 Viewer *viewer;
 
+
+
+int k=0;
+float height=0.5;
+float count=0;				
+int x1;
+int y_temp;
+int count_bishop=0,count_king=0;
+
 void init() {
     /* the chessboard and the table and the player (viewer)*/
 	chessboard = create_chessboard();
@@ -50,18 +59,18 @@ void init() {
 	/* the chess set */
 	int player, i,i1;
 	for (player = 0; player < PLAYER_TYPE_COUNT; player++) {
-		for (i=0;  i<8;  i++) block[player][i] = create_block(PAWN_TYPE_PAWN, player);
-		for (i=8;  i<10; i++) block[player][i] = create_block(PAWN_TYPE_ROOK, player);
-		for (i=10; i<12; i++) block[player][i] = create_block(PAWN_TYPE_KNIGHT, player);
-		for (i=12; i<14; i++) block[player][i] = create_block(PAWN_TYPE_BISHOP, player);
-		block[player][14] = create_block(PAWN_TYPE_QUEEN, player);
-		block[player][15] = create_block(PAWN_TYPE_KING, player);
+		// for (i=0;  i<8;  i++) block[player][i] = create_block(PAWN_TYPE_PAWN, player);
+		// for (i=8;  i<10; i++) block[player][i] = create_block(PAWN_TYPE_ROOK, player);
+		// for (i=10; i<12; i++) block[player][i] = create_block(PAWN_TYPE_KNIGHT, player);
+		// for (i=12; i<14; i++) block[player][i] = create_block(PAWN_TYPE_BISHOP, player);
+		// block[player][i] = create_block(PAWN_TYPE_BISHOP, player);
+		// block[player][i] = create_block(PAWN_TYPE_KING, player);
 	}
-	for (i1 = 0; i1 < 15; ++i1)
-	{
-		glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
-		glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
-	}
+	// for (i1 = 0; i1 < 300; ++i1)
+	// {
+	// 	glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
+	// 	glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
+	// }
 	//glmScale(block[PLAYER_TYPE_WHITE][12],0.5);
 	
 	/* place all the pieces */
@@ -71,10 +80,10 @@ void init() {
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][9],  CELL(7, rand()/RAND_MAX*8));
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][10], CELL(1, rand()/RAND_MAX*8));  knight 
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(6, rand()/RAND_MAX*8));
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, rand()/RAND_MAX*8));
+	//chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, 3)); /* bishop */
+	//chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, 6));
 	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
-	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15],CELL(3,1)); /* king */
+	//chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15],CELL(3,1)); /* king */
 //	for (x=0; x<5; x++){chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][x], CELL(x, rand()/RAND_MAX*8));}
 	
 	/* -- black -- */
@@ -143,10 +152,85 @@ void reshape (int w, int h) {
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity ();
 }
+void create_now(int k)
+{
+	x1=rand()%8+1;
+	y_temp=rand()%8+1;
+	//block[player][15] = create_block(PAWN_TYPE_KING, player);
+	switch(k)
+	{
+		case 1:
+			while(x1>6)
+			{
+				x1=rand()%8+1;
+			}
+			count_bishop++;
+			printf("entered\n");
+			block[PLAYER_TYPE_WHITE][count_bishop] = create_block(PAWN_TYPE_BISHOP, 0);
+			glmScale(block[PLAYER_TYPE_WHITE][count_bishop]->model,0.6);
+			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
+			break;
+		// case 2:
+		// 	count_bishop++;
+		// 	block[PLAYER_TYPE_WHITE][count_bishop] = create_block(PAWN_TYPE_BISHOP, 0);
+		// 	glmScale(block[PLAYER_TYPE_WHITE][count_bishop]->model,0.6);
+		// 	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
+		// 	break;
+		case 2:
+			count_king++;
+			block[PLAYER_TYPE_WHITE][count_king] = create_block(PAWN_TYPE_KING, 0);
+			//glmScale(block[PLAYER_TYPE_WHITE][count_king]->model,0.6);
+			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1, y_temp));
+			break;
+		/*case 4:
+			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(x1, y_temp));*/
+	}
 
+}
 void update_z1()
 {
-	update_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1));
+	printf("count==%f\n",count);
+	if(count==0)
+	{
+		count=height/0.1;
+		k=rand()%2+ 1;
+		create_now(k);
+	}
+	else
+	{
+		count--;
+	}
+
+
+	switch(k){
+	case 1:
+		update_z(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
+		if(count==0)
+		{
+			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
+			//count_bishop++;
+			update_z2(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
+		}
+		break;
+	// case 2:
+	// 	update_z(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
+	// 	if(count==0)
+	// 	{
+	// 		chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
+	// 		//count_bishop++;
+	// 		update_z2(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
+	// 	}
+	// 	break;
+	case 2:
+		update_z(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1,y_temp));
+		if(count==0)
+		{
+			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1, y_temp));
+			update_z2(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1,y_temp));
+			//count_king++;
+		}
+		break;
+	}
 }
 void timer(int extra) {
 	glutPostRedisplay();
@@ -154,9 +238,9 @@ void timer(int extra) {
 	// glutTimerFunc(1000, reduce_z, 0);
 	// reduce_z();
 
-	glutTimerFunc(1000, timer, 0);
+	glutTimerFunc(10, timer, 0);
 
-	glutTimerFunc(1000, update_z1,0);
+	glutTimerFunc(10, update_z1,0);
 	
 	
 }
