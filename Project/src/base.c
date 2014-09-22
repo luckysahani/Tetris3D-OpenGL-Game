@@ -56,22 +56,30 @@ void chessboard_place_block(Chessboard *cboard, Block *p, int cell ) {
 
 	cboard->board[cell] = p;
 }
-GLdouble return_z(Chessboard *cboard, Block *p, int cell)
-{
-	GLdouble a1= p->pos[1];
-	printf("p->pos[1]==%f\n",a1);
-	return p->pos[1];
-}
-void change_z(Chessboard *cboard, Block *p, int cell,GLdouble z_val)
-{
 
-	p->pos[1] = z_val;
-	printf("z_val==%f\n",z_val);
-}
+
+
+
+// GLdouble return_z(Chessboard *cboard, Block *p, int cell)
+// {
+// 	GLdouble a1= p->pos[1];
+// 	printf("p->pos[1]==%f\n",a1);
+// 	return p->pos[1];
+// }
+// void change_z(Chessboard *cboard, Block *p, int cell,GLdouble z_val)
+// {
+
+// 	p->pos[1] = z_val;
+// 	printf("z_val==%f\n",z_val);
+// }
 void update_z(Chessboard *cboard, Block *p, int cell)
 {
 	p->pos[1] -= 0.1; 
 }
+
+
+
+
 void highlight_cell(Chessboard* c, int x, int y) {
     c->cell_highlighted = CELL(x,y);
 }

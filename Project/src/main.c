@@ -143,15 +143,7 @@ void reshape (int w, int h) {
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity ();
 }
-void reduce_z(){
-	// printf("hi\n");
-	GLdouble t2=return_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1));
-	GLdouble k=0.01;
-	//if(t2!=0){
-		printf("t2==%lf\n",t2);
-		change_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1),return_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1))-k);
-	//}
-}
+
 void update_z1()
 {
 	update_z(chessboard, block[PLAYER_TYPE_WHITE][15], CELL(3,1));
