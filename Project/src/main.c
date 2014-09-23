@@ -239,7 +239,7 @@ void update_z1()
 			chessboard_place_block(chessboard, block[1][count_queen], CELL(x1, y_temp));
 			update_z2(chessboard, block[1][count_queen], CELL(x1,y_temp));
 			//count_king++;
-		}
+		} 
 		break;
 	}
 }
