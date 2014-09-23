@@ -44,7 +44,7 @@ float height=0.5;
 float count=0;				
 int x1;
 int y_temp;
-int count_bishop=0,count_king=0;
+int count_bishop=0,count_king=0,count_queen=0;
 
 void init() {
     /* the chessboard and the table and the player (viewer)*/
@@ -160,7 +160,6 @@ void create_now(int k)
 	switch(k)
 	{
 		case 1:
-			
 			// printf("x1==%d,y1==%d\n",x1,y_temp );
 			count_bishop++;
 			printf("entered\n");
@@ -168,12 +167,6 @@ void create_now(int k)
 			glmScale(block[PLAYER_TYPE_WHITE][count_bishop]->model,0.6);
 			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
 			break;
-		// case 2:
-		// 	count_bishop++;
-		// 	block[PLAYER_TYPE_WHITE][count_bishop] = create_block(PAWN_TYPE_BISHOP, 0);
-		// 	glmScale(block[PLAYER_TYPE_WHITE][count_bishop]->model,0.6);
-		// 	chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
-		// 	break;
 		case 2:
 			while(y_temp>5)
 			{
@@ -184,6 +177,21 @@ void create_now(int k)
 			block[PLAYER_TYPE_WHITE][count_king] = create_block(PAWN_TYPE_KING, 0);
 			//glmScale(block[PLAYER_TYPE_WHITE][count_king]->model,0.6);
 			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1, y_temp));
+			break;
+		case 3:
+			while(y_temp>6)
+			{
+				y_temp=rand()%8+1;
+			}
+			while(x1>6)
+			{
+				x1=rand()%8+1;
+			}
+			printf("x1==%d,y1==%d\n",x1,y_temp );
+			count_queen++;
+			block[1][count_queen] = create_block(PAWN_TYPE_QUEEN, 0);
+			glmScale(block[1][count_queen]->model,0.6);
+			chessboard_place_block(chessboard, block[1][count_queen], CELL(x1, y_temp));
 			break;
 		/*case 4:
 			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(x1, y_temp));*/
@@ -196,7 +204,8 @@ void update_z1()
 	if(count==0)
 	{
 		count=height/0.1;
-		k=rand()%2+ 1;
+		k=rand()%3+ 1;
+		k=3;
 		create_now(k);
 	}
 	else
@@ -211,25 +220,24 @@ void update_z1()
 		if(count==0)
 		{
 			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
-			//count_bishop++;
 			update_z2(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
 		}
 		break;
-	// case 2:
-	// 	update_z(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
-	// 	if(count==0)
-	// 	{
-	// 		chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1, y_temp));
-	// 		//count_bishop++;
-	// 		update_z2(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x1,y_temp));
-	// 	}
-	// 	break;
 	case 2:
 		update_z(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1,y_temp));
 		if(count==0)
 		{
 			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1, y_temp));
 			update_z2(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x1,y_temp));
+			//count_king++;
+		}
+		break;
+	case 3:
+		update_z(chessboard, block[1][count_queen], CELL(x1,y_temp));
+		if(count==0)
+		{
+			chessboard_place_block(chessboard, block[1][count_queen], CELL(x1, y_temp));
+			update_z2(chessboard, block[1][count_queen], CELL(x1,y_temp));
 			//count_king++;
 		}
 		break;
@@ -240,12 +248,8 @@ void timer(int extra) {
 	// reduce_z(0.0);
 	// glutTimerFunc(1000, reduce_z, 0);
 	// reduce_z();
-
-	glutTimerFunc(100, timer, 0);
-
-	glutTimerFunc(100, update_z1,0);
-	
-	
+	glutTimerFunc(1000, timer, 0);
+	glutTimerFunc(1000, update_z1,0);	
 }
 
 void keypressed(unsigned char key, int x, int y) {
