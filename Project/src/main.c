@@ -38,7 +38,7 @@ GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 Viewer *viewer;
 
 
-
+int isClicked_right,isClicked_left;
 int k=0;
 float height=0.5;
 float count=0;				
@@ -260,12 +260,26 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'p') { select_cell(chessboard, CELL_CURRENT); }
     if (key == 'x') { exit(0); }
 }
+void mouseMove(int x, int y) 
+{ 	
+	if (isClicked_left) { 
+		viewer->pos[2]-=0.05;
+	}
+	else if (isClicked_right)
+	{
+		viewer->pos[2]+=0.05;
+	}
+}
 void mouseButton(int button, int state, int x, int y) 
 {
 	if (button == GLUT_LEFT_BUTTON) 
 	{
-		if (state == GLUT_DOWN) { // left mouse button pressed
-			viewer->pos[2]+=0.05;
+		if (state == GLUT_DOWN) { 
+			viewer->pos[2]-=0.05;
+			isClicked_left=1;
+		}
+		else  { 
+			isClicked_left = 0; 
 		}
 		
 	}
@@ -273,18 +287,23 @@ void mouseButton(int button, int state, int x, int y)
 	{
 		if(state == GLUT_DOWN)
 		{
-			viewer->pos[1]-=0.05;
+			viewer->pos[2]+=0.05;
+			isClicked_right=1;
+		}
+		else
+		{
+			isClicked_right=0;
 		}
 
 	}
-	if ((button == 3) || (button == 4)) 
+	if ((button == 3) ) 
    {
        if (state == GLUT_UP) return; 
-       printf("Scroll %s At %d %d\n", (button == 3) ? "Up" : "Down", x, y);
+       viewer->pos[0]-=0.05;
    }
-   else
+   else if(button == 4)
    {
-	       printf("Button %s At %d %d\n", (state == GLUT_DOWN) ? "Down" : "Up", x, y);
+   		viewer->pos[0]+=0.05;
    }
 }
 
@@ -298,7 +317,8 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
     glutKeyboardFunc(keypressed);
-
+    glutMouseFunc(mouseButton);
+    glutMotionFunc(mouseMove);
 	glutTimerFunc(0,timer,0);
 	
     init();
