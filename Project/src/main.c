@@ -260,6 +260,34 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'p') { select_cell(chessboard, CELL_CURRENT); }
     if (key == 'x') { exit(0); }
 }
+void mouseButton(int button, int state, int x, int y) 
+{
+	if (button == GLUT_LEFT_BUTTON) 
+	{
+		if (state == GLUT_DOWN) { // left mouse button pressed
+			viewer->pos[2]+=0.05;
+		}
+		
+	}
+	else if (button == GLUT_RIGHT_BUTTON)
+	{
+		if(state == GLUT_DOWN)
+		{
+			viewer->pos[1]-=0.05;
+		}
+
+	}
+	if ((button == 3) || (button == 4)) 
+   {
+       if (state == GLUT_UP) return; 
+       printf("Scroll %s At %d %d\n", (button == 3) ? "Up" : "Down", x, y);
+   }
+   else
+   {
+	       printf("Button %s At %d %d\n", (state == GLUT_DOWN) ? "Down" : "Up", x, y);
+   }
+}
+
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
