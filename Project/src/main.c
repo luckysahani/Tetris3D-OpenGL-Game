@@ -18,7 +18,7 @@
 #define WIDTH 800
 
 Chessboard *chessboard;
-Block *block[1000];
+Block *block[1000]; 
 Table *table;
 
 /* some lighting */
