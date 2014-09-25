@@ -33,7 +33,7 @@ Chessboard * create_chessboard()
 	cboard->color_specular[R] = 1.0f; cboard->color_specular[G] = 1.0f;
 	cboard->color_specular[B] = 1.0f; cboard->color_specular[A] = 1.0f;
 
-	//cboard->player_turn = PLAYER_TYPE_WHITE;
+	//cboard->player_turn = WHITE;
 
     /* select no cell */
     cboard->cell_highlighted = CELL_NONE;
@@ -158,8 +158,8 @@ void highlight_cell_right(Chessboard *cboard)
 // }
 // void flip_turn(Chessboard *cboard) {
 // 	cboard->player_turn = 
-// 		cboard->player_turn == PLAYER_TYPE_WHITE ? PLAYER_TYPE_BLACK
-// 												 : PLAYER_TYPE_WHITE;
+// 		cboard->player_turn == WHITE ? BLACK
+// 												 : WHITE;
 // }
 
 void select_cell(Chessboard *cboard, int cell)

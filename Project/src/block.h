@@ -20,9 +20,16 @@ typedef enum block_state_t {
 } BlockState;
 
 typedef enum player_type_t {
-	PLAYER_TYPE_WHITE,
-	PLAYER_TYPE_BLACK,
-	PLAYER_TYPE_COUNT,
+	
+	
+	LIGHT_GREEN,
+	LIGHT_BLUE,
+	LIGHT_YELLOW,
+	GREY,
+	WHITE,
+	BLACK
+
+	// PLAYER_TYPE_COUNT,
 } PlayerType;
 
 typedef enum block_type_t {

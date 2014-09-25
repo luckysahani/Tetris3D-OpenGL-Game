@@ -44,8 +44,8 @@ float height=0.5;
 float count=0;				
 int x_temp;
 int y_temp;
-int count_bishop=0,count_king=0,count_queen=0;
-int color;
+int count_squareshape=0,count_ishape=0,count_cube=0;
+int color_block;
 
 void init() {
     /* the chessboard and the table and the player (viewer)*/
@@ -59,44 +59,44 @@ void init() {
 
 	/* the chess set */
 	int player, i,i1;
-	for (player = 0; player < PLAYER_TYPE_COUNT; player++) {
+	// for (player = 0; player < PLAYER_TYPE_COUNT; player++) {
 		// for (i=0;  i<8;  i++) block[player][i] = create_block(PAWN_TYPE_PAWN, player);
 		// for (i=8;  i<10; i++) block[player][i] = create_block(PAWN_TYPE_ROOK, player);
 		// for (i=10; i<12; i++) block[player][i] = create_block(PAWN_TYPE_KNIGHT, player);
 		// for (i=12; i<14; i++) block[player][i] = create_block(squareshape, player);
 		// block[player][i] = create_block(squareshape, player);
 		// block[player][i] = create_block(ishape, player);
-	}
+	// }
 	// for (i1 = 0; i1 < 300; ++i1)
 	// {
-	// 	glmScale(block[PLAYER_TYPE_WHITE][i1]->model,0.6);
-	// 	glmScale(block[PLAYER_TYPE_BLACK][i1]->model,0.6);
+	// 	glmScale(block[WHITE][i1]->model,0.6);
+	// 	glmScale(block[BLACK][i1]->model,0.6);
 	// }
-	//glmScale(block[PLAYER_TYPE_WHITE][12],0.5);
+	//glmScale(block[WHITE][12],0.5);
 	
 	/* place all the pieces */
 	int x, y;
 	/* -- white -- */
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][8],  CELL(0, rand()/RAND_MAX*8));  /*rooks */
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][9],  CELL(7, rand()/RAND_MAX*8));
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][10], CELL(1, rand()/RAND_MAX*8));  knight 
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(6, rand()/RAND_MAX*8));
-	//chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][12], CELL(2, 3)); /* bishop */
-	//chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][13], CELL(5, 6));
-	// chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
-	//chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][15],CELL(3,1)); /* king */
-//	for (x=0; x<5; x++){chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][x], CELL(x, rand()/RAND_MAX*8));}
+	// chessboard_place_block(chessboard, block[WHITE][8],  CELL(0, rand()/RAND_MAX*8));  /*rooks */
+	// chessboard_place_block(chessboard, block[WHITE][9],  CELL(7, rand()/RAND_MAX*8));
+	// chessboard_place_block(chessboard, block[WHITE][10], CELL(1, rand()/RAND_MAX*8));  knight 
+	// chessboard_place_block(chessboard, block[WHITE][11], CELL(6, rand()/RAND_MAX*8));
+	//chessboard_place_block(chessboard, block[WHITE][12], CELL(2, 3)); /* bishop */
+	//chessboard_place_block(chessboard, block[WHITE][13], CELL(5, 6));
+	// chessboard_place_block(chessboard, block[WHITE][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
+	//chessboard_place_block(chessboard, block[WHITE][15],CELL(3,1)); /* king */
+//	for (x=0; x<5; x++){chessboard_place_block(chessboard, block[WHITE][x], CELL(x, rand()/RAND_MAX*8));}
 	
 	/* -- black -- */
-	// rand()/RAND_MAX*8=7; chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][8],  CELL(0, rand()/RAND_MAX*8)); /* rooks */
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][9],  CELL(7, rand()/RAND_MAX*8));
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][10], CELL(1, rand()/RAND_MAX*8)); /* knight */
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][11], CELL(6, rand()/RAND_MAX*8));
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][13], CELL(5, rand()/RAND_MAX*8));
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
-	//      chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][15], CELL(4, rand()/RAND_MAX*8)); /* king */
-	//		for (x=0; x<2; x++) chessboard_place_block(chessboard, block[PLAYER_TYPE_BLACK][x], CELL(x, rand()/RAND_MAX*8));
+	// rand()/RAND_MAX*8=7; chessboard_place_block(chessboard, block[BLACK][8],  CELL(0, rand()/RAND_MAX*8)); /* rooks */
+	//      chessboard_place_block(chessboard, block[BLACK][9],  CELL(7, rand()/RAND_MAX*8));
+	//      chessboard_place_block(chessboard, block[BLACK][10], CELL(1, rand()/RAND_MAX*8)); /* knight */
+	//      chessboard_place_block(chessboard, block[BLACK][11], CELL(6, rand()/RAND_MAX*8));
+	//      chessboard_place_block(chessboard, block[BLACK][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
+	//      chessboard_place_block(chessboard, block[BLACK][13], CELL(5, rand()/RAND_MAX*8));
+	//      chessboard_place_block(chessboard, block[BLACK][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
+	//      chessboard_place_block(chessboard, block[BLACK][15], CELL(4, rand()/RAND_MAX*8)); /* king */
+	//		for (x=0; x<2; x++) chessboard_place_block(chessboard, block[BLACK][x], CELL(x, rand()/RAND_MAX*8));
 	
     /* opengl initialisations */
 	glClearColor (0.0f,0.2f,0.2f, 1.0);
@@ -158,17 +158,17 @@ void create_now(int k)
 {
 	x_temp=rand()%8 ;
 	y_temp=rand()%8 ;
-	color=rand()%2;
+	color_block=rand()%3;
 	//block[player][15] = create_block(ishape, player);
 	switch(k)
 	{
 		case 1:
 			// printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
-			count_bishop++;
+			count_squareshape++;
 			printf("entered\n");
-			block[PLAYER_TYPE_WHITE][count_bishop] = create_block(squareshape, color);
-			glmScale(block[PLAYER_TYPE_WHITE][count_bishop]->model,0.6);
-			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x_temp, y_temp));
+			block[WHITE][count_squareshape] = create_block(squareshape, color_block);
+			glmScale(block[WHITE][count_squareshape]->model,0.6);
+			chessboard_place_block(chessboard, block[WHITE][count_squareshape], CELL(x_temp, y_temp));
 			break;
 		case 2:
 			while(y_temp>5)
@@ -176,10 +176,9 @@ void create_now(int k)
 				y_temp=rand()%8+1;
 			}
 			printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
-			count_king++;
-			block[PLAYER_TYPE_WHITE][count_king] = create_block(ishape, color);
-			//glmScale(block[PLAYER_TYPE_WHITE][count_king]->model,0.6);
-			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x_temp, y_temp));
+			count_ishape++;
+			block[WHITE][count_ishape] = create_block(ishape, color_block);
+			chessboard_place_block(chessboard, block[WHITE][count_ishape], CELL(x_temp, y_temp));
 			break;
 		case 3:
 			while(y_temp>6)
@@ -191,13 +190,13 @@ void create_now(int k)
 				x_temp=rand()%8+1;
 			}
 			printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
-			count_queen++;
-			block[1][count_queen] = create_block(cube, color);
-			glmScale(block[1][count_queen]->model,0.6);
-			chessboard_place_block(chessboard, block[1][count_queen], CELL(x_temp, y_temp));
+			count_cube++;
+			block[1][count_cube] = create_block(cube, color_block);
+			glmScale(block[1][count_cube]->model,0.6);
+			chessboard_place_block(chessboard, block[1][count_cube], CELL(x_temp, y_temp));
 			break;
 		/*case 4:
-			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][11], CELL(x_temp, y_temp));*/
+			chessboard_place_block(chessboard, block[WHITE][11], CELL(x_temp, y_temp));*/
 	}
 
 }
@@ -219,29 +218,29 @@ void update_game()
 
 	switch(k){
 	case 1:
-		reduce_z_regularly(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x_temp,y_temp));
+		reduce_z_regularly(chessboard, block[WHITE][count_squareshape], CELL(x_temp,y_temp));
 		if(count==0)
 		{
-			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[PLAYER_TYPE_WHITE][count_bishop], CELL(x_temp,y_temp));
+			chessboard_place_block(chessboard, block[WHITE][count_squareshape], CELL(x_temp, y_temp));
+			set_z_to_zero(chessboard, block[WHITE][count_squareshape], CELL(x_temp,y_temp));
 		}
 		break;
 	case 2:
-		reduce_z_regularly(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x_temp,y_temp));
+		reduce_z_regularly(chessboard, block[WHITE][count_ishape], CELL(x_temp,y_temp));
 		if(count==0)
 		{
-			chessboard_place_block(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[PLAYER_TYPE_WHITE][count_king], CELL(x_temp,y_temp));
-			//count_king++;
+			chessboard_place_block(chessboard, block[WHITE][count_ishape], CELL(x_temp, y_temp));
+			set_z_to_zero(chessboard, block[WHITE][count_ishape], CELL(x_temp,y_temp));
+			//count_ishape++;
 		}
 		break;
 	case 3:
-		reduce_z_regularly(chessboard, block[1][count_queen], CELL(x_temp,y_temp));
+		reduce_z_regularly(chessboard, block[1][count_cube], CELL(x_temp,y_temp));
 		if(count==0)
 		{
-			chessboard_place_block(chessboard, block[1][count_queen], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[1][count_queen], CELL(x_temp,y_temp));
-			//count_king++;
+			chessboard_place_block(chessboard, block[1][count_cube], CELL(x_temp, y_temp));
+			set_z_to_zero(chessboard, block[1][count_cube], CELL(x_temp,y_temp));
+			//count_ishape++;
 		} 
 		break;
 	}
