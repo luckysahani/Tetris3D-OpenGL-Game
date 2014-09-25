@@ -120,7 +120,7 @@ void reshape (int w, int h) {
     glLoadIdentity ();
 }
 
-
+//This creates an Square shape Object
 void create_squareshape_block()
 {
 	count_squareshape++;
@@ -130,6 +130,7 @@ void create_squareshape_block()
 	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
 	tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
+//This creates an Ishape Object
 void create_ishape_block()
 {
 
@@ -142,6 +143,7 @@ void create_ishape_block()
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(ishape, color_block);
 	tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
+//This creates an Cube Object
 void create_cube_block()
 {
 	while(y_temp>6)
@@ -158,38 +160,34 @@ void create_cube_block()
 	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
 	tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
-
+//To move the block by 0.1 units downward
 void move_block_down_by_one_step()
 {
 	printf("moved down 1 step\n");
 	reduce_z_regularly(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]));
 
 }
+//Update board status by 1 i.e now the blocks should come above the already placed block
 void increment_board_status()
 {
 	// tetris_board_place_block_at_boardvalue(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),temp);
-	//increment all the z parts by 1
-	// temp++;
 	// board_status[x_temp][y_temp]++;
 	printf("board_status with x_temp=%d,y_temp=%d and board_status=%d\n\n",x_temp,y_temp,board_status[x_temp][y_temp]);
 	
 }
+//Place the block at the bottom most possible and then increment the board status
 void place_block()
 {
 	set_z_to_zero(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]),(board_status[x_temp][y_temp]));
 	// tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),2);
 	increment_board_status();
 }
-
+//The main code is implemented here
 void update_game()
 {
 	// printf("count==%f\n",count);
 	if(board_status[x_temp][y_temp]>5){
 			printf("Game over\n");
-			// delete block;
-			// free(block);
-			// destoy_block(block);
-			// destroy_table(tetris_board);
 			exit(0);
 		}
 	if(flag==1)
@@ -198,31 +196,29 @@ void update_game()
 		flag=0;
 		count=height/0.1;
 		k=rand()%3+ 1;//k=3;
-		x_temp=rand()%8 ;
-		y_temp=rand()%8 ;
+		x_temp=rand()%8 ;						//x value of block
+		y_temp=rand()%8 ;						//y value of block
 		// x_temp=3;y_temp=5;
-		color_block=rand()%3;
-		if(k==1){create_squareshape_block();}
-		if(k==2){create_ishape_block();}
-		if(k==3){create_cube_block();}
+		color_block=rand()%3;					//color of block
+		if(k==1){create_squareshape_block();}	//Creates an square shape object
+		if(k==2){create_ishape_block();}		//creates an ishape object
+		if(k==3){create_cube_block();}			//created an cube object
 		printf("Created the blocks\n");
 	}
 	else
 	{
-		count--;
+		count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
 	}
-	move_block_down_by_one_step();
-	// printf("CELL(x_temp, y_temp,board_status[x_temp][y_temp])==%d\n",CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
-	if(count==board_status[x_temp][y_temp])
+	move_block_down_by_one_step();				//decrement z by 0.1
+	if(count==board_status[x_temp][y_temp])		// if the block is just above another already placed block
 	{
-		place_block();
-		if(board_status[x_temp][y_temp]>5){
+		place_block();							//place this new block
+		if(board_status[x_temp][y_temp]>5){		//if the height of game>5 exit the game baby
 			printf("Game over\n");
 			exit(0);
 		}
-		flag=1;
+		flag=1;									
 	}
-	// if(count==board_status[x_temp][y_temp])occupy_board();
 }
 
 
