@@ -101,6 +101,7 @@ void init() {
 	glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
+	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
     glEnable(GL_LIGHTING);
