@@ -154,51 +154,54 @@ void reshape (int w, int h) {
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity ();
 }
-void create_now(int k)
-{
-	x_temp=rand()%8 ;
-	y_temp=rand()%8 ;
-	color_block=rand()%3;
-	//block[player][15] = create_block(ishape, player);
-	switch(k)
-	{
-		case 1:
-			// printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
-			count_squareshape++;
-			printf("entered\n");
-			block[WHITE][count_squareshape] = create_block(squareshape, color_block);
-			glmScale(block[WHITE][count_squareshape]->model,0.6);
-			chessboard_place_block(chessboard, block[WHITE][count_squareshape], CELL(x_temp, y_temp));
-			break;
-		case 2:
-			while(y_temp>5)
-			{
-				y_temp=rand()%8+1;
-			}
-			printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
-			count_ishape++;
-			block[WHITE][count_ishape] = create_block(ishape, color_block);
-			chessboard_place_block(chessboard, block[WHITE][count_ishape], CELL(x_temp, y_temp));
-			break;
-		case 3:
-			while(y_temp>6)
-			{
-				y_temp=rand()%8+1;
-			}
-			while(x_temp>6)
-			{
-				x_temp=rand()%8+1;
-			}
-			printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
-			count_cube++;
-			block[1][count_cube] = create_block(cube, color_block);
-			glmScale(block[1][count_cube]->model,0.6);
-			chessboard_place_block(chessboard, block[1][count_cube], CELL(x_temp, y_temp));
-			break;
-		/*case 4:
-			chessboard_place_block(chessboard, block[WHITE][11], CELL(x_temp, y_temp));*/
-	}
 
+
+void create_squareshape_block(int x_temp,int y_temp,int color_block)
+{
+	// create_squareshape_block();
+	count_squareshape++;
+	printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
+	// printf("entered\n");
+	block[WHITE][count_squareshape] = create_block(squareshape, color_block);
+	glmScale(block[WHITE][count_squareshape]->model,0.6);
+	chessboard_place_block(chessboard, block[WHITE][count_squareshape], CELL(x_temp, y_temp));
+}
+void create_ishape_block(int x_temp,int y_temp,int color_block)
+{
+	while(y_temp>5)
+	{
+		y_temp=rand()%8+1;
+	}
+	printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
+	count_ishape++;
+	block[WHITE][count_ishape] = create_block(ishape, color_block);
+	chessboard_place_block(chessboard, block[WHITE][count_ishape], CELL(x_temp, y_temp));
+}
+void create_cube_block(int x_temp,int y_temp,int color_block)
+{
+	while(y_temp>6)
+	{
+		y_temp=rand()%8+1;
+	}
+	while(x_temp>6)
+	{
+		x_temp=rand()%8+1;
+	}
+	printf("x_temp==%d,y1==%d\n",x_temp,y_temp );
+	count_cube++;
+	block[1][count_cube] = create_block(cube, color_block);
+	glmScale(block[1][count_cube]->model,0.6);
+	chessboard_place_block(chessboard, block[1][count_cube], CELL(x_temp, y_temp));
+}
+void move_block_down_by_one_step(int count_of_block)
+{
+	printf("Movind doesn on x_temp==%d,y1==%d\n",x_temp,y_temp );
+	reduce_z_regularly(chessboard, block[WHITE][count_of_block], CELL(x_temp,y_temp));
+	if(count==0)
+	{
+		chessboard_place_block(chessboard, block[WHITE][count_of_block], CELL(x_temp, y_temp));
+		set_z_to_zero(chessboard, block[WHITE][count_of_block], CELL(x_temp,y_temp));
+	}
 }
 void update_game()
 {
@@ -207,34 +210,42 @@ void update_game()
 	{
 		count=height/0.1;
 		k=rand()%3+ 1;
-		// k=3;
-		create_now(k);
+		x_temp=rand()%8 ;
+		y_temp=rand()%8 ;
+		color_block=rand()%3;
+		if(k==1){create_squareshape_block(x_temp,y_temp,color_block);}
+		if(k==2){create_ishape_block(x_temp,y_temp,color_block);}
+		if(k==3){create_cube_block(x_temp,y_temp,color_block);}
+		// sleep(1);
 	}
 	else
 	{
 		count--;
 	}
-
+	if(k==1){move_block_down_by_one_step(count_squareshape);}
+	if(k==2){move_block_down_by_one_step(count_ishape);}
+	else if(k==3){move_block_down_by_one_step(count_cube);}
+	
 
 	switch(k){
-	case 1:
-		reduce_z_regularly(chessboard, block[WHITE][count_squareshape], CELL(x_temp,y_temp));
-		if(count==0)
-		{
-			chessboard_place_block(chessboard, block[WHITE][count_squareshape], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[WHITE][count_squareshape], CELL(x_temp,y_temp));
-		}
-		break;
-	case 2:
-		reduce_z_regularly(chessboard, block[WHITE][count_ishape], CELL(x_temp,y_temp));
-		if(count==0)
-		{
-			chessboard_place_block(chessboard, block[WHITE][count_ishape], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[WHITE][count_ishape], CELL(x_temp,y_temp));
-			//count_ishape++;
-		}
-		break;
-	case 3:
+	// case 1:
+	// 	reduce_z_regularly(chessboard, block[WHITE][count_squareshape], CELL(x_temp,y_temp));
+	// 	if(count==0)
+	// 	{
+	// 		chessboard_place_block(chessboard, block[WHITE][count_squareshape], CELL(x_temp, y_temp));
+	// 		set_z_to_zero(chessboard, block[WHITE][count_squareshape], CELL(x_temp,y_temp));
+	// 	}
+	// 	break;
+	// case 2:
+	// 	reduce_z_regularly(chessboard, block[WHITE][count_ishape], CELL(x_temp,y_temp));
+	// 	if(count==0)
+	// 	{
+	// 		chessboard_place_block(chessboard, block[WHITE][count_ishape], CELL(x_temp, y_temp));
+	// 		set_z_to_zero(chessboard, block[WHITE][count_ishape], CELL(x_temp,y_temp));
+	// 		//count_ishape++;
+	// 	}
+	// 	break;
+	case 4:
 		reduce_z_regularly(chessboard, block[1][count_cube], CELL(x_temp,y_temp));
 		if(count==0)
 		{
@@ -247,11 +258,8 @@ void update_game()
 }
 void timer(int extra) {
 	glutPostRedisplay();
-	// reduce_z(0.0);
-	// glutTimerFunc(1000, reduce_z, 0);
-	// reduce_z();
-	glutTimerFunc(500, timer, 0);
-	glutTimerFunc(500, update_game,0);	
+	glutTimerFunc(100, timer, 0);
+	glutTimerFunc(100, update_game,0);	
 }
 
 void keypressed(unsigned char key, int x, int y) {
