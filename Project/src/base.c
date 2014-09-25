@@ -83,10 +83,10 @@ void reduce_z_regularly(Chessboard *cboard, Block *p, int cell)
 		p->pos[1]=0;
 	}
 }
-void set_z_to_zero(Chessboard *cboard, Block *p, int cell)
+void set_z_to_zero(Chessboard *cboard, Block *p, int cell,int k)
 {
 	
-	p->pos[1]=0;
+	p->pos[1]=k;
 	
 }
 

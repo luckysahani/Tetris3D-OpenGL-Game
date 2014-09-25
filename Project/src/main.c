@@ -46,6 +46,7 @@ int x_temp;
 int y_temp;
 int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
 int color_block;
+int board_status[8][8];
 
 void init() {
     /* the chessboard and the table and the player (viewer)*/
@@ -53,6 +54,15 @@ void init() {
 	table      = create_table();
 	place_on_model(chessboard->pos, (Placeable *) table);
 	viewer = create_viewer((Placeable *)chessboard);
+	int i,j;
+	for ( i = 0; i < 8; ++i)
+	{
+		for ( j = 0; j < 8; ++j)
+		{
+			board_status[i][j]=0;
+		}
+	}
+
 	glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
@@ -145,16 +155,27 @@ void create_cube_block()
 	glmScale(block[x_temp][y_temp]->model,0.6);
 	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
 }
+// void occupy_board()
+// {
+
+// }
 void move_block_down_by_one_step()
 {
 	// printf("Movind doesn on x_temp==%d,y1==%d\n",x_temp,y_temp );
 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-		if(count==0)
-		{
-			chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-		}
+
 }
+void increment_board_status()
+{
+	//increment all the z parts by 1
+}
+void place_block()
+{
+	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp),board_status[x_temp][y_temp]);
+	increment_board_status();
+}
+
 void update_game()
 {
 	// printf("count==%f\n",count);
@@ -174,6 +195,11 @@ void update_game()
 		count--;
 	}
 	move_block_down_by_one_step();
+	if(count==board_status[x_temp][y_temp])
+	{
+		place_block();
+	}
+	// if(count==board_status[x_temp][y_temp])occupy_board();
 }
 
 
