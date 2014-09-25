@@ -89,7 +89,7 @@ void set_z_to_zero(Chessboard *cboard, Block *p, int cell,int k)
 	temp=temp/10;
 	printf("setting p->pos[1] to %d and temp =%f\n",k ,temp);
 
-	p->pos[1]=temp;
+	p->pos[1]=0;
 	
 }
 
