@@ -120,6 +120,15 @@ void reshape (int w, int h) {
     glLoadIdentity ();
 }
 
+
+
+
+
+
+
+
+
+
 //This creates an Square shape Object
 void create_squareshape_block()
 {
@@ -220,6 +229,14 @@ void update_game()
 		flag=1;									
 	}
 }
+
+
+
+
+
+
+
+
 
 
 void timer(int extra) {
