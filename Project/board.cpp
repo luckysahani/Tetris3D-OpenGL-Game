@@ -57,7 +57,7 @@ Chessboard * create_chessboard()
 // }
 
 void highlight_cell(Chessboard* c, int x, int y) {
-    c->cell_highlighted = CELL(x,y);
+    c->cell_highlighted = CELL(x,y,0);
 }
 
 // Pawn *get_pawn(Chessboard* c, int cell) {
@@ -72,6 +72,7 @@ void display_chessboard(Chessboard *cboard) {
     
 	int xcell = -1;
 	int ycell;
+	int zcell=0;
 	GLdouble step = cboard->cell_width;
     for (x=-0.5f; x<0.5f; x+=step){
 		xcell++;
@@ -85,7 +86,7 @@ void display_chessboard(Chessboard *cboard) {
     		color = 1 - color;
     
     		/* choose material color */
-            if (cboard->cell_highlighted == CELL(xcell, ycell)) {
+            if (cboard->cell_highlighted == CELL(xcell, ycell,zcell)) {
                 glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_selected);
                 glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_selected);
                 glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
@@ -132,25 +133,25 @@ void highlight_cell_up(Chessboard *cboard)
 {
 	int celly = CELLY(cboard->cell_highlighted);
 	celly += celly == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
-    cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly);
+    cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
 }
 void highlight_cell_down(Chessboard *cboard)
 {
 	int celly = CELLY(cboard->cell_highlighted);
 	celly -= celly == 0 ? -NUM_CELLS + 1 : 1; 
-    cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly);
+    cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
 }
 void highlight_cell_left(Chessboard *cboard)
 {
 	int cellx = CELLX(cboard->cell_highlighted);
 	cellx += cellx == 0 ? NUM_CELLS-1 : -1; 
-    cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted));
+    cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
 }
 void highlight_cell_right(Chessboard *cboard)
 {
 	int cellx = CELLX(cboard->cell_highlighted);
 	cellx += cellx == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
-    cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted));
+    cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
 }
 
 // void set_turn(Chessboard *cboard, PlayerType player) {

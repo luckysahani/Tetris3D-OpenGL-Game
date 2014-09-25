@@ -18,7 +18,7 @@
 #define WIDTH 800
 
 Chessboard *chessboard;
-Block *block[8][8]; 
+Block *block[8][8][5]; 
 Table *table;
 
 /* some lighting */
@@ -43,6 +43,7 @@ int k=0;
 float height=0.5;
 float count=0;				
 int x_temp;
+int flag=1;
 int y_temp;
 int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
 int color_block;
@@ -123,21 +124,23 @@ void reshape (int w, int h) {
 void create_squareshape_block()
 {
 	count_squareshape++;
+	// printf("CELL(x_temp, y_temp,board_status[x_temp][y_temp])==%d\n",CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
 	printf("SquareShape created at x_temp==%d,y1==%d\n",x_temp,y_temp );
-	block[x_temp][y_temp] = create_block(squareshape, color_block);
-	glmScale(block[x_temp][y_temp]->model,0.6);
-	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(squareshape, color_block);
+	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
 }
 void create_ishape_block()
 {
+
 	while(y_temp>5)
 	{
 		y_temp=rand()%8+1;
 	}
 	printf("Ishape craeted at x_temp==%d,y1==%d\n",x_temp,y_temp );
 	count_ishape++;
-	block[x_temp][y_temp] = create_block(ishape, color_block);
-	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(ishape, color_block);
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
 }
 void create_cube_block()
 {
@@ -151,36 +154,37 @@ void create_cube_block()
 	}
 	printf("Cube created at x_temp==%d,y1==%d\n",x_temp,y_temp );
 	count_cube++;
-	block[x_temp][y_temp] = create_block(cube, color_block);
-	glmScale(block[x_temp][y_temp]->model,0.6);
-	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(cube, color_block);
+	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
 }
-// void occupy_board()
-// {
 
-// }
 void move_block_down_by_one_step()
 {
-	// printf("Movind doesn on x_temp==%d,y1==%d\n",x_temp,y_temp );
-	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	printf("moved down 1 step\n");
+	reduce_z_regularly(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]));
 
 }
 void increment_board_status()
 {
 	//increment all the z parts by 1
+	board_status[x_temp][y_temp]++;
+	printf("\n\nboard_status with x_temp=%d,y_temp=%d and board_status=%d\n\n",x_temp,y_temp,board_status[x_temp][y_temp]);
+	
 }
 void place_block()
 {
-	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
-	set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp),board_status[x_temp][y_temp]);
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
+	set_z_to_zero(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]),(board_status[x_temp][y_temp]));
 	increment_board_status();
 }
 
 void update_game()
 {
 	// printf("count==%f\n",count);
-	if(count==0)
+	if(flag==1)
 	{
+		flag=0;
 		count=height/0.1;
 		k=rand()%3+ 1;//k=3;
 		x_temp=rand()%8 ;
@@ -195,9 +199,11 @@ void update_game()
 		count--;
 	}
 	move_block_down_by_one_step();
+	// printf("CELL(x_temp, y_temp,board_status[x_temp][y_temp])==%d\n",CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
 	if(count==board_status[x_temp][y_temp])
 	{
 		place_block();
+		flag=1;
 	}
 	// if(count==board_status[x_temp][y_temp])occupy_board();
 }
@@ -205,8 +211,8 @@ void update_game()
 
 void timer(int extra) {
 	glutPostRedisplay();
-	glutTimerFunc(100, timer, 0);
-	glutTimerFunc(100, update_game,0);	
+	glutTimerFunc(200, timer, 0);
+	glutTimerFunc(200, update_game,0);	
 }
 
 void keypressed(unsigned char key, int x, int y) {

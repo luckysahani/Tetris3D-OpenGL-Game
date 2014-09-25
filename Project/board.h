@@ -12,7 +12,7 @@
 
 #define NUM_CELLS 8
 #define TOTAL_CELLS (NUM_CELLS*NUM_CELLS)
-#define CELL(x,y) (x+(NUM_CELLS*(y)))
+#define CELL(x,y,z) (x+(NUM_CELLS*(y))+(z*NUM_CELLS*NUM_CELLS))
 #define CELLY(cell) ((int)((float)cell/(float)NUM_CELLS))
 #define CELLX(cell) (cell - (NUM_CELLS * CELLY(cell)))
 #define CELL_CURRENT -2
