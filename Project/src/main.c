@@ -17,7 +17,7 @@
 #define HEIGHT 800
 #define WIDTH 800
 
-Chessboard *chessboard;
+Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Table *table;
 
@@ -44,17 +44,17 @@ float height=0.5;
 float count=0;				
 int x_temp;
 int flag=1;
-int y_temp;
+int y_temp,temp=0;
 int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
 int color_block;
 int board_status[8][8];
 
 void init() {
-    /* the chessboard and the table and the player (viewer)*/
-	chessboard = create_chessboard();
+    /* the tetris_board and the table and the player (viewer)*/
+	tetris_board = create_tetris_board();
 	table      = create_table();
-	place_on_model(chessboard->pos, (Placeable *) table);
-	viewer = create_viewer((Placeable *)chessboard);
+	place_on_model(tetris_board->pos, (Placeable *) table);
+	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j;
 	for ( i = 0; i < 8; ++i)
 	{
@@ -81,7 +81,7 @@ void init() {
 }
 
 void end() {
-	destroy_chessboard(chessboard);
+	destroy_tetris_board(tetris_board);
 	destroy_viewer(viewer);
 }
 
@@ -105,7 +105,7 @@ void display() {
    observe_from_viewer(viewer);
 
    //display_table(table);
-   display_chessboard(chessboard);
+   display_tetris_board(tetris_board);
 
    glFlush();
    glutSwapBuffers();
@@ -128,7 +128,7 @@ void create_squareshape_block()
 	printf("SquareShape created at x_temp==%d,y1==%d and board_staus=%d\n",x_temp,y_temp,board_status[x_temp][y_temp] );
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(squareshape, color_block);
 	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
+	tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
 void create_ishape_block()
 {
@@ -140,7 +140,7 @@ void create_ishape_block()
 	printf("Ishape created at x_temp==%d,y_temp==%d and board_staus=%d\n",x_temp,y_temp,board_status[x_temp][y_temp] );
 	count_ishape++;
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(ishape, color_block);
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
+	tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
 void create_cube_block()
 {
@@ -156,27 +156,28 @@ void create_cube_block()
 	count_cube++;
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(cube, color_block);
 	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
+	tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
 
 void move_block_down_by_one_step()
 {
 	printf("moved down 1 step\n");
-	reduce_z_regularly(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]));
+	reduce_z_regularly(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]));
 
 }
 void increment_board_status()
 {
-	// chessboard_place_block_at_boardvalue(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
+	// tetris_board_place_block_at_boardvalue(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),temp);
 	//increment all the z parts by 1
-	board_status[x_temp][y_temp]++;
+	// temp++;
+	// board_status[x_temp][y_temp]++;
 	printf("board_status with x_temp=%d,y_temp=%d and board_status=%d\n\n",x_temp,y_temp,board_status[x_temp][y_temp]);
 	
 }
 void place_block()
 {
-	// chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
-	set_z_to_zero(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]),(board_status[x_temp][y_temp]));
+	set_z_to_zero(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]),(board_status[x_temp][y_temp]));
+	// tetris_board_place_block(tetris_board, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),2);
 	increment_board_status();
 }
 
@@ -187,6 +188,8 @@ void update_game()
 			printf("Game over\n");
 			// delete block;
 			// free(block);
+			// destoy_block(block);
+			// destroy_table(tetris_board);
 			exit(0);
 		}
 	if(flag==1)
@@ -197,11 +200,12 @@ void update_game()
 		k=rand()%3+ 1;//k=3;
 		x_temp=rand()%8 ;
 		y_temp=rand()%8 ;
-		x_temp=3;y_temp=5;
+		// x_temp=3;y_temp=5;
 		color_block=rand()%3;
 		if(k==1){create_squareshape_block();}
 		if(k==2){create_ishape_block();}
 		if(k==3){create_cube_block();}
+		printf("Created the blocks\n");
 	}
 	else
 	{
@@ -235,11 +239,11 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'd') { viewer->pos[0]+=0.05; }
 	if (key == 'm') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
-	// if (key == 'f') { highlight_cell_left(chessboard); }
-	// if (key == 'g') { highlight_cell_down(chessboard); }
-	// if (key == 'h') { highlight_cell_right(chessboard); }
-	// if (key == 't') { highlight_cell_up(chessboard); }
-	if (key == 'p') { select_cell(chessboard, CELL_CURRENT); }
+	// if (key == 'f') { highlight_cell_left(tetris_board); }
+	// if (key == 'g') { highlight_cell_down(tetris_board); }
+	// if (key == 'h') { highlight_cell_right(tetris_board); }
+	// if (key == 't') { highlight_cell_up(tetris_board); }
+	if (key == 'p') { select_cell(tetris_board, CELL_CURRENT); }
     if (key == 'x') { exit(0); }
 }
 void mouseMove(int x, int y) 

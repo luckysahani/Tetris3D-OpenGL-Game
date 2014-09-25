@@ -107,6 +107,7 @@ Block* create_block(BlockType type, PlayerType player)
 
     /* load the model in case */
     if (model_name) {
+    	// printf("should never get printed\n");
         block->model = (GLMmodel*) malloc(sizeof(GLMmodel));
 		block->model = glmReadOBJ(model_name);
     }

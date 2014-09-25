@@ -73,20 +73,20 @@ typedef struct {
 	PlayerType player_turn;
 
 	Block **board;
-} Chessboard;
+} Tetris_board;
 
-Chessboard *create_chessboard();
-void destroy_chessboard(Chessboard *cboard);
-void display_chessboard(Chessboard *cboard);
+Tetris_board *create_tetris_board();
+void destroy_tetris_board(Tetris_board *cboard);
+void display_tetris_board(Tetris_board *cboard);
 
-// void highlight_cell(Chessboard *cboard, int x, int y);
-// void highlight_cell_up(Chessboard *cboard);
-// void highlight_cell_down(Chessboard *cboard);
-// void highlight_cell_left(Chessboard *cboard);
-// void highlight_cell_right(Chessboard *cboard);
-void select_cell(Chessboard *cboard, int cell);
+// void highlight_cell(Tetris_board *cboard, int x, int y);
+// void highlight_cell_up(Tetris_board *cboard);
+// void highlight_cell_down(Tetris_board *cboard);
+// void highlight_cell_left(Tetris_board *cboard);
+// void highlight_cell_right(Tetris_board *cboard);
+void select_cell(Tetris_board *cboard, int cell);
 
-void chessboard_place_block(Chessboard *cboard, Block *block, int cell,int z);
-void chessboard_clear_cell(Chessboard *cboard, int cell);
+void tetris_board_place_block(Tetris_board *cboard, Block *block, int cell,int z);
+void tetris_board_clear_cell(Tetris_board *cboard, int cell);
 
 #endif

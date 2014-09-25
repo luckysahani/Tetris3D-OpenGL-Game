@@ -4,15 +4,15 @@
 
 #include "board.h"
 
-void destroy_chessboard(Chessboard *cboard)
+void destroy_tetris_board(Tetris_board *cboard)
 {
     //free(cboard->board); cboard->board = NULL;
 	free(cboard);        cboard = NULL;
 }
 
-Chessboard * create_chessboard()
+Tetris_board * create_tetris_board()
 {
-    Chessboard *cboard ;//= malloc(sizeof(Chessboard));
+    Tetris_board *cboard ;//= malloc(sizeof(Tetris_board));
 	cboard->pos[0] = 0;
 	cboard->pos[1] = 0;
 	cboard->pos[2] = 0;
@@ -46,25 +46,11 @@ Chessboard * create_chessboard()
 	return cboard;
 }
 
-// void chessboard_place_pawn(Chessboard *cboard, Pawn *p, int cell) {
-// 	/* invert the position of the pieces along the y-axis */
-
-// 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-// 	p->pos[1] = 0;
-// 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
-
-// 	cboard->board[cell] = p;
-// }
-
-void highlight_cell(Chessboard* c, int x, int y) {
+void highlight_cell(Tetris_board* c, int x, int y) {
     c->cell_highlighted = CELL(x,y,0);
 }
 
-// Pawn *get_pawn(Chessboard* c, int cell) {
-// 	return c->board[cell];
-// }
-
-void display_chessboard(Chessboard *cboard) {
+void display_tetris_board(Tetris_board *cboard) {
     glPushMatrix();
     glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
     GLdouble x, y;
@@ -116,54 +102,47 @@ void display_chessboard(Chessboard *cboard) {
     			glVertex3d(x, 0, y+step);
     		glEnd();
 
-			/* draw pawn at cell */
-			// Pawn *pawn = get_pawn(cboard, CELL(xcell, ycell));
-			// if (pawn) {
-			// 	display_pawn(pawn, 
-			// 		CELL(xcell, ycell) == cboard->cell_selected ? PAWN_SELECTED 
-			// 													: PAWN_NORMAL
-			// 	);
-			// }
+			
     	}
    }
    glPopMatrix();
 }
 
-void highlight_cell_up(Chessboard *cboard)
+void highlight_cell_up(Tetris_board *cboard)
 {
 	int celly = CELLY(cboard->cell_highlighted);
 	celly += celly == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
     cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
 }
-void highlight_cell_down(Chessboard *cboard)
+void highlight_cell_down(Tetris_board *cboard)
 {
 	int celly = CELLY(cboard->cell_highlighted);
 	celly -= celly == 0 ? -NUM_CELLS + 1 : 1; 
     cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
 }
-void highlight_cell_left(Chessboard *cboard)
+void highlight_cell_left(Tetris_board *cboard)
 {
 	int cellx = CELLX(cboard->cell_highlighted);
 	cellx += cellx == 0 ? NUM_CELLS-1 : -1; 
     cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
 }
-void highlight_cell_right(Chessboard *cboard)
+void highlight_cell_right(Tetris_board *cboard)
 {
 	int cellx = CELLX(cboard->cell_highlighted);
 	cellx += cellx == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
     cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
 }
 
-// void set_turn(Chessboard *cboard, PlayerType player) {
+// void set_turn(Tetris_board *cboard, PlayerType player) {
 // 	cboard->player_turn = player;
 // }
-// void flip_turn(Chessboard *cboard) {
+// void flip_turn(Tetris_board *cboard) {
 // 	cboard->player_turn = 
 // 		cboard->player_turn == WHITE ? BLACK
 // 												 : WHITE;
 // }
 
-void select_cell(Chessboard *cboard, int cell)
+void select_cell(Tetris_board *cboard, int cell)
 {
 	int cell_wish = cell == CELL_CURRENT ? cboard->cell_highlighted : cell;
 	//Pawn *p = get_pawn(cboard, cell_wish);
@@ -175,10 +154,10 @@ void select_cell(Chessboard *cboard, int cell)
 	// 	else {
 	// 		if(CELL_NONE != cboard->cell_selected) {
 	// 			/* opponent pawn selected -- take */
-	// 			chessboard_clear_cell(cboard, cell_wish);
+	// 			tetris_board_clear_cell(cboard, cell_wish);
 	// 			//Pawn *taker = get_pawn(cboard, cboard->cell_selected);
-	// 			chessboard_clear_cell(cboard, cboard->cell_selected);
-	// 			//chessboard_place_pawn(cboard, taker, cell_wish);;
+	// 			tetris_board_clear_cell(cboard, cboard->cell_selected);
+	// 			//tetris_board_place_pawn(cboard, taker, cell_wish);;
 	// 			cboard->cell_selected = CELL_NONE;
 	// 			flip_turn(cboard);
 	// 		}
@@ -189,15 +168,15 @@ void select_cell(Chessboard *cboard, int cell)
 	// 	if(CELL_NONE != cboard->cell_selected) {
 	// 		/* move */
 	// 		//Pawn *mover = get_pawn(cboard, cboard->cell_selected);
-	// 	    chessboard_clear_cell(cboard, cboard->cell_selected);
-	// 		//chessboard_place_pawn(cboard, mover, cell_wish);;
+	// 	    tetris_board_clear_cell(cboard, cboard->cell_selected);
+	// 		//tetris_board_place_pawn(cboard, mover, cell_wish);;
 	// 	    flip_turn(cboard);
 	// 	}
 	// 	cboard->cell_selected = CELL_NONE;
 	// }
 }
 
-void chessboard_clear_cell(Chessboard *cboard, int cell)
+void tetris_board_clear_cell(Tetris_board *cboard, int cell)
 {
 	//cboard->board[cell] = NULL;
 }
