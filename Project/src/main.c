@@ -154,32 +154,6 @@ void move_block_down_by_one_step()
 			chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
 			set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
 		}
-	// switch(k){
-	// case 1:
-	// 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-	// 	if(count==0)
-	// 	{
-	// 		chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
-	// 		set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-	// 	}
-	// 	break;
-	// case 2:
-	// 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-	// 	if(count==0)
-	// 	{
-	// 		chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
-	// 		set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-	// 	}
-	// 	break;
-	// case 3:
-	// 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-	// 	if(count==0)
-	// 	{
-	// 		chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
-	// 		set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
-	// 	} 
-	// 	break;
-	// }
 }
 void update_game()
 {
