@@ -46,8 +46,9 @@
 #define NUM_CELLS 8
 #define TOTAL_CELLS (NUM_CELLS*NUM_CELLS)
 #define CELL(x,y,z) (x+(NUM_CELLS*(y))+(z*NUM_CELLS*NUM_CELLS))
-#define CELLY(cell) ((int)((float)cell/(float)NUM_CELLS))
-#define CELLX(cell) (cell - (NUM_CELLS * CELLY(cell)))
+#define CELLZ(cell) ((int)((float)cell/(float)(NUM_CELLS*NUM_CELLS)))
+#define CELLY(cell) ((int)(((float)cell/(float)NUM_CELLS)) - (NUM_CELLS * CELLZ(cell)))
+#define CELLX(cell) (cell - (NUM_CELLS * CELLY(cell)) - (NUM_CELLS*NUM_CELLS * CELLZ(cell)))
 #define CELL_CURRENT -2
 #define CELL_NONE -1
 #define R 0
@@ -78,14 +79,14 @@ Chessboard *create_chessboard();
 void destroy_chessboard(Chessboard *cboard);
 void display_chessboard(Chessboard *cboard);
 
-void highlight_cell(Chessboard *cboard, int x, int y);
-void highlight_cell_up(Chessboard *cboard);
-void highlight_cell_down(Chessboard *cboard);
-void highlight_cell_left(Chessboard *cboard);
-void highlight_cell_right(Chessboard *cboard);
+// void highlight_cell(Chessboard *cboard, int x, int y);
+// void highlight_cell_up(Chessboard *cboard);
+// void highlight_cell_down(Chessboard *cboard);
+// void highlight_cell_left(Chessboard *cboard);
+// void highlight_cell_right(Chessboard *cboard);
 void select_cell(Chessboard *cboard, int cell);
 
-void chessboard_place_block(Chessboard *cboard, Block *block, int cell);
+void chessboard_place_block(Chessboard *cboard, Block *block, int cell,int z);
 void chessboard_clear_cell(Chessboard *cboard, int cell);
 
 #endif

@@ -46,13 +46,16 @@ Chessboard * create_chessboard()
 
 	return cboard;
 }
+// void chessboard_place_block_at_boardvalue(Chessboard *cboard, Block *p, int cell ,int k)
+// {
 
-void chessboard_place_block(Chessboard *cboard, Block *p, int cell ) {
+// }
+void chessboard_place_block(Chessboard *cboard, Block *p, int cell,int z ) {
 	/* invert the position of the pieces along the y-axis */
-
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
 	p->pos[1] = 0.5;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
+	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
 	cboard->board[cell] = p;
 }
@@ -80,7 +83,7 @@ void reduce_z_regularly(Chessboard *cboard, Block *p, int cell)
 	}
 	else
 	{
-		p->pos[1]=0;
+		// p->pos[1]=0;
 	}
 }
 void set_z_to_zero(Chessboard *cboard, Block *p, int cell,int k)
@@ -88,17 +91,19 @@ void set_z_to_zero(Chessboard *cboard, Block *p, int cell,int k)
 	float temp=k;
 	temp=temp/10;
 	printf("setting p->pos[1] to %d and temp =%f\n",k ,temp);
+	p->pos[1]=temp;
+	printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
-	p->pos[1]=0;
+	
 	
 }
 
 
 
 
-void highlight_cell(Chessboard* c, int x, int y) {
-    c->cell_highlighted = CELL(x,y,0);
-}
+// void highlight_cell(Chessboard* c, int x, int y) {
+//     c->cell_highlighted = CELL(x,y,0);
+// }
 
 Block *get_block(Chessboard* c, int cell) {
 	return c->board[cell];
@@ -167,30 +172,30 @@ void display_chessboard(Chessboard *cboard) {
    glPopMatrix();
 }
 
-void highlight_cell_up(Chessboard *cboard)
-{
-	int celly = CELLY(cboard->cell_highlighted);
-	celly += celly == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
-    cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
-}
-void highlight_cell_down(Chessboard *cboard)
-{
-	int celly = CELLY(cboard->cell_highlighted);
-	celly -= celly == 0 ? -NUM_CELLS + 1 : 1; 
-    cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
-}
-void highlight_cell_left(Chessboard *cboard)
-{
-	int cellx = CELLX(cboard->cell_highlighted);
-	cellx += cellx == 0 ? NUM_CELLS-1 : -1; 
-    cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
-}
-void highlight_cell_right(Chessboard *cboard)
-{
-	int cellx = CELLX(cboard->cell_highlighted);
-	cellx += cellx == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
-    cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
-}
+// void highlight_cell_up(Chessboard *cboard)
+// {
+// 	int celly = CELLY(cboard->cell_highlighted);
+// 	celly += celly == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
+//     cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
+// }
+// void highlight_cell_down(Chessboard *cboard)
+// {
+// 	int celly = CELLY(cboard->cell_highlighted);
+// 	celly -= celly == 0 ? -NUM_CELLS + 1 : 1; 
+//     cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
+// }
+// void highlight_cell_left(Chessboard *cboard)
+// {
+// 	int cellx = CELLX(cboard->cell_highlighted);
+// 	cellx += cellx == 0 ? NUM_CELLS-1 : -1; 
+//     cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
+// }
+// void highlight_cell_right(Chessboard *cboard)
+// {
+// 	int cellx = CELLX(cboard->cell_highlighted);
+// 	cellx += cellx == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
+//     cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
+// }
 
 void set_turn(Chessboard *cboard, PlayerType player) {
 	cboard->player_turn = player;
@@ -216,7 +221,7 @@ void select_cell(Chessboard *cboard, int cell)
 				chessboard_clear_cell(cboard, cell_wish);
 				Block *taker = get_block(cboard, cboard->cell_selected);
 				chessboard_clear_cell(cboard, cboard->cell_selected);
-				chessboard_place_block(cboard, taker, cell_wish);;
+				chessboard_place_block(cboard, taker, cell_wish,0);;
 				cboard->cell_selected = CELL_NONE;
 				//flip_turn(cboard);
 			}
@@ -228,7 +233,7 @@ void select_cell(Chessboard *cboard, int cell)
 			/* move */
 			Block *mover = get_block(cboard, cboard->cell_selected);
 		    chessboard_clear_cell(cboard, cboard->cell_selected);
-			chessboard_place_block(cboard, mover, cell_wish);;
+			chessboard_place_block(cboard, mover, cell_wish,0);
 		    flip_turn(cboard);
 		}
 		cboard->cell_selected = CELL_NONE;
@@ -237,5 +242,5 @@ void select_cell(Chessboard *cboard, int cell)
 
 void chessboard_clear_cell(Chessboard *cboard, int cell)
 {
-	cboard->board[cell] = NULL;
+	// cboard->board[cell] = NULL;
 }

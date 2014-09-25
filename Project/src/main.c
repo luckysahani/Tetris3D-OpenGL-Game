@@ -13,7 +13,7 @@
 #include "table.h"
 #include "viewer.h"
 #include "glm.h"
-
+#include <stdlib.h> 
 #define HEIGHT 800
 #define WIDTH 800
 
@@ -128,7 +128,7 @@ void create_squareshape_block()
 	printf("SquareShape created at x_temp==%d,y1==%d and board_staus=%d\n",x_temp,y_temp,board_status[x_temp][y_temp] );
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(squareshape, color_block);
 	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
 void create_ishape_block()
 {
@@ -140,7 +140,7 @@ void create_ishape_block()
 	printf("Ishape created at x_temp==%d,y_temp==%d and board_staus=%d\n",x_temp,y_temp,board_status[x_temp][y_temp] );
 	count_ishape++;
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(ishape, color_block);
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
 void create_cube_block()
 {
@@ -156,7 +156,7 @@ void create_cube_block()
 	count_cube++;
 	block[x_temp][y_temp][board_status[x_temp][y_temp]] = create_block(cube, color_block);
 	glmScale(block[x_temp][y_temp][board_status[x_temp][y_temp]]->model,0.6);
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
+	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 }
 
 void move_block_down_by_one_step()
@@ -167,6 +167,7 @@ void move_block_down_by_one_step()
 }
 void increment_board_status()
 {
+	// chessboard_place_block_at_boardvalue(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]),board_status[x_temp][y_temp]);
 	//increment all the z parts by 1
 	board_status[x_temp][y_temp]++;
 	printf("board_status with x_temp=%d,y_temp=%d and board_status=%d\n\n",x_temp,y_temp,board_status[x_temp][y_temp]);
@@ -174,7 +175,7 @@ void increment_board_status()
 }
 void place_block()
 {
-	chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
+	// chessboard_place_block(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp, y_temp,board_status[x_temp][y_temp]));
 	set_z_to_zero(chessboard, block[x_temp][y_temp][board_status[x_temp][y_temp]], CELL(x_temp,y_temp,board_status[x_temp][y_temp]),(board_status[x_temp][y_temp]));
 	increment_board_status();
 }
@@ -182,6 +183,12 @@ void place_block()
 void update_game()
 {
 	// printf("count==%f\n",count);
+	if(board_status[x_temp][y_temp]>5){
+			printf("Game over\n");
+			// delete block;
+			// free(block);
+			exit(0);
+		}
 	if(flag==1)
 	{
 		printf("\n\n");
@@ -190,6 +197,7 @@ void update_game()
 		k=rand()%3+ 1;//k=3;
 		x_temp=rand()%8 ;
 		y_temp=rand()%8 ;
+		x_temp=3;y_temp=5;
 		color_block=rand()%3;
 		if(k==1){create_squareshape_block();}
 		if(k==2){create_ishape_block();}
@@ -206,6 +214,7 @@ void update_game()
 		place_block();
 		if(board_status[x_temp][y_temp]>5){
 			printf("Game over\n");
+			exit(0);
 		}
 		flag=1;
 	}
@@ -226,10 +235,10 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'd') { viewer->pos[0]+=0.05; }
 	if (key == 'm') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
-	if (key == 'f') { highlight_cell_left(chessboard); }
-	if (key == 'g') { highlight_cell_down(chessboard); }
-	if (key == 'h') { highlight_cell_right(chessboard); }
-	if (key == 't') { highlight_cell_up(chessboard); }
+	// if (key == 'f') { highlight_cell_left(chessboard); }
+	// if (key == 'g') { highlight_cell_down(chessboard); }
+	// if (key == 'h') { highlight_cell_right(chessboard); }
+	// if (key == 't') { highlight_cell_up(chessboard); }
 	if (key == 'p') { select_cell(chessboard, CELL_CURRENT); }
     if (key == 'x') { exit(0); }
 }
