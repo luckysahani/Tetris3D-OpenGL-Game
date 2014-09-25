@@ -18,7 +18,7 @@
 #define WIDTH 800
 
 Chessboard *chessboard;
-Block *block[1000]; 
+Block *block[8][8]; 
 Table *table;
 
 /* some lighting */
@@ -51,54 +51,8 @@ void init() {
     /* the chessboard and the table and the player (viewer)*/
 	chessboard = create_chessboard();
 	table      = create_table();
-
-	/* place the chessboard on the table */
 	place_on_model(chessboard->pos, (Placeable *) table);
-
 	viewer = create_viewer((Placeable *)chessboard);
-
-	/* the chess set */
-	int player, i,i1;
-	// for (player = 0; player < PLAYER_TYPE_COUNT; player++) {
-		// for (i=0;  i<8;  i++) block[player][i] = create_block(PAWN_TYPE_PAWN, player);
-		// for (i=8;  i<10; i++) block[player][i] = create_block(PAWN_TYPE_ROOK, player);
-		// for (i=10; i<12; i++) block[player][i] = create_block(PAWN_TYPE_KNIGHT, player);
-		// for (i=12; i<14; i++) block[player][i] = create_block(squareshape, player);
-		// block[player][i] = create_block(squareshape, player);
-		// block[player][i] = create_block(ishape, player);
-	// }
-	// for (i1 = 0; i1 < 300; ++i1)
-	// {
-	// 	glmScale(block[i1]->model,0.6);
-	// 	glmScale(block[BLACK][i1]->model,0.6);
-	// }
-	//glmScale(block[12],0.5);
-	
-	/* place all the pieces */
-	int x, y;
-	/* -- white -- */
-	// chessboard_place_block(chessboard, block[8],  CELL(0, rand()/RAND_MAX*8));  /*rooks */
-	// chessboard_place_block(chessboard, block[9],  CELL(7, rand()/RAND_MAX*8));
-	// chessboard_place_block(chessboard, block[10], CELL(1, rand()/RAND_MAX*8));  knight 
-	// chessboard_place_block(chessboard, block[11], CELL(6, rand()/RAND_MAX*8));
-	//chessboard_place_block(chessboard, block[12], CELL(2, 3)); /* bishop */
-	//chessboard_place_block(chessboard, block[13], CELL(5, 6));
-	// chessboard_place_block(chessboard, block[14], CELL(3, rand()/RAND_MAX*8)); /* queen */
-	//chessboard_place_block(chessboard, block[15],CELL(3,1)); /* king */
-//	for (x=0; x<5; x++){chessboard_place_block(chessboard, block[x], CELL(x, rand()/RAND_MAX*8));}
-	
-	/* -- black -- */
-	// rand()/RAND_MAX*8=7; chessboard_place_block(chessboard, block[BLACK][8],  CELL(0, rand()/RAND_MAX*8)); /* rooks */
-	//      chessboard_place_block(chessboard, block[BLACK][9],  CELL(7, rand()/RAND_MAX*8));
-	//      chessboard_place_block(chessboard, block[BLACK][10], CELL(1, rand()/RAND_MAX*8)); /* knight */
-	//      chessboard_place_block(chessboard, block[BLACK][11], CELL(6, rand()/RAND_MAX*8));
-	//      chessboard_place_block(chessboard, block[BLACK][12], CELL(2, rand()/RAND_MAX*8)); /* bishop */
-	//      chessboard_place_block(chessboard, block[BLACK][13], CELL(5, rand()/RAND_MAX*8));
-	//      chessboard_place_block(chessboard, block[BLACK][14], CELL(3, rand()/RAND_MAX*8)); /* queen */
-	//      chessboard_place_block(chessboard, block[BLACK][15], CELL(4, rand()/RAND_MAX*8)); /* king */
-	//		for (x=0; x<2; x++) chessboard_place_block(chessboard, block[BLACK][x], CELL(x, rand()/RAND_MAX*8));
-	
-    /* opengl initialisations */
 	glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
@@ -160,9 +114,9 @@ void create_squareshape_block()
 {
 	count_squareshape++;
 	printf("SquareShape created at x_temp==%d,y1==%d\n",x_temp,y_temp );
-	block[count_block] = create_block(squareshape, color_block);
-	glmScale(block[count_block]->model,0.6);
-	chessboard_place_block(chessboard, block[count_block], CELL(x_temp, y_temp));
+	block[x_temp][y_temp] = create_block(squareshape, color_block);
+	glmScale(block[x_temp][y_temp]->model,0.6);
+	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
 }
 void create_ishape_block()
 {
@@ -172,8 +126,8 @@ void create_ishape_block()
 	}
 	printf("Ishape craeted at x_temp==%d,y1==%d\n",x_temp,y_temp );
 	count_ishape++;
-	block[count_block] = create_block(ishape, color_block);
-	chessboard_place_block(chessboard, block[count_block], CELL(x_temp, y_temp));
+	block[x_temp][y_temp] = create_block(ishape, color_block);
+	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
 }
 void create_cube_block()
 {
@@ -187,39 +141,45 @@ void create_cube_block()
 	}
 	printf("Cube created at x_temp==%d,y1==%d\n",x_temp,y_temp );
 	count_cube++;
-	block[count_block] = create_block(cube, color_block);
-	glmScale(block[count_block]->model,0.6);
-	chessboard_place_block(chessboard, block[count_block], CELL(x_temp, y_temp));
+	block[x_temp][y_temp] = create_block(cube, color_block);
+	glmScale(block[x_temp][y_temp]->model,0.6);
+	chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
 }
 void move_block_down_by_one_step()
 {
 	// printf("Movind doesn on x_temp==%d,y1==%d\n",x_temp,y_temp );
-	switch(k){
-	case 1:
-		reduce_z_regularly(chessboard, block[count_block], CELL(x_temp,y_temp));
+	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
 		if(count==0)
 		{
-			chessboard_place_block(chessboard, block[count_block], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[count_block], CELL(x_temp,y_temp));
+			chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+			set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
 		}
-		break;
-	case 2:
-		reduce_z_regularly(chessboard, block[count_block], CELL(x_temp,y_temp));
-		if(count==0)
-		{
-			chessboard_place_block(chessboard, block[count_block], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[count_block], CELL(x_temp,y_temp));
-		}
-		break;
-	case 3:
-		reduce_z_regularly(chessboard, block[count_block], CELL(x_temp,y_temp));
-		if(count==0)
-		{
-			chessboard_place_block(chessboard, block[count_block], CELL(x_temp, y_temp));
-			set_z_to_zero(chessboard, block[count_block], CELL(x_temp,y_temp));
-		} 
-		break;
-	}
+	// switch(k){
+	// case 1:
+	// 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	// 	if(count==0)
+	// 	{
+	// 		chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	// 		set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	// 	}
+	// 	break;
+	// case 2:
+	// 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	// 	if(count==0)
+	// 	{
+	// 		chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	// 		set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	// 	}
+	// 	break;
+	// case 3:
+	// 	reduce_z_regularly(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	// 	if(count==0)
+	// 	{
+	// 		chessboard_place_block(chessboard, block[x_temp][y_temp], CELL(x_temp, y_temp));
+	// 		set_z_to_zero(chessboard, block[x_temp][y_temp], CELL(x_temp,y_temp));
+	// 	} 
+	// 	break;
+	// }
 }
 void update_game()
 {
