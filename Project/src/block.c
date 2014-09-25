@@ -23,16 +23,16 @@ char* _get_model_name(Block *block, PlayerType player)
 
 
 
-		case PAWN_TYPE_QUEEN: 
+		case cube: 
 			model_name = "objs/3dsquare.obj";
 			block->height = 0.05;
 		break;
-        case PAWN_TYPE_BISHOP: 
+        case squareshape: 
 			model_name = "objs/squareshape.obj";
 			block->height = 0.05;
 		break;
         
-        case PAWN_TYPE_KING: 
+        case ishape: 
 			model_name = "objs/ishape.obj";
 			block->height = 0.05;
 		break;

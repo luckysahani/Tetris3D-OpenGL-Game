@@ -28,10 +28,10 @@ typedef enum player_type_t {
 typedef enum block_type_t {
 	PAWN_TYPE_PAWN,
 	PAWN_TYPE_KNIGHT,
-	PAWN_TYPE_BISHOP,
+	squareshape,
 	PAWN_TYPE_ROOK,
-	PAWN_TYPE_QUEEN,
-	PAWN_TYPE_KING,
+	cube,
+	ishape,
 	PAWN_TYPE_COUNT,
 } BlockType;
 

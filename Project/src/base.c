@@ -72,7 +72,7 @@ void chessboard_place_block(Chessboard *cboard, Block *p, int cell ) {
 // 	p->pos[1] = z_val;
 // 	printf("z_val==%f\n",z_val);
 // }
-void update_z(Chessboard *cboard, Block *p, int cell)
+void reduce_z_regularly(Chessboard *cboard, Block *p, int cell)
 {
 	if(p->pos[1]>0.1)
 	{
@@ -83,7 +83,7 @@ void update_z(Chessboard *cboard, Block *p, int cell)
 		p->pos[1]=0;
 	}
 }
-void update_z2(Chessboard *cboard, Block *p, int cell)
+void set_z_to_zero(Chessboard *cboard, Block *p, int cell)
 {
 	
 	p->pos[1]=0;
