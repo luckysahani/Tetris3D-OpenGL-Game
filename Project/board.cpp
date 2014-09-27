@@ -178,5 +178,5 @@ void select_cell(Tetris_board *cboard, int cell)
 
 void tetris_board_clear_cell(Tetris_board *cboard, int cell)
 {
-	//cboard->board[cell] = NULL;
+	cboard->board[cell] = NULL;
 }

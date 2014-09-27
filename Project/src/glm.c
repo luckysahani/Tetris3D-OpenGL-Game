@@ -112,6 +112,13 @@ glmEqual(GLfloat* u, GLfloat* v, GLfloat epsilon)
   {
     return GL_TRUE;
   }
+  // if (glmAbs(u[0] - v[0]) ==0 &&
+  //     glmAbs(u[1] - v[1]) ==0 &&
+  //     glmAbs(u[2] - v[2]) ==0) 
+  // {
+  //   return GL_TRUE;
+  // }
+
   return GL_FALSE;
 }
 
@@ -153,7 +160,7 @@ glmWeldVectors(GLfloat* vectors, GLuint* numvectors, GLfloat epsilon)
        index into the new copies array */
     vectors[3 * i + 0] = (GLfloat)j;
   }
-
+  printf("Number of copied vextors=%d\n",copied);
   *numvectors = copied-1;
   return copies;
 }

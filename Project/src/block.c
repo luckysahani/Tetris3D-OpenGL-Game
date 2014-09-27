@@ -113,6 +113,80 @@ Block* create_block(BlockType type, PlayerType player)
     }
 	return block;
 }
+Block* set_block(BlockType type, PlayerType player,Block *block2)
+{
+    Block *block = malloc(sizeof(Block));
+    block=block2;
+	// block->pos[0] = 0;
+	// block->pos[1] = 0;
+	// block->pos[2] = 0;
+	// block->width = 0.05f;
+
+	/* block colors */
+	if (player == BLACK) {
+		block->color[R] = 0.01f;
+		block->color[G] = 0.01f;
+		block->color[B] = 0.01f;
+		block->color[A] = 1.0f;
+	}
+	else if (player == WHITE) {
+		block->color[R] = 1.0f;
+		block->color[G] = 1.0f;
+		block->color[B] = 1.0f;
+		block->color[A] = 1.0f;
+	}
+	//255, 236, 148
+	else if (player == LIGHT_YELLOW) {
+		block->color[R] = 1.0f;
+		block->color[G] = 0.95f;
+		block->color[B] = 0.6f;
+		block->color[A] = 1.0f;
+	}
+	else if (player == GREY) {
+		//192, 188, 182
+		block->color[R] = 0.752f;
+		block->color[G] = 0.745f;
+		block->color[B] = 0.739f;
+		block->color[A] = 1.0f;
+	}
+	else if (player == LIGHT_GREEN) {
+		block->color[R] = 0.690f;
+		block->color[G] = 0.898f;
+		block->color[B] = 0.486f;
+		block->color[A] = 1.0f;
+	}
+	else if (player == LIGHT_BLUE) {
+		//155, 209, 250
+		block->color[R] = 0.607f;
+		block->color[G] = 0.819f;
+		block->color[B] = 0.98f;
+		block->color[A] = 1.0f;
+	}
+
+	else {
+		block->color[R] = 0.09f;
+		block->color[G] = 0.09f;
+		block->color[B] = 0.09f;
+		block->color[A] = 1.0f;
+	}
+	block->color_selected[R] = 0.05f;
+	block->color_selected[G] = 0.05f;
+	block->color_selected[B] = 0.08f;
+
+	block->type = type;
+	block->player = player;
+	block->height = 0.1f + ((GLdouble)type/(GLdouble)PAWN_TYPE_COUNT);
+
+    char *model_name = _get_model_name(block, player);
+
+    /* load the model in case */
+    if (model_name) {
+    	// printf("should never get printed\n");
+        block->model = (GLMmodel*) malloc(sizeof(GLMmodel));
+		block->model = glmReadOBJ(model_name);
+    }
+	return block;
+}
 
 
 void display_block(Block *block, BlockState state) {

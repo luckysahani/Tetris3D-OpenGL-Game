@@ -251,9 +251,9 @@ glmDraw(GLMmodel* model, GLuint mode);
  *            GLM_SMOOTH  -  render with vertex normals
  *            GLM_TEXTURE -  render with texture coords
  *            GLM_FLAT and GLM_SMOOTH should not both be specified.  
- */
-GLuint
-glmList(GLMmodel* model, GLuint mode);
+//  */
+// GLuint
+// glmList(GLMmodel* model, GLuint mode);
 
 /* glmWeld: eliminate (weld) vectors that are within an epsilon of
  * each other.

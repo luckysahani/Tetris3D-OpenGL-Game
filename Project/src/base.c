@@ -51,7 +51,7 @@ void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int 
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
 	p->pos[1] = (float)((float)(k)/10);//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
-	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
+	//printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
 	cboard->board[cell] = p;
 }
@@ -111,6 +111,7 @@ void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
 // }
 
 Block *get_block(Tetris_board* c, int cell) {
+	// printf("Asking for block\n");
 	return c->board[cell];
 }
 
@@ -123,6 +124,7 @@ void display_tetris_board(Tetris_board *cboard) {
 	int xcell = -1;
 	int ycell;
 	int zcell=0;
+	int i;
 	GLdouble step = cboard->cell_width;
     for (x=-0.5f; x<0.5f; x+=step){
 		xcell++;
@@ -131,6 +133,7 @@ void display_tetris_board(Tetris_board *cboard) {
     	color = 1 - color;
     	for (y=-0.5f; y<0.5f; y+=step){
 			ycell--;
+
 
     		/* flip color */
     		color = 1 - color;
@@ -167,15 +170,23 @@ void display_tetris_board(Tetris_board *cboard) {
     		glEnd();
 
 			/* draw block at cell */
-			Block *block = get_block(cboard, CELL(xcell, ycell,zcell));
-			if (block) {
-				display_block(block, CELL(xcell, ycell,zcell) == cboard->cell_selected ? PAWN_SELECTED : PAWN_NORMAL
-				);
+			// printf("just entered\n");
+			for ( i = 0; i < 2; i++)
+			{
+				/* code */
+				// printf("entering inside\n");
+			
+				Block *block = get_block(cboard, CELL(xcell, ycell,0));
+				if (block) {
+				display_block(block, CELL(xcell, ycell,i)	);
+				}
 			}
     	}
    }
+   printf("Displaying board\n");
    glPopMatrix();
 }
+
 
 // void highlight_cell_up(Tetris_board *cboard)
 // {
@@ -204,15 +215,17 @@ void display_tetris_board(Tetris_board *cboard) {
 
 void set_turn(Tetris_board *cboard, PlayerType player) {
 	cboard->player_turn = player;
+	printf("Player turn changed\n");
 }
 void flip_turn(Tetris_board *cboard) {
 	cboard->player_turn = 
-		cboard->player_turn == WHITE ? BLACK
-												 : WHITE;
+		cboard->player_turn == WHITE ? BLACK: WHITE;
+		printf("Flipped\n");
 }
 
 void select_cell(Tetris_board *cboard, int cell)
 {
+	printf("Selectcell called\n");
 	int cell_wish = cell == CELL_CURRENT ? cboard->cell_highlighted : cell;
 	Block *p = get_block(cboard, cell_wish);
 	if (p) {
@@ -248,4 +261,5 @@ void select_cell(Tetris_board *cboard, int cell)
 void tetris_board_clear_cell(Tetris_board *cboard, int cell)
 {
 	// cboard->board[cell] = NULL;
+	printf("Clearing\n");
 }
