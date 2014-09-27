@@ -137,13 +137,6 @@ void reshape (int w, int h) {
 
 
 
-
-
-
-
-
-
-
 //This creates an Square shape Object
 void create_squareshape_block()
 {
@@ -154,6 +147,11 @@ void create_squareshape_block()
 	glmScale(block[x_temp][y_temp][current_z]->model,0.6);
 	tetris_board_place_block(tetris_board, block[x_temp][y_temp][current_z], CELL(x_temp, y_temp,current_z),current_z);
 }
+
+
+
+
+
 //This creates an Ishape Object
 void create_ishape_block()
 {
@@ -166,6 +164,11 @@ void create_ishape_block()
 	block[x_temp][y_temp][current_z]= set_block(ishape, color_block,block[x_temp][y_temp][current_z]);
 	tetris_board_place_block(tetris_board, block[x_temp][y_temp][current_z], CELL(x_temp, y_temp,current_z),current_z);
 }
+
+
+
+
+
 //This creates an Cube Object
 void create_cube_block()
 {
@@ -191,6 +194,12 @@ void move_block_down_by_one_step()
 	reduce_z_regularly(tetris_board, block[x_temp][y_temp][current_z], CELL(x_temp,y_temp,current_z));
 
 }
+
+
+
+
+
+
 //Update board status by 1 i.e now the blocks should come above the already placed block
 void increment_board_status()
 {
@@ -200,6 +209,10 @@ void increment_board_status()
 	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
 
 }
+
+
+
+
 //Place the block at the bottom most possible and then increment the board status
 void place_block()
 {
@@ -207,6 +220,11 @@ void place_block()
 	set_z_to_zero(tetris_board, block[x_temp][y_temp][current_z], CELL(x_temp,y_temp,current_z),(current_z));
 	increment_board_status();
 }
+
+
+
+
+
 //The main code is implemented here
 void update_game()
 {
