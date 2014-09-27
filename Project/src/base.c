@@ -171,7 +171,7 @@ void display_tetris_board(Tetris_board *cboard) {
 
 			/* draw block at cell */
 			// printf("just entered\n");
-			for ( i = 0; i < 2; i++)
+			for ( i = 0; i < 6; i++)
 			{
 				/* code */
 				// printf("entering inside\n");

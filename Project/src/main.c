@@ -186,6 +186,10 @@ void create_cube_block()
 	glmScale(block[x_temp][y_temp][current_z]->model,0.6);
 	tetris_board_place_block(tetris_board, block[x_temp][y_temp][current_z], CELL(x_temp, y_temp,current_z),current_z);
 }
+
+
+
+
 //To move the block by 0.1 units downward
 void move_block_down_by_one_step()
 {
