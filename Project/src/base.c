@@ -170,6 +170,12 @@ void display_tetris_board(Tetris_board *cboard) {
     		glEnd();
 
 			/* draw block at cell */
+
+
+//			ERROR PART
+
+
+
 			// printf("just entered\n");
 			for ( i = 0; i < 6; i++)
 			{
@@ -181,6 +187,9 @@ void display_tetris_board(Tetris_board *cboard) {
 				display_block(block, CELL(xcell, ycell,i)	);
 				}
 			}
+
+
+//			ERROR PART OVER
     	}
    }
    printf("Displaying board\n");
