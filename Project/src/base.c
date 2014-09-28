@@ -202,7 +202,33 @@ void display_tetris_board(Tetris_board *cboard) {
 //			ERROR PART OVER
     	}
    }
-   printf("Displaying board\n");
+
+
+
+
+ //   xcell = -1;;
+ //   for (x=-0.5f; x<0.5f; x+=step){
+	// 	xcell++;
+	// 	ycell = NUM_CELLS;
+
+ //    	// color = 1 - color;
+ //    	for (y=-0.5f; y<0.5f; y+=step){
+	// 		ycell--;
+	// 		for ( i = 0; i < 1; i++)
+	// 		{
+	// 			/* code */
+	// 			// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
+			
+	// 			// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
+	// 			if (cboard->board[CELL(xcell, ycell,i)]) {
+	// 				Block *block = cboard->board[CELL(xcell, ycell,i)];
+	// 				// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+	// 				display_block(block, CELL(xcell, ycell,i)	);
+	// 			}
+	// 		}
+	// 	}
+	// }
+   // printf("Displaying board\n");
    glPopMatrix();
 }
 
