@@ -192,7 +192,7 @@ void display_tetris_board(Tetris_board *cboard) {
 			
 				// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
 				if (cboard->board[CELL(xcell, ycell,i)]) {
-					// Block *block = cboard->board[CELL(xcell, ycell,i)];
+					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
