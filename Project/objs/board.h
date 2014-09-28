@@ -36,9 +36,9 @@ typedef struct {
     int cell_selected;
     GLfloat color_selected[4];
 
-	//PlayerType player_turn;
+	PlayerType player_turn;
 
-	//Pawn **board;
+	Board **board;
 } Tetris_board;
 
 Tetris_board *create_tetris_board();

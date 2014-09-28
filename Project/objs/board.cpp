@@ -101,7 +101,7 @@ void display_tetris_board(Tetris_board *cboard) {
     			glVertex3d(x+step, 0, y+step);
     			glVertex3d(x, 0, y+step);
     		glEnd();
-
+    		printf("hi\n");
 			
     	}
    }

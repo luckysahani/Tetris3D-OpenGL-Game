@@ -112,6 +112,14 @@ void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
 
 Block *get_block(Tetris_board* c, int cell) {
 	// printf("Asking for block\n");
+	if(c->board[cell])
+	{
+		printf("Block exists at cell %d\n",cell );
+	}
+	else
+	{
+		// printf("Block does not exists at cell %d\n",cell );
+	}
 	return c->board[cell];
 }
 
@@ -177,14 +185,16 @@ void display_tetris_board(Tetris_board *cboard) {
 
 
 			// printf("just entered\n");
-			for ( i = 0; i < 6; i++)
+			for ( i = 0; i < 1; i++)
 			{
 				/* code */
-				// printf("entering inside\n");
+				// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
 			
-				Block *block = get_block(cboard, CELL(xcell, ycell,0));
-				if (block) {
-				display_block(block, CELL(xcell, ycell,i)	);
+				// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
+				if (cboard->board[CELL(xcell, ycell,i)]) {
+					// Block *block = cboard->board[CELL(xcell, ycell,i)];
+					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+					display_block(block, CELL(xcell, ycell,i)	);
 				}
 			}
 

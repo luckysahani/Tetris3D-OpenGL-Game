@@ -1,36 +1,3 @@
-// #ifdef __APPLE__
-//     #include <GLUT/glut.h>
-// #else
-//     #include <GL/glut.h>
-// #endif
-
-// #include "block.h"
-
-// #ifndef BASE_h
-// #define BASE_h
-
-// #define LENGTH_BASE	8
-// #define WIDTH_BASE 	8
-
-// #define CELL(x,y) (x+(WIDTH_BASE*(y)))
-// #define CELLY(cell) ((int)((float)cell/(float)WIDTH_BASE))
-// #define CELLX(cell) (cell - (LENGTH_BASE) * CELLY(cell)))
-// #define CELL_CURRENT -2
-// #define CELL_NONE -1
-// #define R 0
-// #define G 1
-// #define B 2
-// #define A 3
-
-// typedef struct {
-// 	GLdouble pos[3];
-
-// 	GLdouble cell_width;
-// 	GLDouble cell_length;
-
-
-// }
-
 #ifdef __APPLE__
     #include <GLUT/glut.h>
 #else
