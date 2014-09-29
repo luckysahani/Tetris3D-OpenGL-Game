@@ -228,6 +228,24 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
     		}
+    		if((board_status[xcell][ycell]>=5)&&(created_status[xcell][ycell]==1))
+    		{
+    			i=5;
+    			if (cboard->board[CELL(xcell, ycell,i)]) {
+					Block *block = cboard->board[CELL(xcell, ycell,i)];
+					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+					display_block(block, CELL(xcell, ycell,i)	);
+				}
+    		}
+    		if((board_status[xcell][ycell]>=6)&&(created_status[xcell][ycell]==1))
+    		{
+    			i=6;
+    			if (cboard->board[CELL(xcell, ycell,i)]) {
+					Block *block = cboard->board[CELL(xcell, ycell,i)];
+					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+					display_block(block, CELL(xcell, ycell,i)	);
+				}
+    		}
 
 			// printf("just entered\n");
 			// else

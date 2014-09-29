@@ -21,6 +21,10 @@ Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Table *table;
 
+// GLfloat ambientLight[4] = { 0.4f, 0.4f, 0.5f, 1.0f };
+// +GLfloat diffuseLight[4] = { 0.6f, 0.6f, 0.5f, 1.0f };
+// +GLfloat specularLight[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
+// +GLfloat position[4] = { 1.0f, 1.0f, 1.0f, 0.3f };
 /* some lighting */
 GLfloat ambientLightA[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 GLfloat diffuseLightA[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -33,6 +37,8 @@ GLfloat specularLightB[4] = { 0.0f, 0.0f, 0.0f, 0.4f };
 
 GLfloat lightPositionA[4] = { -100.0f, 100.0f, -100.0f, 1.0f };
 GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
+
+// GLfloat diffuseLightA[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
 
 /* the viewer */
 Viewer *viewer;
@@ -81,8 +87,8 @@ void init() {
 	// 	// pawn[player][15] = create_pawn(PAWN_TYPE_KING, player);
 	// }
 	
-
-	glClearColor (0.0f,0.2f,0.2f, 1.0);
+	glClearColor (0.8, 0.8, 1.0, 1.0);
+	// glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_NORMALIZE);
@@ -122,7 +128,7 @@ void display() {
    
    observe_from_viewer(viewer);
 
-   //display_table(table);
+   display_table(table);
    display_tetris_board(tetris_board,board_status,created_status);
 
    glFlush();
@@ -143,6 +149,11 @@ void reshape (int w, int h) {
 //This creates an Square shape Object
 void create_squareshape_block()
 {
+	while(y_temp==0 && x_temp==0)
+	{
+		y_temp=rand()%8;
+		x_temp=rand()%8;
+	}
 	int current_z=board_status[x_temp][y_temp];
 	// Block *square=current_block;
 	printf("SquareShape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
@@ -161,7 +172,7 @@ void create_ishape_block()
 {
 	while(y_temp>5)
 	{
-		y_temp=rand()%8+1;
+		y_temp=rand()%8;
 	}
 	int current_z=board_status[x_temp][y_temp];
 	printf("Ishape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
@@ -179,11 +190,16 @@ void create_cube_block()
 {
 	while(y_temp>6)
 	{
-		y_temp=rand()%8+1;
+		y_temp=rand()%8;
 	}
 	while(x_temp>6)
 	{
-		x_temp=rand()%8+1;
+		x_temp=rand()%8;
+	}
+	while(y_temp==0 && x_temp==0)
+	{
+		y_temp=rand()%8;
+		x_temp=rand()%8;
 	}
 	int current_z=board_status[x_temp][y_temp];
 	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
@@ -200,6 +216,10 @@ void create_cube_block()
 void move_block_down_by_one_step()
 {
 	int current_z=board_status[x_temp][y_temp];
+	if(current_z==6){
+		printf("Game over\n");
+		exit(0);
+	}
 	printf("moved down 1 step\n");
 	reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 
@@ -214,6 +234,27 @@ void move_block_down_by_one_step()
 void increment_board_status()
 {
 	// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
+	printf("Updating board statu\n");
+	int i,j;
+	// if(k==1){
+	// 	board_status[x_temp][y_temp]++;
+	// } 
+	// // else if(k==2){
+	// // 	board_status[x_temp][y_temp]++;
+	// // 	board_status[x_temp][y_temp+1]++;
+	// // 	// board_status[x_temp][y_temp+2]++;
+	// // }
+	// else if(k==3){
+	// 	for ( i = 0; i < 2; ++i)
+	// 	{
+	// 		for ( j = 0; j < 2; ++j)
+	// 		{
+	// 			board_status[x_temp+i][y_temp+j]++;
+	// 			printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
+	// 			// board_status[x_temp][y_temp]++;break;
+	// 		}
+	// 	}
+	// }
 	board_status[x_temp][y_temp]++;
 	int current_z=board_status[x_temp][y_temp];
 	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
@@ -240,7 +281,7 @@ void place_block()
 void update_game()
 {
 	int current_z=board_status[x_temp][y_temp];
-	if(current_z>5){
+	if(current_z==6){
 			printf("Game over\n");
 			exit(0);
 		}
@@ -255,7 +296,8 @@ void update_game()
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
 		// x_temp=3;y_temp=5;
-		k=1;
+		k=3;
+		// x_temp=0;y_temp=0;
 		color_block=rand()%3;					//color of block
 		if(k==1){create_squareshape_block();}	//Creates an square shape object
 		if(k==2){create_ishape_block();}		//creates an ishape object
@@ -272,7 +314,7 @@ void update_game()
 	if(count==current_z)		// if the block is just above another already placed block
 	{
 		place_block();							//place this new block
-		if(current_z>5){		//if the height of game>5 exit the game baby
+		if(current_z==5){		//if the height of game>5 exit the game baby
 			printf("Game over\n");
 			exit(0);
 		}
@@ -358,7 +400,7 @@ void mouseButton(int button, int state, int x, int y)
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-	glutInitWindowSize (800, 800);
+	glutInitWindowSize (1200, 800);
 	glutInitWindowPosition (100,100);
 	glutCreateWindow ("3D-Tetris");
 	glutDisplayFunc(display);
