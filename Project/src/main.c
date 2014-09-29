@@ -37,7 +37,7 @@ GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 /* the viewer */
 Viewer *viewer;
 
-
+int time_status=0;
 int isClicked_right,isClicked_left;
 int k=0;
 float height=0.5;
@@ -279,14 +279,17 @@ void update_game()
 
 
 
-
-
-
-
+// void timer2(int extra) {
+// 	glutPostRedisplay();
+// 	glutTimerFunc(1, timer2, 0);
+// 	// glutTimerFunc(200, update_game,0);	
+// }
 void timer(int extra) {
 	glutPostRedisplay();
-	glutTimerFunc(200, timer, 0);
-	glutTimerFunc(200, update_game,0);	
+	if(time_status==50){update_game();time_status=0;}
+	time_status++;
+	glutTimerFunc(1, timer, 0);
+	// glutTimerFunc(200, update_game,0);	
 }
 
 void keypressed(unsigned char key, int x, int y) {
