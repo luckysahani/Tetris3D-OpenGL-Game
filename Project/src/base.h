@@ -44,7 +44,7 @@ typedef struct {
 
 Tetris_board *create_tetris_board();
 void destroy_tetris_board(Tetris_board *cboard);
-void display_tetris_board(Tetris_board *cboard);
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8]);
 
 // void highlight_cell(Tetris_board *cboard, int x, int y);
 // void highlight_cell_up(Tetris_board *cboard);

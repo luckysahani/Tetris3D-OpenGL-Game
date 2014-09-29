@@ -48,7 +48,9 @@ int y_temp,temp=0;
 int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
 int color_block;
 int board_status[8][8];
+int created_status[8][8];
 Block *current_block;
+int x_prev,y_prev;
 
 void init() {
     /* the tetris_board and the table and the player (viewer)*/
@@ -121,7 +123,7 @@ void display() {
    observe_from_viewer(viewer);
 
    //display_table(table);
-   display_tetris_board(tetris_board);
+   display_tetris_board(tetris_board,board_status,created_status);
 
    glFlush();
    glutSwapBuffers();
@@ -212,7 +214,7 @@ void move_block_down_by_one_step()
 void increment_board_status()
 {
 	// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
-	// board_status[x_temp][y_temp]++;
+	board_status[x_temp][y_temp]++;
 	int current_z=board_status[x_temp][y_temp];
 	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
 
@@ -227,6 +229,7 @@ void place_block()
 	int current_z=board_status[x_temp][y_temp];
 	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
 	increment_board_status();
+	created_status[x_temp][y_temp]=0;
 }
 
 
@@ -243,26 +246,29 @@ void update_game()
 		}
 	if(flag==1)
 	{
-		// flip_turn(tetris_board);
+		// x_prev=x_temp;
+		// y_prev=x_temp;
 		printf("\n\n");
 		flag=0;
 		count=height/0.1;
 		k=rand()%3+ 1;//k=3;
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
-		// x_temp=3;y_temp=5;k=1;
+		// x_temp=3;y_temp=5;
+		k=1;
 		color_block=rand()%3;					//color of block
 		if(k==1){create_squareshape_block();}	//Creates an square shape object
 		if(k==2){create_ishape_block();}		//creates an ishape object
 		if(k==3){create_cube_block();}			//created an cube object
+		// board_status[x_prev][y_prev]++;
 		printf("Created the blocks\n");
+		created_status[x_temp][y_temp]=1;
 	}
 	else
 	{
 		count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
 	}
 	move_block_down_by_one_step();				//decrement z by 0.1
-	//flip_turn(tetris_board);
 	if(count==current_z)		// if the block is just above another already placed block
 	{
 		place_block();							//place this new block
@@ -281,7 +287,7 @@ void update_game()
 
 void timer(int extra) {
 	glutPostRedisplay();
-	if(time_status==50){update_game();time_status=0;}
+	if(time_status==10){update_game();time_status=0;}
 	time_status++;
 	glutTimerFunc(1, timer, 0);
 	// glutTimerFunc(200, update_game,0);	

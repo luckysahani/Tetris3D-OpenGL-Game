@@ -26,8 +26,7 @@ typedef enum player_type_t {
 	LIGHT_BLUE,
 	LIGHT_YELLOW,
 	GREY,
-	WHITE,
-	BLACK
+	WHITE
 
 	// PLAYER_TYPE_COUNT,
 } PlayerType;

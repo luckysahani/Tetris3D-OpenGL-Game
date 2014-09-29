@@ -49,13 +49,13 @@ Block* create_block(BlockType type, PlayerType player)
 	block->width = 0.05f;
 
 	/* block colors */
-	if (player == BLACK) {
-		block->color[R] = 0.01f;
-		block->color[G] = 0.01f;
-		block->color[B] = 0.01f;
-		block->color[A] = 1.0f;
-	}
-	else if (player == WHITE) {
+	// if (player == BLACK) {
+	// 	block->color[R] = 0.01f;
+	// 	block->color[G] = 0.01f;
+	// 	block->color[B] = 0.01f;
+	// 	block->color[A] = 1.0f;
+	// }
+	if (player == WHITE) {
 		block->color[R] = 1.0f;
 		block->color[G] = 1.0f;
 		block->color[B] = 1.0f;
@@ -89,12 +89,12 @@ Block* create_block(BlockType type, PlayerType player)
 		block->color[A] = 1.0f;
 	}
 
-	else {
-		block->color[R] = 0.09f;
-		block->color[G] = 0.09f;
-		block->color[B] = 0.09f;
-		block->color[A] = 1.0f;
-	}
+	// else {
+	// 	block->color[R] = 0.09f;
+	// 	block->color[G] = 0.09f;
+	// 	block->color[B] = 0.09f;
+	// 	block->color[A] = 1.0f;
+	// }
 	block->color_selected[R] = 0.05f;
 	block->color_selected[G] = 0.05f;
 	block->color_selected[B] = 0.08f;
@@ -123,13 +123,13 @@ Block* set_block(BlockType type, PlayerType player,Block *block2)
 	// block->width = 0.05f;
 
 	/* block colors */
-	if (player == BLACK) {
-		block->color[R] = 0.01f;
-		block->color[G] = 0.01f;
-		block->color[B] = 0.01f;
-		block->color[A] = 1.0f;
-	}
-	else if (player == WHITE) {
+	// if (player == BLACK) {
+	// 	block->color[R] = 0.01f;
+	// 	block->color[G] = 0.01f;
+	// 	block->color[B] = 0.01f;
+	// 	block->color[A] = 1.0f;
+	// }
+	if (player == WHITE) {
 		block->color[R] = 1.0f;
 		block->color[G] = 1.0f;
 		block->color[B] = 1.0f;
