@@ -279,11 +279,6 @@ void update_game()
 
 
 
-// void timer2(int extra) {
-// 	glutPostRedisplay();
-// 	glutTimerFunc(1, timer2, 0);
-// 	// glutTimerFunc(200, update_game,0);	
-// }
 void timer(int extra) {
 	glutPostRedisplay();
 	if(time_status==50){update_game();time_status=0;}
