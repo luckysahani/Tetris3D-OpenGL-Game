@@ -10,9 +10,11 @@
 #include "base.h"
 #include "block.h"
 #include "placer.h"
-#include <stdio.h>
 #include "viewer.h"
 #include "glm.h"
+#include "sound.hpp"
+
+#include <stdio.h>
 #include <stdlib.h> 
 #define HEIGHT 800
 #define WIDTH 800
@@ -59,6 +61,9 @@ int x_prev,y_prev;
 
 void init() {
     /* the tetris_board and the table and the player (viewer)*/
+    Sound::initialise();
+	Sound::load("yoursound.mp3");
+	Sound::play();
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
