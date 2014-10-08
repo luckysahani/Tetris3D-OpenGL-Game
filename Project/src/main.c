@@ -58,10 +58,28 @@ int board_status[8][8];
 int created_status[8][8];
 Block *current_block;
 int x_prev,y_prev;
+GLuint texture;
+
+
+
+ALuint buffer, source; 		
+void loadSound(){		
+	buffer = alutCreateBufferFromFile("~/cs360/Project/src/wav/3.wav");		
+	alGenSources(1, &source);		
+	alSourcei(source, AL_BUFFER, buffer);		
+}		
+void cleanUpSound(){		
+	alDeleteSources(1, &source);		
+	alDeleteBuffers(1, &buffer);		
+}		
+void playSound(){		
+	alSourcePlay(source);		
+}
+
 
 void init() {
     /* the tetris_board and the table and the player (viewer)*/
- //    Sound::initialise();
+	//Sound::initialise();
 	// Sound::load("yoursound.mp3");
 	// Sound::play();
 	tetris_board = create_tetris_board();
@@ -96,9 +114,9 @@ void init() {
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	glEnable(GL_POLYGON_SMOOTH);
 	glEnable(GL_LINE_SMOOTH);
@@ -112,37 +130,45 @@ void end() {
 }
 
 void display() {
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	static int shouldPlaySound = 1;
+	if(shouldPlaySound){
+		loadSound();		
+	 	playSound();
+	 	shouldPlaySound = 0;		
+	}
+	// glEnable(GL_TEXTURE_2D);
+	// glBindTexture(GL_TEXTURE_2D, texture);
 
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
-   glLoadIdentity();
-	
-   /* lighting */
-   glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLightA);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightA);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, specularLightA);
-   glLightfv(GL_LIGHT0, GL_POSITION, lightPositionA);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
+	glLoadIdentity();
 
-   glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightB);
-   glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLightB);
-   glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
-   glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
-   
-   observe_from_viewer(viewer);
+	/* lighting */
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLightA);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightA);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLightA);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPositionA);
 
-   display_tetris_board(tetris_board,board_status,created_status);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightB);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLightB);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
+	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
-   glFlush();
-   glutSwapBuffers();
+	observe_from_viewer(viewer);
+
+	display_tetris_board(tetris_board,board_status,created_status);
+
+	glFlush();
+	glutSwapBuffers();
 }
 
 void reshape (int w, int h) {
 	glViewport (0, 0, (GLsizei)w, (GLsizei)h);
-    glMatrixMode (GL_PROJECTION);
-    glLoadIdentity ();
-    gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
-    glMatrixMode (GL_MODELVIEW);
-    glLoadIdentity ();
+	glMatrixMode (GL_PROJECTION);
+	glLoadIdentity ();
+	gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
 }
 
 
@@ -215,51 +241,51 @@ int save_screenshot(char* filename, int w, int h)
 {	
   //This prevents the images getting padded 
  // when the width multiplied by 3 is not a multiple of 4
-  glPixelStorei(GL_PACK_ALIGNMENT, 1);
- 
-  int nSize = w*h*3;
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+	int nSize = w*h*3;
   // First let's create our buffer, 3 channels per Pixel
-  char* dataBuffer = (char*)malloc(nSize*sizeof(char));
- 
-  if (!dataBuffer) return 0;
- 
+	char* dataBuffer = (char*)malloc(nSize*sizeof(char));
+
+	if (!dataBuffer) return 0;
+
    // Let's fetch them from the backbuffer	
    // We request the pixels in GL_BGR format, thanks to Berzeger for the tip
-   glReadPixels((GLint)0, (GLint)0,
+	glReadPixels((GLint)0, (GLint)0,
 		(GLint)w, (GLint)h,
-		 GL_BGR, GL_UNSIGNED_BYTE, dataBuffer);
- 
+		GL_BGR, GL_UNSIGNED_BYTE, dataBuffer);
+
    //Now the file creation
-   FILE *filePtr = fopen(filename, "wb");
-   if (!filePtr) return 0;
- 
- 
-   unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
-   unsigned char header[6] = { w%256,w/256,
-			       h%256,h/256,
-			       24,0};
+	FILE *filePtr = fopen(filename, "wb");
+	if (!filePtr) return 0;
+
+
+	unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
+	unsigned char header[6] = { w%256,w/256,
+		h%256,h/256,
+		24,0};
    // We write the headers
-   fwrite(TGAheader,	sizeof(unsigned char),	12,	filePtr);
-   fwrite(header,	sizeof(unsigned char),	6,	filePtr);
+		fwrite(TGAheader,	sizeof(unsigned char),	12,	filePtr);
+		fwrite(header,	sizeof(unsigned char),	6,	filePtr);
    // And finally our image data
-   fwrite(dataBuffer,	sizeof(GLubyte),	nSize,	filePtr);
-   fclose(filePtr);
- 
-  return 1;
-}
+		fwrite(dataBuffer,	sizeof(GLubyte),	nSize,	filePtr);
+		fclose(filePtr);
+
+		return 1;
+	}
 
 //To move the block by 0.1 units downward
-void move_block_down_by_one_step()
-{
-	int current_z=board_status[x_temp][y_temp];
-	if(current_z==6){
-		printf("Game over\n");
-		exit(0);
-	}
-	printf("moved down 1 step\n");
-	reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
+	void move_block_down_by_one_step()
+	{
+		int current_z=board_status[x_temp][y_temp];
+		if(current_z==6){
+			printf("Game over\n");
+			exit(0);
+		}
+		printf("moved down 1 step\n");
+		reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 
-}
+	}
 
 
 
@@ -267,11 +293,11 @@ void move_block_down_by_one_step()
 
 
 //Update board status by 1 i.e now the blocks should come above the already placed block
-void increment_board_status()
-{
+	void increment_board_status()
+	{
 	// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
-	printf("Updating board statu\n");
-	int i,j;
+		printf("Updating board statu\n");
+		int i,j;
 	// if(k==1){
 	// 	board_status[x_temp][y_temp]++;
 	// } 
@@ -291,43 +317,43 @@ void increment_board_status()
 	// 		}
 	// 	}
 	// }
-	board_status[x_temp][y_temp]++;
-	int current_z=board_status[x_temp][y_temp];
-	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
+		board_status[x_temp][y_temp]++;
+		int current_z=board_status[x_temp][y_temp];
+		printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
 
-}
+	}
 
 
 
 
 //Place the block at the bottom most possible and then increment the board status
-void place_block()
-{
-	int current_z=board_status[x_temp][y_temp];
-	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
-	increment_board_status();
-	created_status[x_temp][y_temp]=0;
-}
+	void place_block()
+	{
+		int current_z=board_status[x_temp][y_temp];
+		set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
+		increment_board_status();
+		created_status[x_temp][y_temp]=0;
+	}
 
 
 
 
 
 //The main code is implemented here
-void update_game()
-{
-	int current_z=board_status[x_temp][y_temp];
-	if(current_z==6){
+	void update_game()
+	{
+		int current_z=board_status[x_temp][y_temp];
+		if(current_z==6){
 			printf("Game over\n");
 			exit(0);
 		}
-	if(flag==1)
-	{
+		if(flag==1)
+		{
 		// x_prev=x_temp;
 		// y_prev=x_temp;
-		printf("\n\n");
-		flag=0;
-		count=height/0.1;
+			printf("\n\n");
+			flag=0;
+			count=height/0.1;
 		k=rand()%3+ 1;//k=3;
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
@@ -376,15 +402,15 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'w') { viewer->pos[2]-=0.05; }
 	if (key == 'a') { viewer->pos[0]-=0.05; }
 	if (key == 'd') { viewer->pos[0]+=0.05; }
-	if (key == 'm') { viewer->pos[1]+=0.05; }
+	if (key == 'b') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
 	// if (key == 'f') { highlight_cell_left(tetris_board); }
 	// if (key == 'g') { highlight_cell_down(tetris_board); }
 	// if (key == 'h') { highlight_cell_right(tetris_board); }
 	// if (key == 't') { highlight_cell_up(tetris_board); }
-	if (key == 'p') { select_cell(tetris_board, CELL_CURRENT); }
-    if (key == 'x') { exit(0); }
+	// if (key == 'p') { select_cell(tetris_board, CELL_CURRENT); }
+	if (key == 'x') { exit(0); }
 }
 void mouseMove(int x, int y) 
 { 	
@@ -423,14 +449,14 @@ void mouseButton(int button, int state, int x, int y)
 
 	}
 	if ((button == 3) ) 
-   {
-       if (state == GLUT_UP) return; 
-       viewer->pos[0]-=0.05;
-   }
-   else if(button == 4)
-   {
-   		viewer->pos[0]+=0.05;
-   }
+	{
+		if (state == GLUT_UP) return; 
+		viewer->pos[0]-=0.05;
+	}
+	else if(button == 4)
+	{
+		viewer->pos[0]+=0.05;
+	}
 }
 
 
@@ -442,12 +468,12 @@ int main(int argc, char** argv) {
 	glutCreateWindow ("3D-Tetris");
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-    glutKeyboardFunc(keypressed);
-    glutMouseFunc(mouseButton);
-    glutMotionFunc(mouseMove);
+	glutKeyboardFunc(keypressed);
+	glutMouseFunc(mouseButton);
+	glutMotionFunc(mouseMove);
 	glutTimerFunc(0,timer,0);
 	
-    init();
+	init();
 	glutMainLoop();
 
 	end();
