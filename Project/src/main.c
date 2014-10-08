@@ -60,6 +60,21 @@ int created_status[8][8];
 Block *current_block;
 int x_prev,y_prev;
 
+
+
+ALuint buffer, source; 
+void loadSound(){
+  buffer = alutCreateBufferFromFile("3.wav");
+  alGenSources(1, &source);
+  alSourcei(source, AL_BUFFER, buffer);
+}
+void cleanUpSound(){
+  alDeleteSources(1, &source);
+  alDeleteBuffers(1, &buffer);
+}
+void playSound(){
+  alSourcePlay(source);
+}
 void init() {
 
 	tetris_board = create_tetris_board();
@@ -109,24 +124,31 @@ void end() {
 	destroy_viewer(viewer);
 }
 
-void play()
-{
-    ALuint helloBuffer, helloSource;
-	// alGetError();
-	helloBuffer = alutCreateBufferFromFile ("wav/2.wav");
-	alGenSources (1, &helloSource);
-	alSourcei (helloSource, AL_BUFFER, helloBuffer);
-	alSourcePlay (helloSource);
-	// alutSleep (1);
-	printf("hi\n");
-	// alutExit (); 
-}
+// void play()
+// {
+//     ALuint helloBuffer, helloSource;
+// 	// alGetError();
+// 	helloBuffer = alutCreateBufferFromFile ("3.wav");
+// 	alGenSources (1, &helloSource);
+// 	alSourcei (helloSource, AL_BUFFER, helloBuffer);
+// 	alSourcePlay (helloSource);
+// 	// alutSleep (1);
+// 	printf("hellobuffer\n");
+// 	// alutExit (); 
+// }
 
 void display() {
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	static int shouldPlaySound = 1;
+	if(shouldPlaySound){
+	loadSound();
+	playSound();
+	shouldPlaySound = 0;
+	}
+	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
-   glLoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
+	glLoadIdentity();
 	
    /* lighting */
    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLightA);
@@ -349,7 +371,7 @@ void timer(int extra) {
 
 void keypressed(unsigned char key, int x, int y) {
 
-	if (key == 's') { viewer->pos[2]+=0.05;play();}
+	if (key == 's') { viewer->pos[2]+=0.05;}
 	if (key == 'w') { viewer->pos[2]-=0.05; }
 	if (key == 'a') { viewer->pos[0]-=0.05; }
 	if (key == 'd') { viewer->pos[0]+=0.05; }
@@ -412,7 +434,7 @@ void mouseButton(int button, int state, int x, int y)
 
 int main(int argc, char** argv) {
 	// ALuint helloBuffer, helloSource;
-	alutInit(0, NULL);
+	// alutInit(0, NULL);
 	// alGetError();
 	// helloBuffer = alutCreateBufferFromFile ("wav/2.wav");
 	// alGenSources (1, &helloSource);
@@ -421,6 +443,8 @@ int main(int argc, char** argv) {
 	// alutExit ();
 
 	glutInit(&argc, argv);
+	alutInit(0, NULL);
+	alGetError();
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize (1200, 800);
 	glutInitWindowPosition (100,100);
@@ -436,8 +460,6 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
-	alutExit ();
-	return EXIT_SUCCESS;
 
 	
 
