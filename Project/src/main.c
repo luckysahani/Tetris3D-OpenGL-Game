@@ -296,7 +296,7 @@ void update_game()
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
 		// x_temp=3;y_temp=5;
-		k=3;
+		// k=3;
 		// x_temp=0;y_temp=0;
 		color_block=rand()%3;					//color of block
 		if(k==1){create_squareshape_block();}	//Creates an square shape object
@@ -329,7 +329,7 @@ void update_game()
 
 void timer(int extra) {
 	glutPostRedisplay();
-	if(time_status==10){update_game();time_status=0;}
+	if(time_status==50){update_game();time_status=0;}
 	time_status++;
 	glutTimerFunc(1, timer, 0);
 	// glutTimerFunc(200, update_game,0);	
