@@ -12,8 +12,7 @@
 #include "placer.h"
 #include "viewer.h"
 #include "glm.h"
-
-#include <AL/alut.h>
+#include "AL/alut.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -60,23 +59,11 @@ int created_status[8][8];
 Block *current_block;
 int x_prev,y_prev;
 
-
-
-ALuint buffer, source; 
-void loadSound(){
-  buffer = alutCreateBufferFromFile("3.wav");
-  alGenSources(1, &source);
-  alSourcei(source, AL_BUFFER, buffer);
-}
-void cleanUpSound(){
-  alDeleteSources(1, &source);
-  alDeleteBuffers(1, &buffer);
-}
-void playSound(){
-  alSourcePlay(source);
-}
 void init() {
-
+    /* the tetris_board and the table and the player (viewer)*/
+ //    Sound::initialise();
+	// Sound::load("yoursound.mp3");
+	// Sound::play();
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
@@ -124,31 +111,11 @@ void end() {
 	destroy_viewer(viewer);
 }
 
-// void play()
-// {
-//     ALuint helloBuffer, helloSource;
-// 	// alGetError();
-// 	helloBuffer = alutCreateBufferFromFile ("3.wav");
-// 	alGenSources (1, &helloSource);
-// 	alSourcei (helloSource, AL_BUFFER, helloBuffer);
-// 	alSourcePlay (helloSource);
-// 	// alutSleep (1);
-// 	printf("hellobuffer\n");
-// 	// alutExit (); 
-// }
-
 void display() {
-	static int shouldPlaySound = 1;
-	if(shouldPlaySound){
-	loadSound();
-	playSound();
-	shouldPlaySound = 0;
-	}
-	
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
-	glLoadIdentity();
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
+   glLoadIdentity();
 	
    /* lighting */
    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLightA);
@@ -244,7 +211,42 @@ void create_cube_block()
 }
 
 
-
+int save_screenshot(char* filename, int w, int h)
+{	
+  //This prevents the images getting padded 
+ // when the width multiplied by 3 is not a multiple of 4
+  glPixelStorei(GL_PACK_ALIGNMENT, 1);
+ 
+  int nSize = w*h*3;
+  // First let's create our buffer, 3 channels per Pixel
+  char* dataBuffer = (char*)malloc(nSize*sizeof(char));
+ 
+  if (!dataBuffer) return 0;
+ 
+   // Let's fetch them from the backbuffer	
+   // We request the pixels in GL_BGR format, thanks to Berzeger for the tip
+   glReadPixels((GLint)0, (GLint)0,
+		(GLint)w, (GLint)h,
+		 GL_BGR, GL_UNSIGNED_BYTE, dataBuffer);
+ 
+   //Now the file creation
+   FILE *filePtr = fopen(filename, "wb");
+   if (!filePtr) return 0;
+ 
+ 
+   unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
+   unsigned char header[6] = { w%256,w/256,
+			       h%256,h/256,
+			       24,0};
+   // We write the headers
+   fwrite(TGAheader,	sizeof(unsigned char),	12,	filePtr);
+   fwrite(header,	sizeof(unsigned char),	6,	filePtr);
+   // And finally our image data
+   fwrite(dataBuffer,	sizeof(GLubyte),	nSize,	filePtr);
+   fclose(filePtr);
+ 
+  return 1;
+}
 
 //To move the block by 0.1 units downward
 void move_block_down_by_one_step()
@@ -370,13 +372,13 @@ void timer(int extra) {
 }
 
 void keypressed(unsigned char key, int x, int y) {
-
-	if (key == 's') { viewer->pos[2]+=0.05;}
+	if (key == 's') { viewer->pos[2]+=0.05; }
 	if (key == 'w') { viewer->pos[2]-=0.05; }
 	if (key == 'a') { viewer->pos[0]-=0.05; }
 	if (key == 'd') { viewer->pos[0]+=0.05; }
 	if (key == 'm') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
+	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
 	// if (key == 'f') { highlight_cell_left(tetris_board); }
 	// if (key == 'g') { highlight_cell_down(tetris_board); }
 	// if (key == 'h') { highlight_cell_right(tetris_board); }
@@ -433,18 +435,7 @@ void mouseButton(int button, int state, int x, int y)
 
 
 int main(int argc, char** argv) {
-	// ALuint helloBuffer, helloSource;
-	// alutInit(0, NULL);
-	// alGetError();
-	// helloBuffer = alutCreateBufferFromFile ("wav/2.wav");
-	// alGenSources (1, &helloSource);
-	// alSourcei (helloSource, AL_BUFFER, helloBuffer);
-	// alSourcePlay (helloSource);
-	// alutExit ();
-
 	glutInit(&argc, argv);
-	alutInit(0, NULL);
-	alGetError();
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize (1200, 800);
 	glutInitWindowPosition (100,100);
@@ -460,9 +451,6 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
-
-	
-
 
 	return 0;
 }
