@@ -12,7 +12,8 @@
 #include "placer.h"
 #include "viewer.h"
 #include "glm.h"
-#include "sound.hpp"
+
+#include <AL/alut.h>
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -60,10 +61,7 @@ Block *current_block;
 int x_prev,y_prev;
 
 void init() {
-    /* the tetris_board and the table and the player (viewer)*/
-    Sound::initialise();
-	Sound::load("yoursound.mp3");
-	Sound::play();
+
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
@@ -399,6 +397,15 @@ void mouseButton(int button, int state, int x, int y)
 
 
 int main(int argc, char** argv) {
+	ALuint helloBuffer, helloSource;
+	alutInit (&argc, argv);
+	helloBuffer = alutCreateBufferFromFile ("1.wav");
+	alGenSources (1, &helloSource);
+	alSourcei (helloSource, AL_BUFFER, helloBuffer);
+	alSourcePlay (helloSource);
+	alutSleep (1); //you need to put here the length in seconds of the file
+	
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize (1200, 800);
@@ -415,6 +422,10 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
+	
+	alutExit ();
+	return EXIT_SUCCESS;
+
 
 	return 0;
 }
