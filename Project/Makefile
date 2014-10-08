@@ -1,5 +1,5 @@
 INC = -I./src
-LDFLAGS = $(INC) -L/usr/X11R6/lib -lGL -lGLU -lglut -lm -lalut
+LDFLAGS = $(INC) -L/usr/X11R6/lib -lGL -lGLU -lglut -lm -lalut `pkg-config --libs freealut`
 CC = gcc
 
 main: clean

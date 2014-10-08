@@ -109,6 +109,19 @@ void end() {
 	destroy_viewer(viewer);
 }
 
+void play()
+{
+    ALuint helloBuffer, helloSource;
+	// alGetError();
+	helloBuffer = alutCreateBufferFromFile ("wav/2.wav");
+	alGenSources (1, &helloSource);
+	alSourcei (helloSource, AL_BUFFER, helloBuffer);
+	alSourcePlay (helloSource);
+	// alutSleep (1);
+	printf("hi\n");
+	// alutExit (); 
+}
+
 void display() {
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -335,7 +348,8 @@ void timer(int extra) {
 }
 
 void keypressed(unsigned char key, int x, int y) {
-	if (key == 's') { viewer->pos[2]+=0.05; }
+
+	if (key == 's') { viewer->pos[2]+=0.05;play();}
 	if (key == 'w') { viewer->pos[2]-=0.05; }
 	if (key == 'a') { viewer->pos[0]-=0.05; }
 	if (key == 'd') { viewer->pos[0]+=0.05; }
@@ -397,14 +411,14 @@ void mouseButton(int button, int state, int x, int y)
 
 
 int main(int argc, char** argv) {
-	ALuint helloBuffer, helloSource;
-	alutInit (&argc, argv);
-	helloBuffer = alutCreateBufferFromFile ("1.wav");
-	alGenSources (1, &helloSource);
-	alSourcei (helloSource, AL_BUFFER, helloBuffer);
-	alSourcePlay (helloSource);
-	alutSleep (1); //you need to put here the length in seconds of the file
-	
+	// ALuint helloBuffer, helloSource;
+	alutInit(0, NULL);
+	// alGetError();
+	// helloBuffer = alutCreateBufferFromFile ("wav/2.wav");
+	// alGenSources (1, &helloSource);
+	// alSourcei (helloSource, AL_BUFFER, helloBuffer);
+	// alSourcePlay (helloSource);
+	// alutExit ();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
@@ -422,9 +436,10 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
-	
 	alutExit ();
 	return EXIT_SUCCESS;
+
+	
 
 
 	return 0;
