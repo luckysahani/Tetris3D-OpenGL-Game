@@ -10,7 +10,8 @@
 #include "base.h"
 #include "block.h"
 #include "placer.h"
-#include "table.h"
+// #include "table.h"
+#include <stdio.h>
 #include "viewer.h"
 #include "glm.h"
 #include <stdlib.h> 
@@ -19,7 +20,7 @@
 
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
-Table *table;
+// Table *table;
 
 // GLfloat ambientLight[4] = { 0.4f, 0.4f, 0.5f, 1.0f };
 // +GLfloat diffuseLight[4] = { 0.6f, 0.6f, 0.5f, 1.0f };
@@ -61,8 +62,8 @@ int x_prev,y_prev;
 void init() {
     /* the tetris_board and the table and the player (viewer)*/
 	tetris_board = create_tetris_board();
-	table      = create_table();
-	place_on_model(tetris_board->pos, (Placeable *) table);
+	// table      = create_table();
+	// place_on_model(tetris_board->pos, (Placeable *) table);
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
 	// itn k=0.0;
@@ -128,7 +129,7 @@ void display() {
    
    observe_from_viewer(viewer);
 
-   display_table(table);
+   // display_table(table);
    display_tetris_board(tetris_board,board_status,created_status);
 
    glFlush();
