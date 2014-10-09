@@ -1,8 +1,8 @@
-Tetris-3D
+**Tetris-3D**
 
 --------------------------------------------------------------------------
 
-PROGRESS-I
+*PROGRESS-I*
 Created a base for the falling blocks. The base defines the playable game volume.
 Modelled 5 different type of blocks in Blender.
 Created an .obj parser to parse the model files into OpenGL standards.
@@ -14,7 +14,7 @@ Implemented basic block selection and movement (albeit without any animation).
 
 --------------------------------------------------------------------------
 
-PROGRESS-II
+*PROGRESS-II*
 Added the animation effect.
 Added the music.
 Implemented some game logic.
