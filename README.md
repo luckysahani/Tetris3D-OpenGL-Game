@@ -2,7 +2,7 @@
 
 --------------------------------------------------------------------------
 
-*PROGRESS-I*
+**PROGRESS-I**
 
 Created a base for the falling blocks. The base defines the playable game volume.
 Modelled 5 different type of blocks in Blender.
@@ -15,7 +15,7 @@ Implemented basic block selection and movement (albeit without any animation).
 
 --------------------------------------------------------------------------
 
-*PROGRESS-II*
+**PROGRESS-II**
 
 Added the animation effect.
 Added the music.
@@ -26,7 +26,7 @@ A navigable camera.
 
 --------------------------------------------------------------------------
 
-*Instructions for compilation*
+**Instructions for compilation**
 
 1.	Install OpenGl and OpenAl -
 	OpenGL: sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
@@ -37,7 +37,7 @@ A navigable camera.
 
 --------------------------------------------------------------------------
 
-*Controls*
+**Controls**
 
 A : Move along x-axis
 S : Move along y-axis
