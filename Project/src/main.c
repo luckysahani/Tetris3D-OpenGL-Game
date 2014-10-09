@@ -270,7 +270,7 @@ void move_block_down_by_one_step()
 void increment_board_status()
 {
 // tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
-	printf("Updating board statu\n");
+	printf("Updating board statua\n");
 	int i,j;
 // if(k==1){
 // 	board_status[x_temp][y_temp]++;
