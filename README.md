@@ -1,4 +1,4 @@
-**Tetris-3D**
+***Tetris-3D***
 
 --------------------------------------------------------------------------
 
@@ -32,25 +32,25 @@ The added 3rd dimension adds another degree of freedom to the rotations of a blo
 
 **PROGRESS-I**
 
-Created a base for the falling blocks. The base defines the playable game volume.
-Modelled 5 different type of blocks in Blender.
-Created an .obj parser to parse the model files into OpenGL standards.
-Wrote the library for displaying the parsed object models onto the viewport.
-Have used basic materials ( only the diffuse, specular, ambient and illumination parameters, no textures or shadows yet) to render the objects.
-Implemented a restrictedly navigable camera with rotation bound to translation bound together for a nice cinematic zoom effect.
-Currently placed blocks into the game volume randomly.
-Implemented basic block selection and movement (albeit without any animation).
+1.	Created a base for the falling blocks. The base defines the playable game volume.
+2.	Modelled 5 different type of blocks in Blender.
+3.	Created an .obj parser to parse the model files into OpenGL standards.
+4.	Wrote the library for displaying the parsed object models onto the viewport.
+5.	Have used basic materials ( only the diffuse, specular, ambient and illumination parameters, no textures or shadows 		yet) to render the objects.
+6.	Implemented a restrictedly navigable camera with rotation bound to translation bound together for a nice cinematic zoom 	effect.
+7.	Currently placed blocks into the game volume randomly.
+8.	Implemented basic block selection and movement (albeit without any animation).
 
 --------------------------------------------------------------------------
 
 **PROGRESS-II**
 
-Added the animation effect.
-Added the music.
-Implemented some game logic.
-Allow players to save screenshots.
-Loading a character, that is, an object which is not part of the world. 
-A navigable camera.
+1.	Added the animation effect.
+2.	Added the music.
+3.	Implemented some game logic.
+4.	Allow players to save screenshots.
+5.	Loading a character, that is, an object which is not part of the world. 
+6.	A navigable camera.
 
 --------------------------------------------------------------------------
 
