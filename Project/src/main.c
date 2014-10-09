@@ -12,7 +12,12 @@
 #include "placer.h"
 #include "viewer.h"
 #include "glm.h"
+
 #include "AL/alut.h"
+// #include <conio>
+// #include <al/al.h>
+#include <AL/alc.h>
+// #include <al/alu.h>
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -63,8 +68,9 @@ GLuint texture;
 
 
 ALuint buffer, source; 		
-void loadSound(){		
-	buffer = alutCreateBufferFromFile("~/cs360/Project/src/wav/3.wav");		
+void loadSound(char* filename){		
+	buffer = alutCreateBufferFromFile(filename);	
+	// buffer = alutCreateBufferHelloWorld();	
 	alGenSources(1, &source);		
 	alSourcei(source, AL_BUFFER, buffer);		
 }		
@@ -133,8 +139,9 @@ void display() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	static int shouldPlaySound = 1;
 	if(shouldPlaySound){
-		loadSound();		
+		loadSound("3.wav");		
 	 	playSound();
+	 	printf("\nPlaying music\n");
 	 	shouldPlaySound = 0;		
 	}
 	// glEnable(GL_TEXTURE_2D);
@@ -405,12 +412,22 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'b') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
-	// if (key == 'f') { highlight_cell_left(tetris_board); }
-	// if (key == 'g') { highlight_cell_down(tetris_board); }
-	// if (key == 'h') { highlight_cell_right(tetris_board); }
-	// if (key == 't') { highlight_cell_up(tetris_board); }
-	// if (key == 'p') { select_cell(tetris_board, CELL_CURRENT); }
+	// if (key == GLUT_KEY_UP) { loadSound("2.wav"); playSound(); }
 	if (key == 'x') { exit(0); }
+}
+void keypressSpecial(int key, int x, int y){
+	if (key == GLUT_KEY_UP) {
+		loadSound("2.wav"); playSound();
+	}
+	if (key== GLUT_KEY_DOWN){
+
+	}
+	if (key== GLUT_KEY_LEFT){
+
+	}
+	if (key== GLUT_KEY_RIGHT){
+
+	}
 }
 void mouseMove(int x, int y) 
 { 	
@@ -462,6 +479,7 @@ void mouseButton(int button, int state, int x, int y)
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
+	alutInit (&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize (1200, 800);
 	glutInitWindowPosition (100,100);
@@ -469,6 +487,7 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keypressed);
+	glutSpecialFunc(keypressSpecial);
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 	glutTimerFunc(0,timer,0);
