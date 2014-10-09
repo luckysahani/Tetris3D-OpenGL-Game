@@ -1,5 +1,7 @@
 Tetris-3D
 
+--------------------------------------------------------------------------
+
 PROGRESS-I
 Created a base for the falling blocks. The base defines the playable game volume.
 Modelled 5 different type of blocks in Blender.
@@ -10,7 +12,7 @@ Implemented a restrictedly navigable camera with rotation bound to translation b
 Currently placed blocks into the game volume randomly.
 Implemented basic block selection and movement (albeit without any animation).
 
--------------------------------------------------------------
+--------------------------------------------------------------------------
 
 PROGRESS-II
 Added the animation effect.
@@ -20,7 +22,7 @@ Allow players to save screenshots.
 Loading a character, that is, an object which is not part of the world. 
 A navigable camera.
 
-------------------------------------------------------------
+--------------------------------------------------------------------------
 
 Instructions for compilation :
 
@@ -28,7 +30,7 @@ Install OpenGl and OpenAl
 
 Makefile in Project folder contains the compilation commnads. So , just make and your executable will be ready.
 
------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 Controls :
 
