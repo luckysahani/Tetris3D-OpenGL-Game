@@ -17,9 +17,9 @@ Implemented basic block selection and movement (albeit without any animation).
 
 PROGRESS-II
 
-Added the animation effect.
-Added the music.
-Implemented some game logic.
+Implemented falling animation for blocks.
+Added the background music and button triggered sounds.
+Implemented partial game logic.
 Allow players to save screenshots.
 Loading a character, that is, an object which is not part of the world. 
 A navigable camera.
@@ -47,3 +47,5 @@ B : Move above the z axis
 N : Move below the z axis
 Z : Screenshot
 X : Exit
+Arrow Keys : Sample sound for block move (implemented as test for now)
+Mouse Left Click & Right Click (Hold) and drag : Navigate camera

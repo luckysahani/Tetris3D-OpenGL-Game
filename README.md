@@ -45,9 +45,9 @@ The added 3rd dimension adds another degree of freedom to the rotations of a blo
 
 **PROGRESS-II**
 
-1.	Added the animation effect.
-2.	Added the music.
-3.	Implemented some game logic.
+1.	Implemented falling animation for blocks.
+2.	Added the background music and button triggered sounds.
+3.	Implemented partial game logic.
 4.	Allow players to save screenshots.
 5.	Loading a character, that is, an object which is not part of the world. 
 6.	A navigable camera.
@@ -71,6 +71,10 @@ N : Move below the z axis
 Z : Screenshot
 
 X : Exit
+
+Arrow Keys : Sample sound for block move (implemented as test for now)
+
+Mouse Left Click & Right Click (Hold) and drag : Navigate camera
 
 --------------------------------------------------------------------------
 
