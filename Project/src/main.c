@@ -139,7 +139,7 @@ void display() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	static int shouldPlaySound = 1;
 	if(shouldPlaySound){
-		loadSound("3.wav");		
+		loadSound("./wav/theme.wav");		
 	 	playSound();
 	 	printf("\nPlaying music\n");
 	 	shouldPlaySound = 0;		
@@ -238,7 +238,6 @@ void create_cube_block()
 	int current_z=board_status[x_temp][y_temp];
 	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
 	current_block=set_block(cube, color_block,block[x_temp][y_temp][current_z]);
-	// current_block=block[x_temp][y_temp][current_z];
 	glmScale(current_block->model,0.6);
 	tetris_board_place_block(tetris_board,current_block, CELL(x_temp, y_temp,current_z),current_z);
 }
@@ -417,16 +416,18 @@ void keypressed(unsigned char key, int x, int y) {
 }
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
-		loadSound("2.wav"); playSound();
+		loadSound("./wav/tick.wav"); playSound();
+		// move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
-
+		loadSound("./wav/tick.wav"); playSound();
+		x_temp--;
 	}
 	if (key== GLUT_KEY_LEFT){
-
+		loadSound("./wav/tick.wav"); playSound();
 	}
 	if (key== GLUT_KEY_RIGHT){
-
+		loadSound("./wav/tick.wav"); playSound();
 	}
 }
 void mouseMove(int x, int y) 
