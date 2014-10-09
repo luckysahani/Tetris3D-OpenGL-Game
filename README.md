@@ -57,12 +57,19 @@ The added 3rd dimension adds another degree of freedom to the rotations of a blo
 **Controls**
 
 A : Move along x-axis
+
 S : Move along y-axis
+
 D : Move along x-axis(opposite to A)
+
 W : Move along y-axis(opposite to S)
+
 B : Move above the z axis
+
 N : Move below the z axis
+
 Z : Screenshot
+
 X : Exit
 
 --------------------------------------------------------------------------
