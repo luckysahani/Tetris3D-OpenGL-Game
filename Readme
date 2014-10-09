@@ -26,7 +26,10 @@ A navigable camera.
 
 Instructions for compilation :
 
-Install OpenGl and OpenAl
+Install OpenGl and OpenAl -
+OpenGL: sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+OpenAL: sudo apt-get install libopenal0a libopenal-dev
+ALUT:   sudo apt-get install libalut0 libalut-dev
 
 Makefile in Project folder contains the compilation commnads. So , just make and your executable will be ready.
 
