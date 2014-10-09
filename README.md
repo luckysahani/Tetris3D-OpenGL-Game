@@ -8,6 +8,7 @@ The added 3rd dimension adds another degree of freedom to the rotations of a blo
 --------------------------------------------------------------------------
 
 **THE RULES OF THE GAME**
+
 1.	Player starts out with an empty game volume.
 2.	Bricks falls at fixed intervals. Every next block is chosen randomly from the set of available blocks.
 3.	A brick freezes in its position and orientation once it touches the base of the game volume.
@@ -67,6 +68,7 @@ X : Exit
 --------------------------------------------------------------------------
 
 **FURTHER WORK**
+
 1.	These are the objectives that we plan to include in our game before final submission:
 2.	Designing a Heads-up Display (HUD) - the HUD will display the current player score, Game title in fancy text and a side 	window displaying the next block, highest score.
 3.	Implement an algorithm for evaluation of the game state at every timer tick. Need to define the possible states of each 	block in higher dimensional arrays and find a way to detect collision using these orientation arrays.
