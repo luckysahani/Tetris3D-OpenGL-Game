@@ -122,6 +122,23 @@ void end() {
 	destroy_tetris_board(tetris_board);
 	destroy_viewer(viewer);
 }
+int save_screenshot(char* filename, int w, int h)
+{	
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	int nSize = w*h*3;
+	char* dataBuffer = (char*)malloc(nSize*sizeof(char));
+	if (!dataBuffer) return 0;
+	glReadPixels((GLint)0, (GLint)0,(GLint)w, (GLint)h,GL_BGR, GL_UNSIGNED_BYTE, dataBuffer);
+	FILE *filePtr = fopen(filename, "wb");
+	if (!filePtr) return 0;
+	unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
+	unsigned char header[6] = { w%256,w/256,h%256,h/256,24,0};
+	fwrite(TGAheader,	sizeof(unsigned char),	12,	filePtr);
+	fwrite(header,	sizeof(unsigned char),	6,	filePtr);
+	fwrite(dataBuffer,	sizeof(GLubyte),	nSize,	filePtr);
+	fclose(filePtr);
+	return 1;
+}
 
 void display() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -229,28 +246,11 @@ void create_cube_block()
 	current_type=cube;
 	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
 	current_block=set_block(cube, color_block,block[x_temp][y_temp][current_z]);
-	glmScale(current_block->model,0.6);
+	// glmScale(current_block->model,0.6);
 	tetris_board_place_block(tetris_board,current_block, CELL(x_temp, y_temp,current_z),current_z);
 }
 
 
-int save_screenshot(char* filename, int w, int h)
-{	
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	int nSize = w*h*3;
-	char* dataBuffer = (char*)malloc(nSize*sizeof(char));
-	if (!dataBuffer) return 0;
-	glReadPixels((GLint)0, (GLint)0,(GLint)w, (GLint)h,GL_BGR, GL_UNSIGNED_BYTE, dataBuffer);
-	FILE *filePtr = fopen(filename, "wb");
-	if (!filePtr) return 0;
-	unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
-	unsigned char header[6] = { w%256,w/256,h%256,h/256,24,0};
-	fwrite(TGAheader,	sizeof(unsigned char),	12,	filePtr);
-	fwrite(header,	sizeof(unsigned char),	6,	filePtr);
-	fwrite(dataBuffer,	sizeof(GLubyte),	nSize,	filePtr);
-	fclose(filePtr);
-	return 1;
-}
 
 //To move the block by 0.1 units downward
 void move_block_down_by_one_step()
@@ -330,7 +330,8 @@ void update_game()
 		printf("\n\n");
 		flag=0;
 		count=height/0.1;
-		k=rand()%3+ 1;//k=3;
+		k=rand()%3+ 1;
+		// k=2;
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
 		color_block=rand()%3;					//color of block
@@ -363,9 +364,15 @@ void move_block_right()
 	tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
 	current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
 	created_status[x_temp][y_temp]=0;
+
+
+
 	x_temp++;
 	created_status[x_temp][y_temp]=1;
+	tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
 	reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
+	printf("count==%f\n",count );
+	tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 
 
 
