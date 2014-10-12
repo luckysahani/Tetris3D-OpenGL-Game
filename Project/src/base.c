@@ -64,21 +64,6 @@ void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	cboard->board[cell] = p;
 }
 
-
-
-
-// GLdouble return_z(Tetris_board *cboard, Block *p, int cell)
-// {
-// 	GLdouble a1= p->pos[1];
-// 	printf("p->pos[1]==%f\n",a1);
-// 	return p->pos[1];
-// }
-// void change_z(Tetris_board *cboard, Block *p, int cell,GLdouble z_val)
-// {
-
-// 	p->pos[1] = z_val;
-// 	printf("z_val==%f\n",z_val);
-// }
 void reduce_z_regularly(Tetris_board *cboard, Block *p, int cell)
 {
 	if(p->pos[1]>0.1)
@@ -97,11 +82,16 @@ void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
 	printf("setting p->pos[1] to %d and temp =%f\n",k ,temp);
 	p->pos[1]=temp;
 	printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
-
-	
-	
 }
-
+void reset_coordinates(Tetris_board *cboard, Block *p, int cell)
+{
+	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
+	// p->pos[1] = 0.5;//((double) rand() / (RAND_MAX))/8;
+	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
+	printf("Resetting position p->pos[0] to %f and p->pos[2] to %f \n",p->pos[0],p->pos[2]);
+	// p->pos[1]=temp;
+	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
+}
 
 
 

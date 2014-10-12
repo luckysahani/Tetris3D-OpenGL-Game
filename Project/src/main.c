@@ -326,16 +326,16 @@ void update_game()
 		printf("\n\n");
 		flag=0;
 		count=height/0.1;
-	k=rand()%3+ 1;//k=3;
-	x_temp=rand()%8 ;						//x value of block
-	y_temp=rand()%8 ;						//y value of block
-	color_block=rand()%3;					//color of block
-	if(k==1){create_squareshape_block();}	//Creates an square shape object
-	if(k==2){create_ishape_block();}		//creates an ishape object
-	if(k==3){create_cube_block();}			//created an cube object
-	// board_status[x_prev][y_prev]++;
-	printf("Created the blocks\n");
-	created_status[x_temp][y_temp]=1;
+		k=rand()%3+ 1;//k=3;
+		x_temp=rand()%8 ;						//x value of block
+		y_temp=rand()%8 ;						//y value of block
+		color_block=rand()%3;					//color of block
+		if(k==1){create_squareshape_block();}	//Creates an square shape object
+		if(k==2){create_ishape_block();}		//creates an ishape object
+		if(k==3){create_cube_block();}			//created an cube object
+		// board_status[x_prev][y_prev]++;
+		printf("Created the blocks\n");
+		created_status[x_temp][y_temp]=1;
 }
 else
 {
@@ -353,10 +353,14 @@ if(count==current_z)		// if the block is just above another already placed block
 }
 }
 
-void move_block_up()
+void move_block_right()
 {
-// x_temp++;
-
+	int current_z=board_status[x_temp][y_temp];
+	current_block=block[x_temp][y_temp][current_z];
+	created_status[x_temp][y_temp]=0;
+	x_temp++;
+	created_status[x_temp][y_temp]=1;
+	reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 
 
 
@@ -388,7 +392,7 @@ void keypressed(unsigned char key, int x, int y) {
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
-		move_block_up();
+		// move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
@@ -399,6 +403,7 @@ void keypressSpecial(int key, int x, int y){
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
+		move_block_right();
 	}
 }
 void mouseMove(int x, int y) 
