@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-// #include <iostream.h>
 #include "base.h" 
 
 void destroy_tetris_board(Tetris_board *cboard)
