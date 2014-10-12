@@ -45,15 +45,15 @@ Tetris_board * create_tetris_board()
 
 	return cboard;
 }
-void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int cell ,int k)
-{
-	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-	p->pos[1] = (float)((float)(k)/10);//((double) rand() / (RAND_MAX))/8;
-	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
-	//printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
+// void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int cell ,int k)
+// {
+// 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
+// 	p->pos[1] = (float)((float)(k)/10);//((double) rand() / (RAND_MAX))/8;
+// 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
+// 	//printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
-	cboard->board[cell] = p;
-}
+// 	cboard->board[cell] = p;
+// }
 void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	/* invert the position of the pieces along the y-axis */
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
@@ -88,6 +88,7 @@ void reset_coordinates(Tetris_board *cboard, Block *p, int cell)
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
 	// p->pos[1] = 0.5;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
+	cboard->board[cell] = p;
 	printf("Resetting position p->pos[0] to %f and p->pos[2] to %f \n",p->pos[0],p->pos[2]);
 	// p->pos[1]=temp;
 	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );

@@ -64,6 +64,7 @@ int created_status[8][8];
 Block *current_block;
 int x_prev,y_prev;
 GLuint texture;
+BlockType current_type;
 
 
 
@@ -178,6 +179,7 @@ void create_squareshape_block()
 	int current_z=board_status[x_temp][y_temp];
 // Block *square=current_block;
 	printf("SquareShape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
+	current_type=squareshape;
 	current_block=set_block(squareshape, color_block,block[x_temp][y_temp][current_z]);
 // current_block=block[x_temp][y_temp][current_z];
 	glmScale(current_block->model,0.6);
@@ -196,6 +198,7 @@ void create_ishape_block()
 		y_temp=rand()%8;
 	}
 	int current_z=board_status[x_temp][y_temp];
+	current_type=ishape;
 	printf("Ishape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
 	current_block= set_block(ishape, color_block,block[x_temp][y_temp][current_z]);
 // current_block=block[x_temp][y_temp][current_z];
@@ -223,6 +226,7 @@ void create_cube_block()
 		x_temp=rand()%8;
 	}
 	int current_z=board_status[x_temp][y_temp];
+	current_type=cube;
 	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
 	current_block=set_block(cube, color_block,block[x_temp][y_temp][current_z]);
 	glmScale(current_block->model,0.6);
@@ -356,7 +360,8 @@ if(count==current_z)		// if the block is just above another already placed block
 void move_block_right()
 {
 	int current_z=board_status[x_temp][y_temp];
-	current_block=block[x_temp][y_temp][current_z];
+	tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
+	current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
 	created_status[x_temp][y_temp]=0;
 	x_temp++;
 	created_status[x_temp][y_temp]=1;
