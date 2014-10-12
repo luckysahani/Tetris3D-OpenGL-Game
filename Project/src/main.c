@@ -182,7 +182,7 @@ void create_squareshape_block()
 	current_type=squareshape;
 	current_block=set_block(squareshape, color_block,block[x_temp][y_temp][current_z]);
 // current_block=block[x_temp][y_temp][current_z];
-	glmScale(current_block->model,0.6);
+	// glmScale(current_block->model,0.6);
 	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
 }
 
