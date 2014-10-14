@@ -66,7 +66,6 @@ Block *current_block;
 int x_prev,y_prev;
 GLuint texture;
 BlockType current_type;
-static int shouldPlaySound = 1;
 ALuint buffer, source; 		
 
 
@@ -75,14 +74,9 @@ ALuint buffer, source;
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
-// buffer = alutCreateBufferHelloWorld();	
 	alGenSources(1, &source);		
 	alSourcei(source, AL_BUFFER, buffer);		
-}		
-void cleanUpSound(){		
-	alDeleteSources(1, &source);		
-	alDeleteBuffers(1, &buffer);		
-}		
+}			
 void playSound(){		
 	alSourcePlay(source);		
 }
@@ -146,44 +140,29 @@ int save_screenshot(char* filename, int w, int h)
 
 void display() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	// if(music==1)
-	// {
-	// 	// static int shouldPlaySound = 1;
-		// if(shouldPlaySound){
-		// 	loadSound("./wav/theme.wav");		
-		// 	// playSound();
-		// 	printf("\nPlaying music\n");
-		// 	shouldPlaySound = 0;
+	// glEnable(GL_TEXTURE_2D);
+	// glBindTexture(GL_TEXTURE_2D, texture);
 
-		// }
-	// }
-	// else
-	// {
-	// 	// cleanUpSound();
-	// }
-// glEnable(GL_TEXTURE_2D);
-// glBindTexture(GL_TEXTURE_2D, texture);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
+	glLoadIdentity();
 
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
-glLoadIdentity();
+	/* lighting */
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLightA);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightA);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLightA);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPositionA);
 
-/* lighting */
-glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLightA);
-glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightA);
-glLightfv(GL_LIGHT0, GL_SPECULAR, specularLightA);
-glLightfv(GL_LIGHT0, GL_POSITION, lightPositionA);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightB);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLightB);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
+	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
-glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightB);
-glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLightB);
-glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
-glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
+	observe_from_viewer(viewer);
 
-observe_from_viewer(viewer);
+	display_tetris_board(tetris_board,board_status,created_status);
 
-display_tetris_board(tetris_board,board_status,created_status);
-
-glFlush();
-glutSwapBuffers();
+	glFlush();
+	glutSwapBuffers();
 }
 
 void reshape (int w, int h) {
@@ -353,9 +332,9 @@ void update_game()
 		// board_status[x_prev][y_prev]++;
 		printf("Created the blocks\n");
 		created_status[x_temp][y_temp]=1;
-}
-else
-{
+	}
+	else
+	{
 	count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
 }
 move_block_down_by_one_step();				//decrement z by 0.1
@@ -380,16 +359,16 @@ void move_block_right()
 	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)))
 	{
 
-			created_status[x_temp][y_temp]=0;
+		created_status[x_temp][y_temp]=0;
 			// tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
-			x_temp++;
-			created_status[x_temp][y_temp]=1;
-			current_z=board_status[x_temp][y_temp];
+		x_temp++;
+		created_status[x_temp][y_temp]=1;
+		current_z=board_status[x_temp][y_temp];
 			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
-			current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+		current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
 			// reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
-			printf("count==%f\n",count );
-			tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
+		printf("count==%f\n",count );
+		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 	}
 
 	
@@ -432,10 +411,7 @@ void keypressed(unsigned char key, int x, int y) {
 			music=0;
 		}
 	}
-	// if(key=='m')
-	// {
 
-	// }
 }
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
