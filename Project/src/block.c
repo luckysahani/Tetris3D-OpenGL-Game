@@ -29,7 +29,7 @@ char* _get_model_name(Block *block, PlayerType player)
 		break;
         case squareshape: 
 			model_name = "objs/squareshape.obj";
-			block->height = 0.05;
+			block->height = 0.04;
 		break;
         
         case ishape: 
