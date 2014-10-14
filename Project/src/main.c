@@ -61,14 +61,18 @@ int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
 int color_block;
 int board_status[8][8];
 int created_status[8][8];
+int music=1;
 Block *current_block;
 int x_prev,y_prev;
 GLuint texture;
 BlockType current_type;
-
-
-
+static int shouldPlaySound = 1;
 ALuint buffer, source; 		
+
+
+
+
+
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
 // buffer = alutCreateBufferHelloWorld();	
@@ -142,12 +146,20 @@ int save_screenshot(char* filename, int w, int h)
 
 void display() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	static int shouldPlaySound = 1;
-	if(shouldPlaySound){
-		loadSound("./wav/theme.wav");		
-		playSound();
-		printf("\nPlaying music\n");
-		shouldPlaySound = 0;		
+	if(music==1)
+	{
+		// static int shouldPlaySound = 1;
+		if(shouldPlaySound){
+			loadSound("./wav/theme.wav");		
+			playSound();
+			printf("\nPlaying music\n");
+			shouldPlaySound = 0;
+
+		}
+	}
+	else
+	{
+		cleanUpSound();
 	}
 // glEnable(GL_TEXTURE_2D);
 // glBindTexture(GL_TEXTURE_2D, texture);
@@ -361,26 +373,23 @@ if(count==current_z)		// if the block is just above another already placed block
 void move_block_right()
 {
 	int current_z=board_status[x_temp][y_temp];
-	tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
+	
 	// current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
 	// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,100),(int)(count));
-	created_status[x_temp][y_temp]=0;
-	if(!(x_temp > 6)) 
+	
+	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)))
 	{
-		if(board_status[x_temp+1][y_temp] >= (int)(count)) 
-		{
 
-		}
-		else
-		{
+			created_status[x_temp][y_temp]=0;
+			// tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
 			x_temp++;
 			created_status[x_temp][y_temp]=1;
+			current_z=board_status[x_temp][y_temp];
 			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
 			current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
 			// reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 			printf("count==%f\n",count );
 			tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
-		}
 	}
 
 	
@@ -410,6 +419,19 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
 	if (key == 'x') { exit(0); }
+	if (key=='m')
+	{
+		if(music==1){
+			music=0;
+		}
+		else
+		{
+			// alutInit (NULL, 0);
+			shouldPlaySound=1;
+			music=1;
+
+		}
+	}
 }
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
