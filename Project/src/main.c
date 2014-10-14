@@ -361,7 +361,6 @@ void move_block_right()
 		current_z=board_status[x_temp][y_temp];
 			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
 		current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
-			// reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 		printf("count==%f\n",count );
 		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 	}
