@@ -360,8 +360,36 @@ void move_block_right()
 	{
 
 		created_status[x_temp][y_temp]=0;
-			// tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
+		tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
 		x_temp++;
+		created_status[x_temp][y_temp]=1;
+		current_z=board_status[x_temp][y_temp];
+			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
+		current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+			// reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
+		printf("count==%f\n",count );
+		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
+	}
+
+	
+
+
+
+
+}
+void move_block_left()
+{
+	int current_z=board_status[x_temp][y_temp];
+	
+	// current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+	// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,100),(int)(count));
+	
+	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp-1][y_temp] < (int)(count)))
+	{
+
+		created_status[x_temp][y_temp]=0;
+			// tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
+		x_temp--;
 		created_status[x_temp][y_temp]=1;
 		current_z=board_status[x_temp][y_temp];
 			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
@@ -424,6 +452,7 @@ void keypressSpecial(int key, int x, int y){
 	}
 	if (key== GLUT_KEY_LEFT){
 		loadSound("./wav/tick.wav"); playSound();
+		move_block_left();
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
