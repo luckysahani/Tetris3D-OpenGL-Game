@@ -331,7 +331,7 @@ void update_game()
 		flag=0;
 		count=height/0.1;
 		k=rand()%3+ 1;
-		// k=2;
+		k=1;
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
 		color_block=rand()%3;					//color of block
@@ -362,18 +362,28 @@ void move_block_right()
 {
 	int current_z=board_status[x_temp][y_temp];
 	tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
-	current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+	// current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+	// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,100),(int)(count));
 	created_status[x_temp][y_temp]=0;
+	if(!(x_temp > 6)) 
+	{
+		if(board_status[x_temp+1][y_temp] >= (int)(count)) 
+		{
 
+		}
+		else
+		{
+			x_temp++;
+			created_status[x_temp][y_temp]=1;
+			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
+			current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+			// reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
+			printf("count==%f\n",count );
+			tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
+		}
+	}
 
-
-	x_temp++;
-	created_status[x_temp][y_temp]=1;
-	tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
-	reset_coordinates(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
-	printf("count==%f\n",count );
-	tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
-
+	
 
 
 
@@ -385,7 +395,7 @@ void move_block_right()
 
 void timer(int extra) {
 	glutPostRedisplay();
-	if(time_status==50){update_game();time_status=0;}
+	if(time_status==20){update_game();time_status=0;}
 	time_status++;
 	glutTimerFunc(1, timer, 0);
 // glutTimerFunc(200, update_game,0);	
