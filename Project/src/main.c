@@ -146,21 +146,21 @@ int save_screenshot(char* filename, int w, int h)
 
 void display() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(music==1)
-	{
-		// static int shouldPlaySound = 1;
-		if(shouldPlaySound){
-			loadSound("./wav/theme.wav");		
-			playSound();
-			printf("\nPlaying music\n");
-			shouldPlaySound = 0;
+	// if(music==1)
+	// {
+	// 	// static int shouldPlaySound = 1;
+		// if(shouldPlaySound){
+		// 	loadSound("./wav/theme.wav");		
+		// 	// playSound();
+		// 	printf("\nPlaying music\n");
+		// 	shouldPlaySound = 0;
 
-		}
-	}
-	else
-	{
-		cleanUpSound();
-	}
+		// }
+	// }
+	// else
+	// {
+	// 	// cleanUpSound();
+	// }
 // glEnable(GL_TEXTURE_2D);
 // glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -421,17 +421,21 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'x') { exit(0); }
 	if (key=='m')
 	{
-		if(music==1){
-			music=0;
+		if(music==0){
+			alSourceStop(source);
+			music=1;
 		}
 		else
 		{
-			// alutInit (NULL, 0);
-			shouldPlaySound=1;
-			music=1;
-
+			loadSound("./wav/theme.wav");
+			alSourcePlay(source);
+			music=0;
 		}
 	}
+	// if(key=='m')
+	// {
+
+	// }
 }
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
