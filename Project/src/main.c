@@ -62,6 +62,7 @@ int color_block;
 int board_status[8][8];
 int created_status[8][8];
 int music=1;
+int executed=1;
 Block *current_block;
 int x_prev,y_prev;
 GLuint texture;
@@ -351,6 +352,7 @@ if(count==current_z)		// if the block is just above another already placed block
 
 void move_block_right()
 {
+	executed=0;
 	int current_z=board_status[x_temp][y_temp];
 	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)))
 	{
@@ -364,9 +366,11 @@ void move_block_right()
 		printf("count==%f\n",count );
 		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 	}
+	executed=1;
 }
 void move_block_left()
 {
+	executed=0;
 	int current_z=board_status[x_temp][y_temp];
 	if(!(x_temp < 1) && (count > 0.0) && (board_status[x_temp-1][y_temp] < (int)(count)))
 	{
@@ -381,9 +385,11 @@ void move_block_left()
 		printf("count==%f\n",count );
 		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 	}
+	executed=1;
 }
 void move_block_up()
 {
+	executed=0;
 	int current_z=board_status[x_temp][y_temp];
 	if(!(y_temp > 6) && (count > 0.0) && (board_status[x_temp][y_temp+1] < (int)(count)))
 	{
@@ -398,9 +404,11 @@ void move_block_up()
 		printf("count==%f\n",count );
 		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 	}
+	executed=1;
 }
 void move_block_down()
 {
+	executed=0;
 	int current_z=board_status[x_temp][y_temp];
 	if(!(y_temp < 1) && (count > 0.0) && (board_status[x_temp][y_temp-1] < (int)(count)))
 	{
@@ -415,6 +423,7 @@ void move_block_down()
 		printf("count==%f\n",count );
 		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
 	}
+	executed=1;
 }
 
 
@@ -422,8 +431,12 @@ void move_block_down()
 
 void timer(int extra) {
 	glutPostRedisplay();
-	if(time_status==20){update_game();time_status=0;}
-	time_status++;
+	if(executed==1)
+	{
+		if(time_status>=40){update_game();time_status=0;}
+		time_status++;
+		
+	}
 	glutTimerFunc(1, timer, 0);
 // glutTimerFunc(200, update_game,0);	
 }
