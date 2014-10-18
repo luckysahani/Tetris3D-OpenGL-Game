@@ -62,6 +62,7 @@ int color_block;
 int board_status[8][8];
 int created_status[8][8];
 int music=1;
+int is_ready_to_update_status_of_block=1;
 int executed=1;
 Block *current_block;
 int x_prev,y_prev;
@@ -253,6 +254,7 @@ void move_block_down_by_one_step()
 		exit(0);
 	}
 	printf("moved down 1 step\n");
+	if(executed==1)
 	reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 
 }
@@ -338,6 +340,7 @@ void update_game()
 	{
 	count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
 }
+// if(executed==1)
 move_block_down_by_one_step();				//decrement z by 0.1
 if(count==current_z)		// if the block is just above another already placed block
 {
@@ -354,7 +357,7 @@ void move_block_right()
 {
 	executed=0;
 	int current_z=board_status[x_temp][y_temp];
-	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)))
+	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)) )
 	{
 		created_status[x_temp][y_temp]=0;
 		tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
@@ -431,13 +434,23 @@ void move_block_down()
 
 void timer(int extra) {
 	glutPostRedisplay();
-	if(executed==1)
-	{
-		if(time_status>=40){update_game();time_status=0;}
+	while(!executed);
+	// while(is_ready_to_update_status_of_block==1)
+	// {
+		while(time_status>=40)
+		{
+			// is_ready_to_update_status_of_block=1;
+			update_game();
+			// time_status=0;
+			// is_ready_to_update_status_of_block=0;
+			time_status=0;
+		}
 		time_status++;
+	// }
 		
-	}
-	glutTimerFunc(1, timer, 0);
+	
+		glutTimerFunc(1, timer, 0);
+	
 // glutTimerFunc(200, update_game,0);	
 }
 
@@ -468,6 +481,7 @@ void keypressed(unsigned char key, int x, int y) {
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
+
 		move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){

@@ -6,13 +6,13 @@
 
 void destroy_tetris_board(Tetris_board *cboard)
 {
-    free(cboard->board); cboard->board = NULL;
+	free(cboard->board); cboard->board = NULL;
 	free(cboard);        cboard = NULL;
 }
 
 Tetris_board * create_tetris_board()
 {
-    Tetris_board *cboard = malloc(sizeof(Tetris_board));
+	Tetris_board *cboard = malloc(sizeof(Tetris_board));
 	cboard->pos[0] = 0;
 	cboard->pos[1] = 0;
 	cboard->pos[2] = 0;
@@ -36,8 +36,8 @@ Tetris_board * create_tetris_board()
 	cboard->player_turn = WHITE;
 
     /* select no cell */
-    cboard->cell_highlighted = CELL_NONE;
-    cboard->cell_selected =  CELL_NONE;
+	cboard->cell_highlighted = CELL_NONE;
+	cboard->cell_selected =  CELL_NONE;
 
 	/* logical cells for the block */
 	cboard->board = malloc(sizeof(Block*) * NUM_CELLS * NUM_CELLS);
@@ -114,58 +114,58 @@ Block *get_block(Tetris_board* c, int cell) {
 }
 
 void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8]) {
-    glPushMatrix();
-    glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
-    GLdouble x, y;
-    int color = 0;
-    
+	glPushMatrix();
+	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
+	GLdouble x, y;
+	int color = 0;
+
 	int xcell = -1;
 	int ycell;
 	int zcell=0;
 	int i;
 	GLdouble step = cboard->cell_width;
-    for (x=-0.5f; x<0.5f; x+=step){
+	for (x=-0.5f; x<0.5f; x+=step){
 		xcell++;
 		ycell = NUM_CELLS;
 
-    	color = 1 - color;
-    	for (y=-0.5f; y<0.5f; y+=step){
+		color = 1 - color;
+		for (y=-0.5f; y<0.5f; y+=step){
 			ycell--;
 
 
     		/* flip color */
-    		color = 1 - color;
-    
+			color = 1 - color;
+
     		/* choose material color */
-            if (cboard->cell_highlighted == CELL(xcell, ycell,zcell)) {
-                glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_selected);
-                glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_selected);
-                glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
-                glMaterialf(GL_FRONT, GL_SHININESS, 10.0f);
-            }
-            else {
-                if (color) { 
-                    glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_dark);
-                    glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_dark);
-                    glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
-                    glMaterialf(GL_FRONT, GL_SHININESS, 60.0f);
-                }
-                else {
-                    glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_clear);
-                    glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_clear);
-                    glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
-                    glMaterialf(GL_FRONT, GL_SHININESS, 40.0f);
-                }
-            }
+			if (cboard->cell_highlighted == CELL(xcell, ycell,zcell)) {
+				glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_selected);
+				glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_selected);
+				glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
+				glMaterialf(GL_FRONT, GL_SHININESS, 10.0f);
+			}
+			else {
+				if (color) { 
+					glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_dark);
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_dark);
+					glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
+					glMaterialf(GL_FRONT, GL_SHININESS, 60.0f);
+				}
+				else {
+					glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_clear);
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_clear);
+					glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
+					glMaterialf(GL_FRONT, GL_SHININESS, 40.0f);
+				}
+			}
 
     		/* draw cell */
-    		glBegin(GL_QUADS);
-				glNormal3f(0.0,0.0,1.0);
-    			glVertex3d(x, 0, y);
-    			glVertex3d(x+step, 0, y);
-    			glVertex3d(x+step, 0, y+step);
-    			glVertex3d(x, 0, y+step);
-    		glEnd();
+			glBegin(GL_QUADS);
+			glNormal3f(0.0,0.0,1.0);
+			glVertex3d(x, 0, y);
+			glVertex3d(x+step, 0, y);
+			glVertex3d(x+step, 0, y+step);
+			glVertex3d(x, 0, y+step);
+			glEnd();
 
 			/* draw block at cell */
 
@@ -173,91 +173,118 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 //			ERROR PART
     		// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
 
-    		if(board_status[xcell][ycell]>=0)
-    		{
-    			i=0;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			if(board_status[xcell][ycell]>=0)
+			{
+				i=0;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
-    		if((board_status[xcell][ycell]>=1)&&(created_status[xcell][ycell]==1))
-    		{
-    			i=1;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			}
+			if((board_status[xcell][ycell]>=1)&&(created_status[xcell][ycell]==1))
+			{
+				i=1;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
-    		if((board_status[xcell][ycell]>=2)&&(created_status[xcell][ycell]==1))
-    		{
-    			i=2;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			}
+			if((board_status[xcell][ycell]>=2)&&(created_status[xcell][ycell]==1))
+			{
+				i=2;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
-    		if((board_status[xcell][ycell]>=3)&&(created_status[xcell][ycell]==1))
-    		{
-    			i=3;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			}
+			if((board_status[xcell][ycell]>=3)&&(created_status[xcell][ycell]==1))
+			{
+				i=3;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
-    		if((board_status[xcell][ycell]>=4)&&(created_status[xcell][ycell]==1))
-    		{
-    			i=4;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			}
+			if((board_status[xcell][ycell]>=4)&&(created_status[xcell][ycell]==1))
+			{
+				i=4;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
-    		if((board_status[xcell][ycell]>=5)&&(created_status[xcell][ycell]==1))
-    		{
-    			i=5;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			}
+			if((board_status[xcell][ycell]>=5)&&(created_status[xcell][ycell]==1))
+			{
+				i=5;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
-    		if((board_status[xcell][ycell]>=6)&&(created_status[xcell][ycell]==1))
-    		{
-    			i=6;
-    			if (cboard->board[CELL(xcell, ycell,i)]) {
+			}
+			if((board_status[xcell][ycell]>=6)&&(created_status[xcell][ycell]==1))
+			{
+				i=6;
+				if (cboard->board[CELL(xcell, ycell,i)]) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
 				}
-    		}
+			}
 
 			// printf("just entered\n");
 			// else
 			// {
-				for ( i = 0; i < board_status[xcell][ycell]; i++)
-				{
+			for ( i = 0; i < board_status[xcell][ycell]; i++)
+			{
 					/* code */
 					// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
 				
 					// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
-					if (cboard->board[CELL(xcell, ycell,i)]) {
-						Block *block = cboard->board[CELL(xcell, ycell,i)];
+				if (cboard->board[CELL(xcell, ycell,i)]) {
+					Block *block = cboard->board[CELL(xcell, ycell,i)];
 						// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-						display_block(block, CELL(xcell, ycell,i)	);
-					}
+					display_block(block, CELL(xcell, ycell,i)	);
 				}
-			// }
+			}
+		}
+	}
+					//Now working on removing the layer if it is complete
+
+		
+		xcell=0;
+		int check=1;
+		for (x=-0.5f; x<0.5f; x+=step)
+		{
+			xcell++;
+			ycell = NUM_CELLS;
+			for (y=-0.5f; y<0.5f; y+=step)
+			{
+				ycell--;
+				if (cboard->board[CELL(xcell, ycell,0)])
+				{
+
+				}
+				else
+				{
+					check=0;
+				}
 
 
-//			ERROR PART OVER
-    	}
-   }
+			}
+
+		}
+		if(check==1)
+		{
+			printf("\n looks like its fully occupied");
+		}
+
+
 
 
 
@@ -274,7 +301,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 	// 		{
 	// 			/* code */
 	// 			// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
-			
+
 	// 			// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
 	// 			if (cboard->board[CELL(xcell, ycell,i)]) {
 	// 				Block *block = cboard->board[CELL(xcell, ycell,i)];
@@ -285,7 +312,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 	// 	}
 	// }
    // printf("Displaying board\n");
-   glPopMatrix();
+	glPopMatrix();
 }
 
 
@@ -321,7 +348,7 @@ void set_turn(Tetris_board *cboard, PlayerType player) {
 void flip_turn(Tetris_board *cboard) {
 	// cboard->player_turn = 
 		// cboard->player_turn == WHITE ? BLACK: WHITE;
-		printf("Flipped\n");
+	printf("Flipped\n");
 }
 
 void select_cell(Tetris_board *cboard, int cell)
@@ -351,9 +378,9 @@ void select_cell(Tetris_board *cboard, int cell)
 		if(CELL_NONE != cboard->cell_selected) {
 			/* move */
 			Block *mover = get_block(cboard, cboard->cell_selected);
-		    tetris_board_clear_cell(cboard, cboard->cell_selected);
+			tetris_board_clear_cell(cboard, cboard->cell_selected);
 			tetris_board_place_block(cboard, mover, cell_wish,0);
-		    flip_turn(cboard);
+			flip_turn(cboard);
 		}
 		cboard->cell_selected = CELL_NONE;
 	}
