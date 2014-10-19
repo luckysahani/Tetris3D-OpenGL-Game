@@ -250,7 +250,7 @@ void move_block_down_by_one_step()
 {
 	int current_z=board_status[x_temp][y_temp];
 	if(current_z==6){
-		printf("Game over\n");
+		printf("Game over (exited in move block by one step)\n");
 		exit(0);
 	}
 	printf("moved down 1 step\n");
@@ -316,7 +316,7 @@ void update_game()
 {
 	int current_z=board_status[x_temp][y_temp];
 	if(current_z==6){
-		printf("Game over\n");
+		printf("Game over (exited in update game)\n");
 		exit(0);
 	}
 	if(flag==1)
@@ -346,7 +346,7 @@ if(count==current_z)		// if the block is just above another already placed block
 {
 	place_block();							//place this new block
 	if(current_z==5){		//if the height of game>5 exit the game baby
-		printf("Game over\n");
+		printf("Game over(exited in update game case 2)\n");
 		exit(0);
 	}
 	flag=1;									
