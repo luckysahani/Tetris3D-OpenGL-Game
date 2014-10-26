@@ -320,7 +320,7 @@ void update_game()
 		exit(0);
 	}
 	if(flag==1)
-	{
+	{ 
 		printf("\n\n");
 		flag=0;
 		count=height/0.1;
