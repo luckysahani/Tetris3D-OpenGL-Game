@@ -260,10 +260,12 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 		xcell=0;
 		int check=1;
 		int count=0;
+		Block *block;
 		for (x=-0.5f; x<0.5f; x+=step)
 		{
 			xcell++;
 			ycell = NUM_CELLS;
+			// count=0;
 			for (y=-0.5f; y<0.5f; y+=step)
 			{
 				ycell--;
@@ -276,6 +278,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 				{
 					check=0;
 				}
+				// if(count>2){printf("count is > 2\n");}
 
 
 			}
@@ -285,6 +288,26 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 		if(check==1)
 		{
 			printf("\n looks like its fully occupied");
+			
+
+
+			xcell=0;
+			for (x=-0.5f; x<0.5f; x+=step)
+			{
+				xcell++;
+				ycell = NUM_CELLS;
+				// count=0;
+				for (y=-0.5f; y<0.5f; y+=step)
+				{
+					ycell--;
+					board_status[xcell][ycell]--;
+					block=cboard->board[CELL(xcell, ycell,0)];
+					cboard->board[CELL(xcell, ycell,0)]=NULL;
+				}
+			}
+
+
+
 		}
 
 
