@@ -168,7 +168,7 @@ void display() {
 }
 
 void reshape (int w, int h) {
-	glViewport (0, 0, (GLsizei)w, (GLsizei)h);
+	glViewport (0, 0, (GLsizei)w*80/100, (GLsizei)h);
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity ();
 	gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
@@ -573,7 +573,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	alutInit (&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-	glutInitWindowSize (1200, 800);
+	glutInitWindowSize (1200, 1200);
 	glutInitWindowPosition (100,100);
 	glutCreateWindow ("3D-Tetris");
 	glutDisplayFunc(display);
