@@ -95,9 +95,9 @@ Block* create_block(BlockType type, PlayerType player)
 	// 	block->color[B] = 0.09f;
 	// 	block->color[A] = 1.0f;
 	// }
-	block->color_selected[R] = 0.05f;
-	block->color_selected[G] = 0.05f;
-	block->color_selected[B] = 0.08f;
+	block->color_selected[R] = block->color[R];
+	block->color_selected[G] = block->color[G]; 
+	block->color_selected[B] = block->color[B];
 
 	block->type = type;
 	block->player = player;
@@ -169,9 +169,9 @@ Block* set_block(BlockType type, PlayerType player,Block *block2)
 		block->color[B] = 0.09f;
 		block->color[A] = 1.0f;
 	}
-	block->color_selected[R] = 0.05f;
-	block->color_selected[G] = 0.05f;
-	block->color_selected[B] = 0.08f;
+	block->color_selected[R] = block->color[R];
+	block->color_selected[G] = block->color[G]; 
+	block->color_selected[B] = block->color[B];
 
 	block->type = type;
 	block->player = player;
@@ -198,18 +198,18 @@ void display_block(Block *block, BlockState state) {
 
     if (block->model) {
 		/* material colour */
-		// if (state == PAWN_SELECTED) {
-		// 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color_selected);
-		// 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color_selected);
-		// 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color_selected);
-		// 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 2.5f);
-		// }
-		// else {
+		if (state == PAWN_SELECTED) {
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color_selected);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color_selected);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color_selected);
+			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+		}
+		else {
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
 			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
 			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
-		// }
+		}
         glmDraw(block->model, GLM_SMOOTH);
     }
     glPopMatrix();
