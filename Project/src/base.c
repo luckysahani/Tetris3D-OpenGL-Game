@@ -275,7 +275,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 					if (cboard->board[CELL(xcell, ycell,0)])
 					{
 						count++;
-						printf("count==%d\n",count );
+						// printf("count==%d\n",count );
 
 					}
 					else
