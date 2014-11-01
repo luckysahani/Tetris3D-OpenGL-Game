@@ -259,7 +259,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 
 
 		
-		xcell=0;
+		xcell=-1;
 		int check=1;
 		int count=0;
 		Block *block;
@@ -292,7 +292,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 
 		}
 		// check=1;
-		// if(count>15){check=1;}
+		// if(count>5){check=1;}
 
 		// printf("count==%d\n",count );
 		if(check==1)
@@ -301,7 +301,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 			
 
 
-			xcell=0;
+			xcell=-1;
 			for (x=-0.5f; x<0.5f; x+=step)
 			{
 				xcell++;
@@ -310,7 +310,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 				for (y=-0.5f; y<0.5f; y+=step)
 				{
 					ycell--;
-					if(board_status[xcell][ycell]>0)
+					if((board_status[xcell][ycell]>0)&&(cboard->board[CELL(xcell, ycell,0)]))
 					{
 						for ( i = 0; i < board_status[xcell][ycell]; i++)
 						{
