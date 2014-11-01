@@ -339,20 +339,40 @@ void update_game()
 	else
 	{
 	count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
+	}
+	// if(executed==1)
+	move_block_down_by_one_step();				//decrement z by 0.1
+	if(count==current_z)		// if the block is just above another already placed block
+	{
+
+		place_block();							//place this new block
+		if(current_z==5){		//if the height of game>5 exit the game baby
+			printf("Game over(exited in update game case 2)\n");
+			exit(0);
+		}
+		flag=1;									
+	}
 }
-// if(executed==1)
-move_block_down_by_one_step();				//decrement z by 0.1
-if(count==current_z)		// if the block is just above another already placed block
+
+void move_block_max_down()
 {
-	place_block();							//place this new block
-	if(current_z==5){		//if the height of game>5 exit the game baby
+	int current_z=board_status[x_temp][y_temp];
+	while(count>current_z)
+	{
+		count--;
+		move_block_down_by_one_step();
+		// current_z=board_status[x_temp][y_temp];
+	}
+	if(count==current_z){
+		place_block();
+	}
+	// current_z=board_status[x_temp][y_temp];
+	if(current_z==5){		
 		printf("Game over(exited in update game case 2)\n");
 		exit(0);
 	}
-	flag=1;									
+	flag=1;
 }
-}
-
 void move_block_right()
 {
 	executed=0;
@@ -463,6 +483,9 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
 	if (key == 'x') { exit(0); }
+	if( key == ' '){
+		move_block_max_down();
+	}
 	if (key=='m')
 	{
 		if(music==0){
@@ -496,6 +519,7 @@ void keypressSpecial(int key, int x, int y){
 		loadSound("./wav/tick.wav"); playSound();
 		move_block_right();
 	}
+
 }
 void mouseMove(int x, int y) 
 { 	

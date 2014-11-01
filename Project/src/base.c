@@ -138,6 +138,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 
     		/* choose material color */
 			if (cboard->cell_highlighted == CELL(xcell, ycell,zcell)) {
+				printf("\n\nshould not enter\n");
 				glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_selected);
 				glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_selected);
 				glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
@@ -148,13 +149,13 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 					glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_dark);
 					glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_dark);
 					glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
-					glMaterialf(GL_FRONT, GL_SHININESS, 60.0f);
+					glMaterialf(GL_FRONT, GL_SHININESS, 120.0f);
 				}
 				else {
 					glMaterialfv(GL_FRONT, GL_AMBIENT, cboard->color_clear);
 					glMaterialfv(GL_FRONT, GL_DIFFUSE, cboard->color_clear);
 					glMaterialfv(GL_FRONT, GL_SPECULAR, cboard->color_specular);
-					glMaterialf(GL_FRONT, GL_SHININESS, 40.0f);
+					glMaterialf(GL_FRONT, GL_SHININESS, 120.0f);
 				}
 			}
 
@@ -402,40 +403,40 @@ void flip_turn(Tetris_board *cboard) {
 	printf("Flipped\n");
 }
 
-void select_cell(Tetris_board *cboard, int cell)
-{
-	printf("Selectcell called\n");
-	int cell_wish = cell == CELL_CURRENT ? cboard->cell_highlighted : cell;
-	Block *p = get_block(cboard, cell_wish);
-	if (p) {
-		if (p->player == cboard->player_turn) {
-			/* own block selected -- clear selection / select block */
-			cboard->cell_selected = cell_wish == cboard->cell_selected ? CELL_NONE : cell_wish;
-		}
-		else {
-			if(CELL_NONE != cboard->cell_selected) {
-				/* opponent block selected -- take */
-				tetris_board_clear_cell(cboard, cell_wish);
-				Block *taker = get_block(cboard, cboard->cell_selected);
-				tetris_board_clear_cell(cboard, cboard->cell_selected);
-				tetris_board_place_block(cboard, taker, cell_wish,0);;
-				cboard->cell_selected = CELL_NONE;
-				//flip_turn(cboard);
-			}
-		}
-	}
-	else {
-		/* empty cell selected */
-		if(CELL_NONE != cboard->cell_selected) {
-			/* move */
-			Block *mover = get_block(cboard, cboard->cell_selected);
-			tetris_board_clear_cell(cboard, cboard->cell_selected);
-			tetris_board_place_block(cboard, mover, cell_wish,0);
-			flip_turn(cboard);
-		}
-		cboard->cell_selected = CELL_NONE;
-	}
-}
+// void select_cell(Tetris_board *cboard, int cell)
+// {
+// 	printf("\n\n\nSelectcell called\n");
+// 	int cell_wish = cell == CELL_CURRENT ? cboard->cell_highlighted : cell;
+// 	Block *p = get_block(cboard, cell_wish);
+// 	if (p) {
+// 		if (p->player == cboard->player_turn) {
+// 			/* own block selected -- clear selection / select block */
+// 			cboard->cell_selected = cell_wish == cboard->cell_selected ? CELL_NONE : cell_wish;
+// 		}
+// 		else {
+// 			if(CELL_NONE != cboard->cell_selected) {
+// 				/* opponent block selected -- take */
+// 				tetris_board_clear_cell(cboard, cell_wish);
+// 				Block *taker = get_block(cboard, cboard->cell_selected);
+// 				tetris_board_clear_cell(cboard, cboard->cell_selected);
+// 				tetris_board_place_block(cboard, taker, cell_wish,0);;
+// 				cboard->cell_selected = CELL_NONE;
+// 				//flip_turn(cboard);
+// 			}
+// 		}
+// 	}
+// 	else {
+// 		/* empty cell selected */
+// 		if(CELL_NONE != cboard->cell_selected) {
+// 			/* move */
+// 			Block *mover = get_block(cboard, cboard->cell_selected);
+// 			tetris_board_clear_cell(cboard, cboard->cell_selected);
+// 			tetris_board_place_block(cboard, mover, cell_wish,0);
+// 			flip_turn(cboard);
+// 		}
+// 		cboard->cell_selected = CELL_NONE;
+// 	}
+// }
 
 void tetris_board_clear_cell(Tetris_board *cboard, int cell)
 {
