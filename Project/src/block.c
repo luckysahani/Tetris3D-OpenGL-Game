@@ -198,18 +198,18 @@ void display_block(Block *block, BlockState state) {
 
     if (block->model) {
 		/* material colour */
-		if (state == PAWN_SELECTED) {
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color_selected);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color_selected);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color_selected);
-			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 2.5f);
-		}
-		else {
+		// if (state == PAWN_SELECTED) {
+		// 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color_selected);
+		// 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color_selected);
+		// 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color_selected);
+		// 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 2.5f);
+		// }
+		// else {
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
 			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
 			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
-		}
+		// }
         glmDraw(block->model, GLM_SMOOTH);
     }
     glPopMatrix();

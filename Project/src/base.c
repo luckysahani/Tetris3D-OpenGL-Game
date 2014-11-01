@@ -256,6 +256,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 	}
 					//Now working on removing the layer if it is complete
 
+
 		
 		xcell=0;
 		int check=1;
@@ -269,25 +270,33 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 			for (y=-0.5f; y<0.5f; y+=step)
 			{
 				ycell--;
-				if (cboard->board[CELL(xcell, ycell,0)])
-				{
-					count++;
+				// if(board_status[xcell][ycell]>0)
+				// {
+					if (cboard->board[CELL(xcell, ycell,0)])
+					{
+						count++;
+						printf("count==%d\n",count );
 
-				}
-				else
-				{
-					check=0;
-				}
-				// if(count>2){printf("count is > 2\n");}
+					}
+					else
+					{
+
+						check=0;
+					}
+					// if(count>2){printf("count is > 2\n");}
+				// }
 
 
 			}
 
 		}
+		// check=1;
+		// if(count>15){check=1;}
+
 		// printf("count==%d\n",count );
 		if(check==1)
 		{
-			printf("\n looks like its fully occupied");
+			printf("\n\n \n looks like its fully occupied\n \n \n");
 			
 
 
@@ -300,9 +309,25 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 				for (y=-0.5f; y<0.5f; y+=step)
 				{
 					ycell--;
-					board_status[xcell][ycell]--;
-					block=cboard->board[CELL(xcell, ycell,0)];
-					cboard->board[CELL(xcell, ycell,0)]=NULL;
+					if(board_status[xcell][ycell]>0)
+					{
+						for ( i = 0; i < board_status[xcell][ycell]; i++)
+						{
+							block=cboard->board[CELL(xcell, ycell,i)];
+							if(i==0)
+							{
+								cboard->board[CELL(xcell, ycell,0)]=NULL;
+							}
+							else
+							{
+								cboard->board[CELL(xcell, ycell,i-1)]=block;
+								cboard->board[CELL(xcell, ycell,i-1)]->pos[1]--;
+							}
+						}
+						board_status[xcell][ycell]--;
+						// block=cboard->board[CELL(xcell, ycell,0)];
+						// cboard->board[CELL(xcell, ycell,0)]=NULL;
+					}
 				}
 			}
 
