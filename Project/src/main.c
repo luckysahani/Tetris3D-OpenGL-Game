@@ -101,6 +101,7 @@ void init() {
 			}
 		}
 	}
+	tetris_board->score=0;
 	glClearColor (0.8, 0.8, 1.0, 1.0);
 // glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
@@ -141,6 +142,7 @@ int save_screenshot(char* filename, int w, int h)
 }
 
 void display() {
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// glEnable(GL_TEXTURE_2D);
 	// glBindTexture(GL_TEXTURE_2D, texture);
@@ -162,18 +164,66 @@ void display() {
 	observe_from_viewer(viewer);
 
 	display_tetris_board(tetris_board,board_status,created_status);
+	// glTranslatef(1030, 30, 0);
+	// glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'string[i]');
+	// GLvoid *font_style = GLUT_BITMAP_TIMES_ROMAN_24;
+// 	glFontBegin(&font);
+// glScalef(8.0, 8.0, 8.0);
+// glTranslatef(1030, 30, 0);
+// glFontTextOut("Test", 5, 5, 0);
+// glFontEnd();
 
 	glFlush();
 	glutSwapBuffers();
 }
 
 void reshape (int w, int h) {
-	glViewport (0, 0, (GLsizei)w*80/100, (GLsizei)h);
+	glViewport (0, 0, w, h);
+	// glViewport (0, 0, 1000, h);
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity ();
 	gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
+
+
+
+
+	// glViewport(1000, 0, 1200,h);
+
+	// glMatrixMode(GL_PROJECTION);
+	// glLoadIdentity();
+	// gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
+	// glMatrixMode(GL_MODELVIEW);
+	// glLoadIdentity();
+	// drawSceneContents();
+	// glMatrixMode(GL_MODELVIEW);
+	// glLoadIdentity();
+	// int score=100000000000000;
+	// glTranslatef(1030, 30, 0);
+	// sprintf(score_display,"Score, harr: %d",score);
+	// glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'string[i]');
+	// glClear(GL_DEPTH_BUFFER_BIT);
+	// gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
+	// glTranslatef(1030, 30, 0);
+	// glScalef(8.0, 8.0, 8.0);
+	// glBegin(GL_QUADS);
+	// glTexCoord2f(0.25, 0.0); glVertex2f(-0.0, -1.0);
+	// glTexCoord2f(0.25, 1.0); glVertex2f(-0.0, +1.0);
+	// glTexCoord2f(0.75, 1.0); glVertex2f(+1.0, +1.0);
+	// glTexCoord2f(0.75, 0.0); glVertex2f(+1.0, -1.0);
+	// glEnd();
+
+
+	// glFontBegin(&font);
+	// glScalef(8.0, 8.0, 8.0);
+	// glTranslatef(1030, 30, 0);
+	// glFontTextOut("Test", 5, 5, 0);
+	// glFontEnd();
+	// glFlush();
+
+
+	
 }
 
 
@@ -251,11 +301,12 @@ void move_block_down_by_one_step()
 	int current_z=board_status[x_temp][y_temp];
 	if(current_z==6){
 		printf("Game over (exited in move block by one step)\n");
+		printf("\n\nYour total score is %d\n",tetris_board->score );
 		exit(0);
 	}
 	printf("moved down 1 step\n");
 	if(executed==1)
-	reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
+		reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 
 }
 
@@ -305,6 +356,8 @@ void place_block()
 	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
 	increment_board_status();
 	created_status[x_temp][y_temp]=0;
+	tetris_board->score+=5;
+	printf("\nScore==%d\n",tetris_board->score );
 }
 
 
@@ -317,6 +370,7 @@ void update_game()
 	int current_z=board_status[x_temp][y_temp];
 	if(current_z==6){
 		printf("Game over (exited in update game)\n");
+		printf("\n\nYour total score is %d\n",tetris_board->score );
 		exit(0);
 	}
 	if(flag==1)
@@ -339,7 +393,7 @@ void update_game()
 	else
 	{
 	count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
-	}
+}
 	// if(executed==1)
 	move_block_down_by_one_step();				//decrement z by 0.1
 	if(count==current_z)		// if the block is just above another already placed block
@@ -348,6 +402,7 @@ void update_game()
 		place_block();							//place this new block
 		if(current_z==5){		//if the height of game>5 exit the game baby
 			printf("Game over(exited in update game case 2)\n");
+			printf("\n\nYour total score is %d\n",tetris_board->score );
 			exit(0);
 		}
 		flag=1;									
@@ -369,6 +424,7 @@ void move_block_max_down()
 	// current_z=board_status[x_temp][y_temp];
 	if(current_z==5){		
 		printf("Game over(exited in update game case 2)\n");
+		printf("\n\nYour total score is %d\n",tetris_board->score );
 		exit(0);
 	}
 	flag=1;
@@ -457,19 +513,21 @@ void timer(int extra) {
 	while(!executed);
 	// while(is_ready_to_update_status_of_block==1)
 	// {
-		while(time_status>=40)
-		{
+	while(time_status>=40)
+	{
 			// is_ready_to_update_status_of_block=1;
-			update_game();
+		// tetris_board->score+=1;
+		// printf("\nScore==%d\n",tetris_board->score );
+		update_game();
 			// time_status=0;
 			// is_ready_to_update_status_of_block=0;
-			time_status=0;
-		}
-		time_status++;
+		time_status=0;
+	}
+	time_status++;
 	// }
-		
+
 	
-		glutTimerFunc(1, timer, 0);
+	glutTimerFunc(1, timer, 0);
 	
 // glutTimerFunc(200, update_game,0);	
 }
@@ -482,8 +540,13 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'b') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
-	if (key == 'x') { exit(0); }
-	if( key == ' '){
+	if (key == 'x') 
+	{ 
+		printf("\n\nYour total score is %d\n",tetris_board->score );
+		exit(0);
+	}
+	if( key == ' ')
+	{
 		move_block_max_down();
 	}
 	if (key=='m')
@@ -573,7 +636,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	alutInit (&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-	glutInitWindowSize (1200, 1200);
+	glutInitWindowSize (1200, 1000);
 	glutInitWindowPosition (100,100);
 	glutCreateWindow ("3D-Tetris");
 	glutDisplayFunc(display);

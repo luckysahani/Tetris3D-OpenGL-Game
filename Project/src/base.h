@@ -37,6 +37,8 @@ typedef struct {
     int cell_selected;
     GLfloat color_selected[4];
 
+    int score;
+
 	PlayerType player_turn;
 
 	Block **board;

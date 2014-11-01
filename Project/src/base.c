@@ -298,6 +298,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 		if(check==1)
 		{
 			printf("\n\n \n looks like its fully occupied\n \n \n");
+			cboard->score+=100;
 			
 
 
