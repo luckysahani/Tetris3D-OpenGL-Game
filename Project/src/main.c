@@ -437,7 +437,7 @@ void timer(int extra) {
 	while(!executed);
 	// while(is_ready_to_update_status_of_block==1)
 	// {
-		while(time_status>=10)
+		while(time_status>=40)
 		{
 			// is_ready_to_update_status_of_block=1;
 			update_game();
