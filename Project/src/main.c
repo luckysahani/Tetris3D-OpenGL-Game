@@ -9,7 +9,7 @@
 
 #include "base.h"
 #include "block.h"
-#include "placer.h"
+// #include "placer.h"
 #include "viewer.h"
 #include "glm.h"
 
