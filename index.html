@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Cs360 : Computer Graphics OpenGL Game">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Cs360</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/luckysahani/CS360">View on GitHub</a>
+
+          <h1 id="project_title">Cs360</h1>
+          <h2 id="project_tagline">Computer Graphics OpenGL Game</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/luckysahani/CS360/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/luckysahani/CS360/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><strong><em>Tetris-3D</em></strong></p>
+
+<hr>
+
+<p>The traditional game of Tetris is rethought here by adding an extra dimension to it, making the gameplay more challenging and the aesthetics more appealing using the graphic capabilities of OpenGL.
+The added 3rd dimension adds another degree of freedom to the rotations of a block exponentially increasing the number of possible configurations of the block object in 3-D space. The goal of traditional tetris was to clear 2 dimensional tiles by obtaining a continous row of horizontal tiles across the length of play area. In this game the player will have to aim to clear a cuboidal volume by achieving a completely filled horizontal level.  The gameplay would become more difficult with time by increasing the falling speed of the blocks. </p>
+
+<hr>
+
+<p><strong>THE RULES OF THE GAME</strong></p>
+
+<ol>
+<li> Player starts out with an empty game volume.</li>
+<li> Bricks falls at fixed intervals. Every next block is chosen randomly from the set of available blocks.</li>
+<li> A brick freezes in its position and orientation once it touches the base of the game volume.</li>
+<li> Player can rotate the brick using two keys. One rotates the block in horizontal plane. Other rotates it in the vertical     plane. All possible space orientations of the block are achievable using this combination of two rotations.</li>
+<li> A horizontal level is cleared if it contains no holes.</li>
+<li> A player loses if the top of any block touches the ceiling of the game volume.</li>
+<li> The fall speed of the blocks increases with time.</li>
+</ol>
+
+<hr>
+
+<p><strong>Instructions for compilation</strong></p>
+
+<ol>
+<li><p>Install OpenGl and OpenAl -
+OpenGL: sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+OpenAL: sudo apt-get install libopenal0a libopenal-dev
+ALUT:   sudo apt-get install libalut0 libalut-dev</p></li>
+<li><p>Makefile in Project folder contains the compilation commnads. So , just make and your executable will be ready.</p></li>
+</ol>
+
+<hr>
+
+<p><strong>PROGRESS-I</strong></p>
+
+<ol>
+<li> Created a base for the falling blocks. The base defines the playable game volume.</li>
+<li> Modelled 5 different type of blocks in Blender.</li>
+<li> Created an .obj parser to parse the model files into OpenGL standards.</li>
+<li> Wrote the library for displaying the parsed object models onto the viewport.</li>
+<li> Have used basic materials ( only the diffuse, specular, ambient and illumination parameters, no textures or shadows         yet) to render the objects.</li>
+<li> Implemented a restrictedly navigable camera with rotation bound to translation bound together for a nice cinematic zoom     effect.</li>
+<li> Currently placed blocks into the game volume randomly.</li>
+<li> Implemented basic block selection and movement (albeit without any animation).</li>
+</ol>
+
+<hr>
+
+<p><strong>PROGRESS-II</strong></p>
+
+<ol>
+<li> Implemented falling animation for blocks.</li>
+<li> Added the background music and button triggered sounds.</li>
+<li> Implemented partial game logic.</li>
+<li> Allow players to save screenshots.</li>
+<li> Loading a character, that is, an object which is not part of the world. </li>
+<li> A navigable camera.</li>
+</ol>
+
+<hr>
+
+<p><strong>Controls</strong></p>
+
+<p>A : Move along x-axis</p>
+
+<p>S : Move along y-axis</p>
+
+<p>D : Move along x-axis(opposite to A)</p>
+
+<p>W : Move along y-axis(opposite to S)</p>
+
+<p>B : Move above the z axis</p>
+
+<p>N : Move below the z axis</p>
+
+<p>Z : Screenshot</p>
+
+<p>X : Exit</p>
+
+<p>Arrow Keys : Sample sound for block move (implemented as test for now)</p>
+
+<p>Mouse Left Click &amp; Right Click (Hold) and drag : Navigate camera</p>
+
+<hr>
+
+<p><strong>FURTHER WORK</strong></p>
+
+<ol>
+<li> These are the objectives that we plan to include in our game before final submission:</li>
+<li> Designing a Heads-up Display (HUD) - the HUD will display the current player score, Game title in fancy text and a side     window displaying the next block, highest score.</li>
+<li> Implement an algorithm for evaluation of the game state at every timer tick. Need to define the possible states of each     block in higher dimensional arrays and find a way to detect collision using these orientation arrays.</li>
+<li> Implement texture mapping for the blocks.</li>
+<li> Use ambient lights and particle effects to add visual appeal. Will make the blocks glow with a light.</li>
+<li> Use raytracing( if feasible) or lightmaps to create realistic shadows.</li>
+<li> Create smooth transition animations for going from one state to other.</li>
+<li> (Optional gameplay element) Add the concept of powers. Bonuses that will destroy large volumes of blocks in single turn.</li>
+<li> Add sound effects to game</li>
+<li>Create a background score - either digital (launchpad or some other application) or create instrumental recordings.<br>
+</li>
+</ol>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Cs360 maintained by <a href="https://github.com/luckysahani">luckysahani</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
