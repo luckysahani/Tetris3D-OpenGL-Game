@@ -20,7 +20,26 @@
 // #include <al/alu.h>
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>  
+#include <time.h>
+// #include <vector>
+// #include <utility>
+// #include <sstream>
+// #include <cstdio>
+// #include <climits>
+// #include <cstdlib>
+// #include <algorithm>
+// #include <cmath>
+// #include <cstring>
+// #include <string>
+// #include <deque>
+// #include <bitset>
+// #include <map>
+// #include <set>
+// #include <stack>
+// #include <list>
+// #include <queue>
+// #include <iterator>
 #define HEIGHT 800
 #define WIDTH 800
 
@@ -69,6 +88,9 @@ int x_prev,y_prev;
 GLuint texture;
 BlockType current_type;
 ALuint buffer, source; 		
+int font=(int)GLUT_BITMAP_8_BY_13;
+// char text_s[11],text_s1[11];
+
 
 
 
@@ -358,11 +380,27 @@ void place_block()
 	created_status[x_temp][y_temp]=0;
 	tetris_board->score+=5;
 	printf("\nScore==%d\n",tetris_board->score );
+	showText();
 }
 
 
 
-
+// void showText(void)
+// {
+// 	int points=1;
+// 	sprintf(text_s,"%d",points);
+// 	glColor3f(1.0f,1.0f,1.0f);
+// 	setOrthographicProjection();
+// 	glPushMatrix();
+// 	glLoadIdentity();
+// 	glColor3f((float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX);
+// 	renderBitmapString(650,40,(char *)font,"Level 1");
+// 	glColor3f((float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX);
+// 	renderBitmapString(50,60,(char *)font,"Points");
+// 	renderBitmapString(135,60,(void *)font,text_s);
+// 	glPopMatrix();
+// 	resetPerspectiveProjection();
+// }
 
 //The main code is implemented here
 void update_game()
@@ -379,7 +417,7 @@ void update_game()
 		flag=0;
 		count=height/0.1;
 		k=rand()%3+ 1;
-		k=1;
+		// k=1;
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
 		color_block=rand()%3;					//color of block
