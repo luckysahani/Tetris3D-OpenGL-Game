@@ -17,11 +17,14 @@
 // #include <conio>
 // #include <al/al.h>
 #include <AL/alc.h>
+// #include "cgame.h"
 // #include <al/alu.h>
 
-#include <stdio.h>
-#include <stdlib.h>  
 #include <time.h>
+#include <stdio.h>    //  Standard Input\Output C Library
+#include <stdarg.h>   //  To use functions with variables arguments
+#include <stdlib.h>   //  for malloc
+
 // #include <vector>
 // #include <utility>
 // #include <sstream>
@@ -89,6 +92,7 @@ BlockType current_type;
 ALuint buffer, source; 		
 int font=(int)GLUT_BITMAP_8_BY_13;
 // char text_s[11],text_s1[11];
+GLvoid *font_style = GLUT_BITMAP_TIMES_ROMAN_24;
 
 
 
@@ -161,6 +165,39 @@ int save_screenshot(char* filename, int w, int h)
 	fclose(filePtr);
 	return 1;
 }
+void printw (float x, float y, float z, char* format, ...)
+{
+    va_list args;   //  Variable argument list
+    int len;        // String length
+    int i;          //  Iterator
+    char * text;    // Text
+ 
+    //  Initialize a variable argument list
+    va_start(args, format);
+ 
+    //  Return the number of characters in the string referenced the list of arguments.
+    // _vscprintf doesn't count terminating '\0' (that's why +1)
+    len = _vscprintf(format, args) + 1;
+ 
+    //  Allocate memory for a string of the specified size
+    text = malloc(len * sizeof(char));
+ 
+    //  Write formatted output using a pointer to the list of arguments
+    vsprintf_s(text, len, format, args);
+ 
+    //  End using variable argument list
+    va_end(args);
+ 
+    //  Specify the raster position for pixel operations.
+    glRasterPos3f (x, y, z);
+ 
+    //  Draw the characters one by one
+    for (i = 0; text[i] != '\0'; i++)
+    glutBitmapCharacter(font_style, text[i]);
+ 
+    //  Free the allocated memory for the string
+    free(text);
+}
 
 void display() {
 
@@ -208,6 +245,7 @@ void reshape (int w, int h) {
 	glLoadIdentity ();
 
 
+  // printw(x, y, z, "char: %c, decimal: %d, float: %f, string: %s", 'X', 1618, 1.618, "text");
 
 
 	// glViewport(1000, 0, 1200,h);
@@ -249,6 +287,7 @@ void reshape (int w, int h) {
 
 
 
+
 //This creates an Square shape Object
 void create_squareshape_block()
 {
@@ -265,6 +304,7 @@ void create_squareshape_block()
 // current_block=block[x_temp][y_temp][current_z];
 	// glmScale(current_block->model,0.6);
 	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
+	// printw(x, y, z, "char: %c, decimal: %d, float: %f, string: %s", 'X', 1618, 1.618, "text");
 }
 
 
