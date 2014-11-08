@@ -281,16 +281,16 @@ void increment_board_status()
 		board_status[x_temp][y_temp]++;
 	} 
 	else if(k==2){
-		board_status[x_temp][y_temp]++;
-		board_status[x_temp][y_temp+1]++;
-		board_status[x_temp][y_temp+2]++;
+		board_status[x_temp][y_temp]=count+1;
+		board_status[x_temp][y_temp+1]=count+1;
+		board_status[x_temp][y_temp+2]=count+1;
 	}
 	else if(k==3){
 		for ( i = 0; i < 2; ++i)
 		{
 			for ( j = 0; j < 2; ++j)
 			{
-				board_status[x_temp+i][y_temp+j]++;
+				board_status[x_temp+i][y_temp+j]=count;
 				printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
 				// board_status[x_temp][y_temp]++;break;
 			}
@@ -335,7 +335,8 @@ void update_game()
 		flag=0;
 		count=height/0.1;
 		k=rand()%3+ 1;
-		// k=1;
+		k=1;
+		k=3;
 		x_temp=rand()%8 ;						//x value of block
 		y_temp=rand()%8 ;						//y value of block
 		color_block=rand()%3;					//color of block
@@ -353,16 +354,47 @@ void update_game()
 }
 	// if(executed==1)
 	move_block_down_by_one_step();				//decrement z by 0.1
-	if(count==current_z)		// if the block is just above another already placed block
-	{
+	if(k==1)
+	{	
+		if(count==current_z)		// if the block is just above another already placed block
+		{
 
-		place_block();							//place this new block
-		if(current_z==5){		//if the height of game>5 exit the game baby
-			printf("Game over(exited in update game case 2)\n");
-			printf("\n\nYour total score is %d\n",tetris_board->score );
-			exit(0);
+			place_block();							//place this new block
+			if(current_z==5){		//if the height of game>5 exit the game baby
+				printf("Game over(exited in update game case 2)\n");
+				printf("\n\nYour total score is %d\n",tetris_board->score );
+				exit(0);
+			}
+			flag=1;									
 		}
-		flag=1;									
+	}
+	else if(k==2)
+	{
+		if((count==current_z)||(count==board_status[x_temp][y_temp+2])||(board_status[x_temp][y_temp+1]==count))		// if the block is just above another already placed block
+		{
+
+			place_block();							//place this new block
+			if(current_z==5){		//if the height of game>5 exit the game baby
+				printf("Game over(exited in update game case 2)\n");
+				printf("\n\nYour total score is %d\n",tetris_board->score );
+				exit(0);
+			}
+			flag=1;									
+		}
+	}
+	else if(k==3)
+	{
+		if((count==current_z)||(count==board_status[x_temp+1][y_temp+1])||(board_status[x_temp][y_temp+1]==count)||(board_status[x_temp+1][y_temp]==count))	// if the block is just above another already placed block
+		{
+
+			place_block();							//place this new block
+			if(current_z==5){		//if the height of game>5 exit the game baby
+				printf("Game over(exited in update game case 2)\n");
+				printf("\n\nYour total score is %d\n",tetris_board->score );
+				exit(0);
+			}
+			flag=1;									
+		}
 	}
 }
 

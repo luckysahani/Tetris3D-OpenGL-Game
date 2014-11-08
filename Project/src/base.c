@@ -241,7 +241,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 			// printf("just entered\n");
 			// else
 			// {
-			for ( i = 0; i < board_status[xcell][ycell]; i++)
+			for ( i = 0; i < view_status[xcell][ycell]; i++)
 			{
 					/* code */
 					// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
