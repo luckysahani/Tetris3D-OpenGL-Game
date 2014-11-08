@@ -113,7 +113,7 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8]) {
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8]) {
 	glPushMatrix();
 	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
 	GLdouble x, y;

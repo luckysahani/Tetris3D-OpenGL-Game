@@ -22,23 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>  
 #include <time.h>
-// #include <vector>
-// #include <utility>
-// #include <sstream>
-// #include <climits>
-// #include <cstdlib>
-// #include <algorithm>
-// #include <cmath>
-// #include <cstring>
-// #include <string>
-// #include <deque>
-// #include <bitset>
-// #include <map>
-// #include <set>
-// #include <stack>
-// #include <list>
-// #include <queue>
-// #include <iterator>
+
 #define HEIGHT 800
 #define WIDTH 800
 
@@ -78,6 +62,7 @@ int y_temp,temp=0;
 int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
 int color_block;
 int board_status[8][8];
+int view_status[8][8];
 int created_status[8][8];
 int music=1;
 int is_ready_to_update_status_of_block=1;
@@ -87,8 +72,6 @@ int x_prev,y_prev;
 GLuint texture;
 BlockType current_type;
 ALuint buffer, source; 		
-// int font=(int)GLUT_BITMAP_8_BY_13;
-// char text_s[11],text_s1[11];
 
 
 
@@ -116,6 +99,7 @@ void init() {
 		for ( j = 0; j < 8; ++j)
 		{
 			board_status[i][j]=0;
+			view_status[i][j]=0;
 			for ( k = 0; k < 6; k++)
 			{
 				block[i][j][k] = create_block(ishape, 1);
@@ -183,17 +167,7 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
 	observe_from_viewer(viewer);
-
-	display_tetris_board(tetris_board,board_status,created_status);
-	// glTranslatef(1030, 30, 0);
-	// glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'string[i]');
-	// GLvoid *font_style = GLUT_BITMAP_TIMES_ROMAN_24;
-// 	glFontBegin(&font);
-// glScalef(8.0, 8.0, 8.0);
-// glTranslatef(1030, 30, 0);
-// glFontTextOut("Test", 5, 5, 0);
-// glFontEnd();
-
+	display_tetris_board(tetris_board,board_status,created_status,view_status);
 	glFlush();
 	glutSwapBuffers();
 }
@@ -206,45 +180,6 @@ void reshape (int w, int h) {
 	gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
-
-
-
-
-	// glViewport(1000, 0, 1200,h);
-
-	// glMatrixMode(GL_PROJECTION);
-	// glLoadIdentity();
-	// gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
-	// glMatrixMode(GL_MODELVIEW);
-	// glLoadIdentity();
-	// drawSceneContents();
-	// glMatrixMode(GL_MODELVIEW);
-	// glLoadIdentity();
-	// int score=100000000000000;
-	// glTranslatef(1030, 30, 0);
-	// sprintf(score_display,"Score, harr: %d",score);
-	// glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'string[i]');
-	// glClear(GL_DEPTH_BUFFER_BIT);
-	// gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 100.0);
-	// glTranslatef(1030, 30, 0);
-	// glScalef(8.0, 8.0, 8.0);
-	// glBegin(GL_QUADS);
-	// glTexCoord2f(0.25, 0.0); glVertex2f(-0.0, -1.0);
-	// glTexCoord2f(0.25, 1.0); glVertex2f(-0.0, +1.0);
-	// glTexCoord2f(0.75, 1.0); glVertex2f(+1.0, +1.0);
-	// glTexCoord2f(0.75, 0.0); glVertex2f(+1.0, -1.0);
-	// glEnd();
-
-
-	// glFontBegin(&font);
-	// glScalef(8.0, 8.0, 8.0);
-	// glTranslatef(1030, 30, 0);
-	// glFontTextOut("Test", 5, 5, 0);
-	// glFontEnd();
-	// glFlush();
-
-
-	
 }
 
 
@@ -342,26 +277,27 @@ void increment_board_status()
 // tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
 	printf("Updating board statua\n");
 	int i,j;
-// if(k==1){
-// 	board_status[x_temp][y_temp]++;
-// } 
-// // else if(k==2){
-// // 	board_status[x_temp][y_temp]++;
-// // 	board_status[x_temp][y_temp+1]++;
-// // 	// board_status[x_temp][y_temp+2]++;
-// // }
-// else if(k==3){
-// 	for ( i = 0; i < 2; ++i)
-// 	{
-// 		for ( j = 0; j < 2; ++j)
-// 		{
-// 			board_status[x_temp+i][y_temp+j]++;
-// 			printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
-// 			// board_status[x_temp][y_temp]++;break;
-// 		}
-// 	}
-// }
-	board_status[x_temp][y_temp]++;
+	if(k==1){
+		board_status[x_temp][y_temp]++;
+	} 
+	else if(k==2){
+		board_status[x_temp][y_temp]++;
+		board_status[x_temp][y_temp+1]++;
+		board_status[x_temp][y_temp+2]++;
+	}
+	else if(k==3){
+		for ( i = 0; i < 2; ++i)
+		{
+			for ( j = 0; j < 2; ++j)
+			{
+				board_status[x_temp+i][y_temp+j]++;
+				printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
+				// board_status[x_temp][y_temp]++;break;
+			}
+		}
+	}
+	view_status[x_temp][y_temp]++;
+	// board_status[x_temp][y_temp]++;
 	int current_z=board_status[x_temp][y_temp];
 	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
 
@@ -383,23 +319,6 @@ void place_block()
 }
 
 
-
-// void showText(void)
-// {
-// 	int points=1;
-// 	sprintf(text_s,"%d",points);
-// 	glColor3f(1.0f,1.0f,1.0f);
-// 	setOrthographicProjection();
-// 	glPushMatrix();
-// 	glLoadIdentity();
-// 	glColor3f((float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX);
-// 	renderBitmapString(650,40,(char *)font,"Level 1");
-// 	glColor3f((float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX,(float)rand()/(float)RAND_MAX);
-// 	renderBitmapString(50,60,(char *)font,"Points");
-// 	renderBitmapString(135,60,(void *)font,text_s);
-// 	glPopMatrix();
-// 	resetPerspectiveProjection();
-// }
 
 //The main code is implemented here
 void update_game()
@@ -423,6 +342,7 @@ void update_game()
 		if(k==1){create_squareshape_block();}	//Creates an square shape object
 		if(k==2){create_ishape_block();}		//creates an ishape object
 		if(k==3){create_cube_block();}			//created an cube object
+		// create_squareshape_block();
 		// board_status[x_prev][y_prev]++;
 		printf("Created the blocks\n");
 		created_status[x_temp][y_temp]=1;
