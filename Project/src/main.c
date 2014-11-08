@@ -28,12 +28,6 @@
 
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
-
-// GLfloat ambientLight[4] = { 0.4f, 0.4f, 0.5f, 1.0f };
-// +GLfloat diffuseLight[4] = { 0.6f, 0.6f, 0.5f, 1.0f };
-// +GLfloat specularLight[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
-// +GLfloat position[4] = { 1.0f, 1.0f, 1.0f, 0.3f };
-/* some lighting */
 GLfloat ambientLightA[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 GLfloat diffuseLightA[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
@@ -47,36 +41,19 @@ GLfloat lightPositionA[4] = { -100.0f, 100.0f, -100.0f, 1.0f };
 GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 
 // GLfloat diffuseLightA[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
-
-/* the viewer */
 Viewer *viewer;
 
-int time_status=0;
-int isClicked_right,isClicked_left;
-int k=0;
-float height=0.5;
-float count=0;				
-int x_temp;
-int flag=1;
-int y_temp,temp=0;
-int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0;
-int color_block;
-int board_status[8][8];
-int view_status[8][8];
-int created_status[8][8];
-int music=1;
-int is_ready_to_update_status_of_block=1;
-int executed=1;
+int time_status=0,isClicked_right,isClicked_left,flag=1,temp=0;
+float height=0.5,count=0;				
+// int x_temp,y_temp;
+int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0,color_block;
+int board_status[8][8],view_status[8][8],created_status[8][8];
+int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block;
-int x_prev,y_prev;
 GLuint texture;
-BlockType current_type;
-ALuint buffer, source; 		
-
-
-
-
-
+// BlockType current_type;
+ALuint buffer, source;
+int x1,y1,x2,y2,x3,y3,x4,y4; 		
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -182,142 +159,79 @@ void reshape (int w, int h) {
 	glLoadIdentity ();
 }
 
+// //This creates an Square shape Object
+// void create_squareshape_block()
+// {
+// 	while(y_temp==0 && x_temp==0)
+// 	{
+// 		y_temp=rand()%8;
+// 		x_temp=rand()%8;
+// 	}
+// 	int current_z=board_status[x_temp][y_temp];
+// // Block *square=current_block;
+// 	printf("SquareShape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
+// 	current_type=squareshape;
+// 	current_block=set_block(squareshape, color_block,block[x_temp][y_temp][current_z]);
+// // current_block=block[x_temp][y_temp][current_z];
+// 	// glmScale(current_block->model,0.6);
+// 	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
+// }
 
+// //This creates an Ishape Object
+// void create_ishape_block()
+// {
+// 	while(y_temp>5)
+// 	{
+// 		y_temp=rand()%8;
+// 	}
+// 	int current_z=board_status[x_temp][y_temp];
+// 	current_type=ishape;
+// 	printf("Ishape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
+// 	current_block= set_block(ishape, color_block,block[x_temp][y_temp][current_z]);
+// // current_block=block[x_temp][y_temp][current_z];
+// 	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
+// }
 
-//This creates an Square shape Object
-void create_squareshape_block()
+// //This creates an Cube Object
+// void create_cube_block()
+// {
+// 	while(y_temp>6)
+// 	{
+// 		y_temp=rand()%8;
+// 	}
+// 	while(x_temp>6)
+// 	{
+// 		x_temp=rand()%8;
+// 	}
+// 	while(y_temp==0 && x_temp==0)
+// 	{
+// 		y_temp=rand()%8;
+// 		x_temp=rand()%8;
+// 	}
+// 	int current_z=board_status[x_temp][y_temp];
+// 	current_type=cube;
+// 	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
+// 	current_block=set_block(cube, color_block,block[x_temp][y_temp][current_z]);
+// 	// glmScale(current_block->model,0.6);
+// 	tetris_board_place_block(tetris_board,current_block, CELL(x_temp, y_temp,current_z),current_z);
+// }
+
+void create_new_shape(int x,int y,int type,int color_block,BlockType type)
 {
-	while(y_temp==0 && x_temp==0)
+	int i,j,current_z;
+	if(type==1)
 	{
-		y_temp=rand()%8;
-		x_temp=rand()%8;
-	}
-	int current_z=board_status[x_temp][y_temp];
-// Block *square=current_block;
-	printf("SquareShape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
-	current_type=squareshape;
-	current_block=set_block(squareshape, color_block,block[x_temp][y_temp][current_z]);
-// current_block=block[x_temp][y_temp][current_z];
-	// glmScale(current_block->model,0.6);
-	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
-}
-
-
-
-
-
-//This creates an Ishape Object
-void create_ishape_block()
-{
-	while(y_temp>5)
-	{
-		y_temp=rand()%8;
-	}
-	int current_z=board_status[x_temp][y_temp];
-	current_type=ishape;
-	printf("Ishape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
-	current_block= set_block(ishape, color_block,block[x_temp][y_temp][current_z]);
-// current_block=block[x_temp][y_temp][current_z];
-	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
-}
-
-
-
-
-
-//This creates an Cube Object
-void create_cube_block()
-{
-	while(y_temp>6)
-	{
-		y_temp=rand()%8;
-	}
-	while(x_temp>6)
-	{
-		x_temp=rand()%8;
-	}
-	while(y_temp==0 && x_temp==0)
-	{
-		y_temp=rand()%8;
-		x_temp=rand()%8;
-	}
-	int current_z=board_status[x_temp][y_temp];
-	current_type=cube;
-	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
-	current_block=set_block(cube, color_block,block[x_temp][y_temp][current_z]);
-	// glmScale(current_block->model,0.6);
-	tetris_board_place_block(tetris_board,current_block, CELL(x_temp, y_temp,current_z),current_z);
-}
-
-
-
-//To move the block by 0.1 units downward
-void move_block_down_by_one_step()
-{
-	int current_z=board_status[x_temp][y_temp];
-	if(current_z==6){
-		printf("Game over (exited in move block by one step)\n");
-		printf("\n\nYour total score is %d\n",tetris_board->score );
-		exit(0);
-	}
-	printf("moved down 1 step\n");
-	if(executed==1)
-		reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
-
-}
-
-
-
-
-
-
-//Update board status by 1 i.e now the blocks should come above the already placed block
-void increment_board_status()
-{
-// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
-	printf("Updating board statua\n");
-	int i,j;
-	if(k==1){
-		board_status[x_temp][y_temp]++;
-	} 
-	else if(k==2){
-		board_status[x_temp][y_temp]=count+1;
-		board_status[x_temp][y_temp+1]=count+1;
-		board_status[x_temp][y_temp+2]=count+1;
-	}
-	else if(k==3){
-		for ( i = 0; i < 2; ++i)
+		for (i = x; i < x+2; ++i)
 		{
-			for ( j = 0; j < 2; ++j)
+			for (int j = y; j < y+2; ++j)
 			{
-				board_status[x_temp+i][y_temp+j]=count;
-				printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
-				// board_status[x_temp][y_temp]++;break;
+				current_z=board_status[i][j];
+				current_block=set_block(type, color_block,block[i][j][current_z]);
 			}
 		}
+		
 	}
-	view_status[x_temp][y_temp]++;
-	// board_status[x_temp][y_temp]++;
-	int current_z=board_status[x_temp][y_temp];
-	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
-
 }
-
-
-
-
-//Place the block at the bottom most possible and then increment the board status
-void place_block()
-{
-	int current_z=board_status[x_temp][y_temp];
-	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
-	increment_board_status();
-	created_status[x_temp][y_temp]=0;
-	tetris_board->score+=5;
-	printf("\nScore==%d\n",tetris_board->score );
-	// showText();
-}
-
 
 
 //The main code is implemented here
@@ -397,6 +311,75 @@ void update_game()
 		}
 	}
 }
+
+//To move the block by 0.1 units downward
+void move_block_down_by_one_step()
+{
+	int current_z=board_status[x_temp][y_temp];
+	if(current_z==6){
+		printf("Game over (exited in move block by one step)\n");
+		printf("\n\nYour total score is %d\n",tetris_board->score );
+		exit(0);
+	}
+	printf("moved down 1 step\n");
+	if(executed==1)
+		reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
+
+}
+
+
+
+
+
+
+//Update board status by 1 i.e now the blocks should come above the already placed block
+void increment_board_status()
+{
+// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
+	printf("Updating board statua\n");
+	int i,j;
+	if(k==1){
+		board_status[x_temp][y_temp]++;
+	} 
+	else if(k==2){
+		board_status[x_temp][y_temp]=count+1;
+		board_status[x_temp][y_temp+1]=count+1;
+		board_status[x_temp][y_temp+2]=count+1;
+	}
+	else if(k==3){
+		for ( i = 0; i < 2; ++i)
+		{
+			for ( j = 0; j < 2; ++j)
+			{
+				board_status[x_temp+i][y_temp+j]=count;
+				printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
+				// board_status[x_temp][y_temp]++;break;
+			}
+		}
+	}
+	view_status[x_temp][y_temp]++;
+	// board_status[x_temp][y_temp]++;
+	int current_z=board_status[x_temp][y_temp];
+	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
+
+}
+
+
+
+
+//Place the block at the bottom most possible and then increment the board status
+void place_block()
+{
+	int current_z=board_status[x_temp][y_temp];
+	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
+	increment_board_status();
+	created_status[x_temp][y_temp]=0;
+	tetris_board->score+=5;
+	printf("\nScore==%d\n",tetris_board->score );
+	// showText();
+}
+
+
 
 void move_block_max_down()
 {

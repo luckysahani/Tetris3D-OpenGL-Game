@@ -57,7 +57,7 @@ void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int 
 void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	/* invert the position of the pieces along the y-axis */
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-	p->pos[1] = 0.5;//((double) rand() / (RAND_MAX))/8;
+	p->pos[1] = 0.8;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
 	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
@@ -241,7 +241,7 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 			// printf("just entered\n");
 			// else
 			// {
-			for ( i = 0; i < view_status[xcell][ycell]; i++)
+			for ( i = 0; i < board_status[xcell][ycell]; i++)
 			{
 					/* code */
 					// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
