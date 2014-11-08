@@ -227,6 +227,18 @@ void check_game_over()
 		}
 	}
 }
+bool collision()
+{
+	int i;
+	for ( i = 0; i < 4; ++i)
+	{
+		if(board_status[x[i]][y[i]]==count)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 void update_created_status()
 {
 	int i;
@@ -295,6 +307,12 @@ void update_game()
 		count--;
 	}
 	move_down();
+	if(collision())
+	{
+		place_block()
+		check_game_over();
+		flag=1;
+	}
 	// if(k==1)
 	// {	
 	// 	if(count==current_z)		// if the block is just above another already placed block
