@@ -70,10 +70,6 @@ void reduce_z_regularly(Tetris_board *cboard, Block *p, int cell)
 	{
 		p->pos[1] -= 0.1; 
 	}
-	else
-	{
-		// p->pos[1]=0;
-	}
 }
 void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
 {
@@ -93,12 +89,6 @@ void reset_coordinates(Tetris_board *cboard, Block *p, int cell)
 	// p->pos[1]=temp;
 	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 }
-
-
-
-// void highlight_cell(Tetris_board* c, int x, int y) {
-//     c->cell_highlighted = CELL(x,y,0);
-// }
 
 Block *get_block(Tetris_board* c, int cell) {
 	// printf("Asking for block\n");
@@ -299,9 +289,6 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 		{
 			printf("\n\n \n looks like its fully occupied\n \n \n");
 			cboard->score+=100;
-			
-
-
 			xcell=-1;
 			for (x=-0.5f; x<0.5f; x+=step)
 			{
@@ -332,67 +319,9 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 					}
 				}
 			}
-
-
-
 		}
-
-
-
-
-
-
- //   xcell = -1;;
- //   for (x=-0.5f; x<0.5f; x+=step){
-	// 	xcell++;
-	// 	ycell = NUM_CELLS;
-
- //    	// color = 1 - color;
- //    	for (y=-0.5f; y<0.5f; y+=step){
-	// 		ycell--;
-	// 		for ( i = 0; i < 1; i++)
-	// 		{
-	// 			/* code */
-	// 			// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
-
-	// 			// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
-	// 			if (cboard->board[CELL(xcell, ycell,i)]) {
-	// 				Block *block = cboard->board[CELL(xcell, ycell,i)];
-	// 				// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-	// 				display_block(block, CELL(xcell, ycell,i)	);
-	// 			}
-	// 		}
-	// 	}
-	// }
-   // printf("Displaying board\n");
 	glPopMatrix();
 }
-
-
-// void highlight_cell_up(Tetris_board *cboard)
-// {
-// 	int celly = CELLY(cboard->cell_highlighted);
-// 	celly += celly == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
-//     cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
-// }
-// void highlight_cell_down(Tetris_board *cboard)
-// {
-// 	int celly = CELLY(cboard->cell_highlighted);
-// 	celly -= celly == 0 ? -NUM_CELLS + 1 : 1; 
-//     cboard->cell_highlighted = CELL(CELLX(cboard->cell_highlighted), celly,0);
-// }
-// void highlight_cell_left(Tetris_board *cboard)
-// {
-// 	int cellx = CELLX(cboard->cell_highlighted);
-// 	cellx += cellx == 0 ? NUM_CELLS-1 : -1; 
-//     cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
-// }
-// void highlight_cell_right(Tetris_board *cboard)
-// {
-// 	int cellx = CELLX(cboard->cell_highlighted);
-// 	cellx += cellx == NUM_CELLS-1 ? -NUM_CELLS+1 : 1; 
-//     cboard->cell_highlighted = CELL(cellx, CELLY(cboard->cell_highlighted),0);
-// }
 
 void set_turn(Tetris_board *cboard, PlayerType player) {
 	cboard->player_turn = player;
@@ -403,41 +332,6 @@ void flip_turn(Tetris_board *cboard) {
 		// cboard->player_turn == WHITE ? BLACK: WHITE;
 	printf("Flipped\n");
 }
-
-// void select_cell(Tetris_board *cboard, int cell)
-// {
-// 	printf("\n\n\nSelectcell called\n");
-// 	int cell_wish = cell == CELL_CURRENT ? cboard->cell_highlighted : cell;
-// 	Block *p = get_block(cboard, cell_wish);
-// 	if (p) {
-// 		if (p->player == cboard->player_turn) {
-// 			/* own block selected -- clear selection / select block */
-// 			cboard->cell_selected = cell_wish == cboard->cell_selected ? CELL_NONE : cell_wish;
-// 		}
-// 		else {
-// 			if(CELL_NONE != cboard->cell_selected) {
-// 				/* opponent block selected -- take */
-// 				tetris_board_clear_cell(cboard, cell_wish);
-// 				Block *taker = get_block(cboard, cboard->cell_selected);
-// 				tetris_board_clear_cell(cboard, cboard->cell_selected);
-// 				tetris_board_place_block(cboard, taker, cell_wish,0);;
-// 				cboard->cell_selected = CELL_NONE;
-// 				//flip_turn(cboard);
-// 			}
-// 		}
-// 	}
-// 	else {
-// 		/* empty cell selected */
-// 		if(CELL_NONE != cboard->cell_selected) {
-// 			/* move */
-// 			Block *mover = get_block(cboard, cboard->cell_selected);
-// 			tetris_board_clear_cell(cboard, cboard->cell_selected);
-// 			tetris_board_place_block(cboard, mover, cell_wish,0);
-// 			flip_turn(cboard);
-// 		}
-// 		cboard->cell_selected = CELL_NONE;
-// 	}
-// }
 
 void tetris_board_clear_cell(Tetris_board *cboard, int cell)
 {

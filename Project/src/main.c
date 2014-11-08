@@ -53,7 +53,7 @@ Block *current_block;
 GLuint texture;
 // BlockType current_type;
 ALuint buffer, source;
-int x1,y1,x2,y2,x3,y3,x4,y4; 		
+int x[4],y[4]; 		
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -215,34 +215,52 @@ void reshape (int w, int h) {
 // 	// glmScale(current_block->model,0.6);
 // 	tetris_board_place_block(tetris_board,current_block, CELL(x_temp, y_temp,current_z),current_z);
 // }
-
-void create_new_shape(int x,int y,int type,int color_block,BlockType type)
+void check_game_over()
+{
+	int i;
+	for ( i = 0; i < 4; ++i)
+	{
+		if(board_status[x[i]][y[i]]>=9)
+		{
+			printf("Game Over\n");
+			exit(0);
+		}
+	}
+}
+void create_new_shape(int type,int color_block,BlockType type_block)
 {
 	int i,j,current_z;
 	if(type==1)
 	{
-		for (i = x; i < x+2; ++i)
+		int temp_x=rand()%6;
+		int temp_y=rand()%6;
+		for (i = temp_x; i < temp_x+2; ++i)
 		{
-			for (int j = y; j < y+2; ++j)
+			for (j = temp_y; j < temp_y+2; ++j)
 			{
+				// x[i-temp_x+j-temp_y]=i;
+				// y[j-temp_y+i-temp_x]=j;
 				current_z=board_status[i][j];
-				current_block=set_block(type, color_block,block[i][j][current_z]);
+				current_block=set_block(type_block, color_block,block[i][j][current_z]);
+				tetris_board_place_block(tetris_board,current_block, CELL(i, j,current_z),current_z);
 			}
 		}
-		
+		x[0]=x[1]=temp_x;
+		x[2]=x[3]=temp_x+1;
+		y[0]=y[2]=temp_y;
+		y[1]=y[3]=temp_y+1;
 	}
 }
-
-
 //The main code is implemented here
 void update_game()
 {
-	int current_z=board_status[x_temp][y_temp];
-	if(current_z==6){
-		printf("Game over (exited in update game)\n");
-		printf("\n\nYour total score is %d\n",tetris_board->score );
-		exit(0);
-	}
+	// int current_z=board_status[x_temp][y_temp];
+	// if(current_z==9){
+	// 	printf("Game over (exited in update game)\n");
+	// 	printf("\n\nYour total score is %d\n",tetris_board->score );
+	// 	exit(0);
+	// }
+	check_game_over();
 	if(flag==1)
 	{ 
 		printf("\n\n");

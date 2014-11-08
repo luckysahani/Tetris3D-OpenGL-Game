@@ -7,22 +7,18 @@ char* _get_model_name(Block *block, PlayerType player)
 {
 	char *model_name = NULL;
     switch (block->type) {
-        case PAWN_TYPE_PAWN: 
-			model_name = "objs/tshape.obj";
-			block->height = 0.05;
-		break;
-        case PAWN_TYPE_ROOK: 
-			model_name = "objs/icapshape.obj";
-			block->height = 0.05;
-		break;
-        case PAWN_TYPE_KNIGHT: 
-			model_name = "objs/sqtshape.obj";
-			block->height = 0.05;
-		break;
-		
-
-
-
+  //       case PAWN_TYPE_PAWN: 
+		// 	model_name = "objs/tshape.obj";
+		// 	block->height = 0.05;
+		// break;
+  //       case PAWN_TYPE_ROOK: 
+		// 	model_name = "objs/icapshape.obj";
+		// 	block->height = 0.05;
+		// break;
+  //       case PAWN_TYPE_KNIGHT: 
+		// 	model_name = "objs/sqtshape.obj";
+		// 	block->height = 0.05;
+		// break;
 		case cube: 
 			model_name = "objs/3dsquare.obj";
 			block->height = 0.05;
