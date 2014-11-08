@@ -64,13 +64,13 @@ void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	cboard->board[cell] = p;
 }
 
-void reduce_z_regularly(Tetris_board *cboard, Block *p, int cell)
-{
-	if(p->pos[1]>0.1)
-	{
-		p->pos[1] -= 0.1; 
-	}
-}
+// void reduce_z_regularly(Tetris_board *cboard, Block *p, int cell)
+// {
+// 	if(p->pos[1]>0.1)
+// 	{
+// 		p->pos[1] -= 0.1; 
+// 	}
+// }
 void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
 {
 	float temp=k;

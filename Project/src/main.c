@@ -44,9 +44,9 @@ GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 Viewer *viewer;
 
 int time_status=0,isClicked_right,isClicked_left,flag=1,temp=0;
-float height=0.5,count=0;				
+float height=0.8,count=0;				
 // int x_temp,y_temp;
-int count_squareshape=0,count_ishape=0,count_cube=0,count_block=0,color_block;
+int color_block;
 int board_status[8][8],view_status[8][8],created_status[8][8];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block;
@@ -227,6 +227,14 @@ void check_game_over()
 		}
 	}
 }
+void update_created_status()
+{
+	int i;
+	for ( i = 0; i < 4; ++i)
+	{
+		created_status[x[i]][y[i]]=1;
+	}
+}
 void create_new_shape(int type,int color_block,BlockType type_block)
 {
 	int i,j,current_z;
@@ -238,8 +246,6 @@ void create_new_shape(int type,int color_block,BlockType type_block)
 		{
 			for (j = temp_y; j < temp_y+2; ++j)
 			{
-				// x[i-temp_x+j-temp_y]=i;
-				// y[j-temp_y+i-temp_x]=j;
 				current_z=board_status[i][j];
 				current_block=set_block(type_block, color_block,block[i][j][current_z]);
 				tetris_board_place_block(tetris_board,current_block, CELL(i, j,current_z),current_z);
@@ -251,99 +257,61 @@ void create_new_shape(int type,int color_block,BlockType type_block)
 		y[1]=y[3]=temp_y+1;
 	}
 }
+//To move the block by 0.1 units downward
+void move_down()
+{
+	int i;
+	check_game_over();
+	printf("moved down 1 step\n");
+	if(executed==1)
+	{
+		for ( i = 0; i < 4; ++i)
+		{
+			current_z=board_status[x[i]][y[i]];
+			current_block=tetris_board->board[CELL(x[i], y[i],current_z)];
+			current_block->pos[1] -= 0.1;
+		}
+	}
+
+}
 //The main code is implemented here
 void update_game()
 {
-	// int current_z=board_status[x_temp][y_temp];
-	// if(current_z==9){
-	// 	printf("Game over (exited in update game)\n");
-	// 	printf("\n\nYour total score is %d\n",tetris_board->score );
-	// 	exit(0);
-	// }
+	int type;
 	check_game_over();
+	BlockType type_block=squareshape;
 	if(flag==1)
 	{ 
 		printf("\n\n");
 		flag=0;
 		count=height/0.1;
-		k=rand()%3+ 1;
-		k=1;
-		k=3;
-		x_temp=rand()%8 ;						//x value of block
-		y_temp=rand()%8 ;						//y value of block
-		color_block=rand()%3;					//color of block
-		if(k==1){create_squareshape_block();}	//Creates an square shape object
-		if(k==2){create_ishape_block();}		//creates an ishape object
-		if(k==3){create_cube_block();}			//created an cube object
-		// create_squareshape_block();
-		// board_status[x_prev][y_prev]++;
+		type=rand()%1+ 1;
+		color_block=rand()%3;
 		printf("Created the blocks\n");
-		created_status[x_temp][y_temp]=1;
+		create_new_shape(type,color_block,type_block);
+		update_created_status();
 	}
-	else
-	{
-	count--;								//this keeps the track of the new block movement i.e its each decrement means decrement of z by 0.1
-}
-	// if(executed==1)
-	move_block_down_by_one_step();				//decrement z by 0.1
-	if(k==1)
-	{	
-		if(count==current_z)		// if the block is just above another already placed block
-		{
+	else{
+		count--;
+	}
+	move_down();
+	// if(k==1)
+	// {	
+	// 	if(count==current_z)		// if the block is just above another already placed block
+	// 	{
 
-			place_block();							//place this new block
-			if(current_z==5){		//if the height of game>5 exit the game baby
-				printf("Game over(exited in update game case 2)\n");
-				printf("\n\nYour total score is %d\n",tetris_board->score );
-				exit(0);
-			}
-			flag=1;									
-		}
-	}
-	else if(k==2)
-	{
-		if((count==current_z)||(count==board_status[x_temp][y_temp+2])||(board_status[x_temp][y_temp+1]==count))		// if the block is just above another already placed block
-		{
-
-			place_block();							//place this new block
-			if(current_z==5){		//if the height of game>5 exit the game baby
-				printf("Game over(exited in update game case 2)\n");
-				printf("\n\nYour total score is %d\n",tetris_board->score );
-				exit(0);
-			}
-			flag=1;									
-		}
-	}
-	else if(k==3)
-	{
-		if((count==current_z)||(count==board_status[x_temp+1][y_temp+1])||(board_status[x_temp][y_temp+1]==count)||(board_status[x_temp+1][y_temp]==count))	// if the block is just above another already placed block
-		{
-
-			place_block();							//place this new block
-			if(current_z==5){		//if the height of game>5 exit the game baby
-				printf("Game over(exited in update game case 2)\n");
-				printf("\n\nYour total score is %d\n",tetris_board->score );
-				exit(0);
-			}
-			flag=1;									
-		}
-	}
+	// 		place_block();							//place this new block
+	// 		if(current_z==5){		//if the height of game>5 exit the game baby
+	// 			printf("Game over(exited in update game case 2)\n");
+	// 			printf("\n\nYour total score is %d\n",tetris_board->score );
+	// 			exit(0);
+	// 		}
+	// 		flag=1;									
+	// 	}
+	// }
 }
 
-//To move the block by 0.1 units downward
-void move_block_down_by_one_step()
-{
-	int current_z=board_status[x_temp][y_temp];
-	if(current_z==6){
-		printf("Game over (exited in move block by one step)\n");
-		printf("\n\nYour total score is %d\n",tetris_board->score );
-		exit(0);
-	}
-	printf("moved down 1 step\n");
-	if(executed==1)
-		reduce_z_regularly(tetris_board, current_block, CELL(x_temp,y_temp,current_z));
 
-}
 
 
 
