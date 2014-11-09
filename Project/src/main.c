@@ -53,7 +53,7 @@ Block *current_block;
 GLuint texture;
 // BlockType current_type;
 ALuint buffer, source;
-int x[4],y[4]; 		
+int x[4],y[4],z[4]; 		
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -223,6 +223,7 @@ void check_game_over()
 		if(board_status[x[i]][y[i]]>=9)
 		{
 			printf("Game Over\n");
+			printf("\n\nYour total score is %d\n",tetris_board->score );
 			exit(0);
 		}
 	}
@@ -232,59 +233,95 @@ bool collision()
 	int i;
 	for ( i = 0; i < 4; ++i)
 	{
-		if(board_status[x[i]][y[i]]==count)
+		if(board_status[x[i]][y[i]]==z[i])
 		{
 			return true;
 		}
 	}
 	return false;
 }
-void update_created_status()
+void update_created_status(int k)
 {
 	int i;
 	for ( i = 0; i < 4; ++i)
 	{
-		created_status[x[i]][y[i]]=1;
+		created_status[x[i]][y[i]]=k;
 	}
 }
 void create_new_shape(int type,int color_block,BlockType type_block)
 {
-	int i,j,current_z;
+	int i,current_z;
 	if(type==1)
 	{
 		int temp_x=rand()%6;
 		int temp_y=rand()%6;
-		for (i = temp_x; i < temp_x+2; ++i)
-		{
-			for (j = temp_y; j < temp_y+2; ++j)
-			{
-				current_z=board_status[i][j];
-				current_block=set_block(type_block, color_block,block[i][j][current_z]);
-				tetris_board_place_block(tetris_board,current_block, CELL(i, j,current_z),current_z);
-			}
-		}
+		
 		x[0]=x[1]=temp_x;
 		x[2]=x[3]=temp_x+1;
 		y[0]=y[2]=temp_y;
 		y[1]=y[3]=temp_y+1;
+		z[0]=z[1]=z[2]=z[3]=8;
+		for ( i = 0; i < 4; ++i)
+		{
+			current_block=set_block(type_block, color_block,block[x[i]][y[i]][z[i]]);
+			tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+		}
+		// for (i = temp_x; i < temp_x+2; ++i)
+		// {
+		// 	for (j = temp_y; j < temp_y+2; ++j)
+		// 	{
+		// 		// current_z=board_status[i][j];
+		// 		current_block=set_block(type_block, color_block,block[i][j][z[]]);
+		// 		tetris_board_place_block(tetris_board,current_block, CELL(i, j,current_z),current_z);
+		// 	}
+		// }
 	}
 }
 //To move the block by 0.1 units downward
 void move_down()
 {
-	int i;
+	int i,j;
 	check_game_over();
 	printf("moved down 1 step\n");
 	if(executed==1)
 	{
 		for ( i = 0; i < 4; ++i)
 		{
-			current_z=board_status[x[i]][y[i]];
-			current_block=tetris_board->board[CELL(x[i], y[i],current_z)];
-			current_block->pos[1] -= 0.1;
+			// current_z=board_status[x[i]][y[i]];
+			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
+			// update_created_status(0);
+			tetris_board->board[CELL(x[i], y[i],z[i])] = NULL;
+			// x_temp++;
+			z[i]--;
+			// current_block=set_block(type_block, color_block,block[x[i]][y[i]][z[i]]);
+			tetris_board_place_block_at_boardvalue(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+			// for ( j = 0; j < 4; ++j)
+			// {
+			// 	z[j]--;
+			// 	current_block=set_block(type_block, color_block,block[x[i]][y[i]][z[i]]);
+			// tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+			// }
+			// update_created_status(1);
+			// current_z=board_status[x_temp][y_temp];
+				// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
+			// current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+			// printf("count==%f\n",count );
+			// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
+			// current_block->pos[1] -= 0.1;
 		}
 	}
 
+}
+void fix_block_at_z()
+{
+	int i; 
+	for ( i = 0; i < 4; ++i)
+	{
+		// current_z=board_status[x[i]][y[i]];
+		current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
+		tetris_board_place_block_at_boardvalue(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+		printf("Block placed at x=%f,y=%f and z=%f\n",current_block->pos[0],current_block->pos[2],current_block->pos[1] );
+	}
 }
 //The main code is implemented here
 void update_game()
@@ -301,7 +338,7 @@ void update_game()
 		color_block=rand()%3;
 		printf("Created the blocks\n");
 		create_new_shape(type,color_block,type_block);
-		update_created_status();
+		update_created_status(1);
 	}
 	else{
 		count--;
@@ -309,32 +346,18 @@ void update_game()
 	move_down();
 	if(collision())
 	{
-		place_block()
+		// current_z=board_status[x_temp][y_temp];
+		// set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
+		fix_block_at_z();
+		increment_board_status(); // make it right
+		update_created_status(0);
+		tetris_board->score+=5;
+		printf("\nScore==%d\n",tetris_board->score );
+		place_block();	//make it right
 		check_game_over();
 		flag=1;
 	}
-	// if(k==1)
-	// {	
-	// 	if(count==current_z)		// if the block is just above another already placed block
-	// 	{
-
-	// 		place_block();							//place this new block
-	// 		if(current_z==5){		//if the height of game>5 exit the game baby
-	// 			printf("Game over(exited in update game case 2)\n");
-	// 			printf("\n\nYour total score is %d\n",tetris_board->score );
-	// 			exit(0);
-	// 		}
-	// 		flag=1;									
-	// 	}
-	// }
 }
-
-
-
-
-
-
-
 
 //Update board status by 1 i.e now the blocks should come above the already placed block
 void increment_board_status()
@@ -371,17 +394,17 @@ void increment_board_status()
 
 
 
-//Place the block at the bottom most possible and then increment the board status
-void place_block()
-{
-	int current_z=board_status[x_temp][y_temp];
-	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
-	increment_board_status();
-	created_status[x_temp][y_temp]=0;
-	tetris_board->score+=5;
-	printf("\nScore==%d\n",tetris_board->score );
-	// showText();
-}
+// //Place the block at the bottom most possible and then increment the board status
+// void place_block()
+// {
+// 	int current_z=board_status[x_temp][y_temp];
+// 	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
+// 	increment_board_status();
+// 	created_status[x_temp][y_temp]=0;
+// 	tetris_board->score+=5;
+// 	printf("\nScore==%d\n",tetris_board->score );
+// 	// showText();
+// }
 
 
 
