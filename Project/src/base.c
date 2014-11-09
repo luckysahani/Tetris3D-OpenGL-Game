@@ -103,7 +103,7 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8]) {
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10]) {
 	glPushMatrix();
 	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
 	GLdouble x, y;
@@ -164,80 +164,84 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 //			ERROR PART
     		// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
 
-			if(board_status[xcell][ycell]>=0)
-			{
-				i=0;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
-			if((board_status[xcell][ycell]>=1)&&(created_status[xcell][ycell]==1))
-			{
-				i=1;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
-			if((board_status[xcell][ycell]>=2)&&(created_status[xcell][ycell]==1))
-			{
-				i=2;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
-			if((board_status[xcell][ycell]>=3)&&(created_status[xcell][ycell]==1))
-			{
-				i=3;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
-			if((board_status[xcell][ycell]>=4)&&(created_status[xcell][ycell]==1))
-			{
-				i=4;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
-			if((board_status[xcell][ycell]>=5)&&(created_status[xcell][ycell]==1))
-			{
-				i=5;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
-			if((board_status[xcell][ycell]>=6)&&(created_status[xcell][ycell]==1))
-			{
-				i=6;
-				if (cboard->board[CELL(xcell, ycell,i)]) {
-					Block *block = cboard->board[CELL(xcell, ycell,i)];
-					// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
-				}
-			}
+			// if(board_status[xcell][ycell]>=0)
+			// {
+			// 	i=0;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
+			// if((board_status[xcell][ycell]>=1)&&(created_status[xcell][ycell]==1))
+			// {
+			// 	i=1;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
+			// if((board_status[xcell][ycell]>=2)&&(created_status[xcell][ycell]==1))
+			// {
+			// 	i=2;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
+			// if((board_status[xcell][ycell]>=3)&&(created_status[xcell][ycell]==1))
+			// {
+			// 	i=3;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
+			// if((board_status[xcell][ycell]>=4)&&(created_status[xcell][ycell]==1))
+			// {
+			// 	i=4;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
+			// if((board_status[xcell][ycell]>=5)&&(created_status[xcell][ycell]==1))
+			// {
+			// 	i=5;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
+			// if((board_status[xcell][ycell]>=6)&&(created_status[xcell][ycell]==1))
+			// {
+			// 	i=6;
+			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
+			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
+			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
+			// 		display_block(block, CELL(xcell, ycell,i)	);
+			// 	}
+			// }
 
 			// printf("just entered\n");
 			// else
 			// {
-			for ( i = 0; i < board_status[xcell][ycell]; i++)
+			// for ( i = 0; i < count; ++i)
+			// {
+			// 	/* code */
+			// }
+			for ( i = 0; i < 8; i++)
 			{
 					/* code */
 					// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
 				
 					// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
-				if (cboard->board[CELL(xcell, ycell,i)]) {
+				if ((cboard->board[CELL(xcell, ycell,i)]) && (view_status[xcell][ycell][i]==1)) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 						// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
 					display_block(block, CELL(xcell, ycell,i)	);
