@@ -160,88 +160,8 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 
 			/* draw block at cell */
 
-
-//			ERROR PART
-    		// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
-
-			// if(board_status[xcell][ycell]>=0)
-			// {
-			// 	i=0;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-			// if((board_status[xcell][ycell]>=1)&&(created_status[xcell][ycell]==1))
-			// {
-			// 	i=1;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-			// if((board_status[xcell][ycell]>=2)&&(created_status[xcell][ycell]==1))
-			// {
-			// 	i=2;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-			// if((board_status[xcell][ycell]>=3)&&(created_status[xcell][ycell]==1))
-			// {
-			// 	i=3;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-			// if((board_status[xcell][ycell]>=4)&&(created_status[xcell][ycell]==1))
-			// {
-			// 	i=4;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-			// if((board_status[xcell][ycell]>=5)&&(created_status[xcell][ycell]==1))
-			// {
-			// 	i=5;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-			// if((board_status[xcell][ycell]>=6)&&(created_status[xcell][ycell]==1))
-			// {
-			// 	i=6;
-			// 	if (cboard->board[CELL(xcell, ycell,i)]) {
-			// 		Block *block = cboard->board[CELL(xcell, ycell,i)];
-			// 		// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-			// 		display_block(block, CELL(xcell, ycell,i)	);
-			// 	}
-			// }
-
-			// printf("just entered\n");
-			// else
-			// {
-			// for ( i = 0; i < count; ++i)
-			// {
-			// 	/* code */
-			// }
 			for ( i = 0; i < 9; i++)
 			{
-					/* code */
-					// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
-				
-					// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
-				// printf("view_status=\n");
 				if ((view_status[xcell][ycell][i]==1)||(placed_status[xcell][ycell][i]==1)) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
 					// printf("Entered ohh really at cell =%d,x=%d,y=%d,z=%d\n",CELL(xcell, ycell,i),xcell,ycell,i);
@@ -250,17 +170,11 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 					{
 						printf("no cell how can this be possible\n");
 					}
-					// printf("z==%f\n",block->pos[1] );
 					display_block(block, CELL(xcell, ycell,i));
 				}
-				// printf("\n");
 			}
-			// printf("\n\n\n");
 		}
 	}
-					//Now working on removing the layer if it is complete
-
-
 		// printf("\n");
 		xcell=-1;
 		int check=0;
