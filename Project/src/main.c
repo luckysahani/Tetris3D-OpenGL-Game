@@ -452,7 +452,7 @@ void move_block_right()
 			check=false;
 		}
 	}
-	if(check)  
+	if(check)   
 	{
 		update_created_status(0);
 		for (i=0;i<4;i++)
