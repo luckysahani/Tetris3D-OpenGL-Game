@@ -627,7 +627,6 @@ void keypressed(unsigned char key, int x, int y) {
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
-
 		move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
