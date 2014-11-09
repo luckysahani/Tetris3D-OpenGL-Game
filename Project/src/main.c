@@ -44,10 +44,10 @@ GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 // GLfloat diffuseLightA[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
 Viewer *viewer;
 
-int time_status=0,isClicked_right,isClicked_left,flag=1,temp=0;
+int time_status=0,time_count=0,isClicked_right,isClicked_left,flag=1,temp=0;
 float height=0.8;				
 // int x_temp,y_temp;
-int color_block;
+int color_block,speed=50;
 int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
@@ -407,21 +407,6 @@ void move_block_max_down()
 	check_game_over();
 	flag=1;
 }
-// bool check_right_collision()
-// {
-// 	int i;
-// 	if(global_type==1)
-// 	{
-// 		for ( i = 0; i < 4; ++i)
-// 		{
-// 			if((x[i]>6) || (board_status[x[i]][y[i]] == z[i]) )
-// 			{
-// 				return false;
-// 			}
-// // 		}
-// 	}
-// 	return true;
-// }
 int max(int a,int b)
 {
 	if(a>b) return a;
@@ -432,14 +417,6 @@ int min(int a , int b)
 	if(a<b) return a;
 	return b;
 }
-// int max4(int a,int b,int c,int d)
-// {
-// 	return max(max(a,b),max(c,d));
-// }
-// int min4(int a,int b,int c , int d)
-// {
-// 	return min(min(a,b),min(c,d));
-// }
 void move_block_right()
 {
 	executed=0;
@@ -571,25 +548,20 @@ void move_block_down()
 void timer(int extra) {
 	glutPostRedisplay();
 	while(!executed);
-	// while(is_ready_to_update_status_of_block==1)
-	// {
-	while(time_status>=40)
+	while(time_status>=speed)
 	{
-			// is_ready_to_update_status_of_block=1;
-		// tetris_board->score+=1;
-		// printf("\nScore==%d\n",tetris_board->score );
-		update_game();
-			// time_status=0;
-			// is_ready_to_update_status_of_block=0;
 		time_status=0;
+		update_game();
 	}
+	if(time_count%250==0)
+	{
+		speed--;
+		printf("speed increased\n");
+	}
+	time_count++;
 	time_status++;
-	// }
-
-	
 	glutTimerFunc(1, timer, 0);
-	
-// glutTimerFunc(200, update_game,0);	
+	// glutTimerFunc(200, update_game,0);	
 }
 
 void keypressed(unsigned char key, int x, int y) {
