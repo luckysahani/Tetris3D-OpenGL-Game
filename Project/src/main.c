@@ -627,18 +627,22 @@ void keypressed(unsigned char key, int x, int y) {
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
+		// if(!collision())
 		move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(!collision())
 		move_block_down();
 	}
 	if (key== GLUT_KEY_LEFT){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(!collision())
 		move_block_left();
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(!collision())
 		move_block_right();
 	}
 
