@@ -12,7 +12,7 @@
 // #include "placer.h"
 #include "viewer.h"
 #include "glm.h"
-
+#include <stdbool.h>
 #include "AL/alut.h"
 // #include <conio>
 // #include <al/al.h>
@@ -44,7 +44,7 @@ GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
 Viewer *viewer;
 
 int time_status=0,isClicked_right,isClicked_left,flag=1,temp=0;
-float height=0.8,count=0;				
+float height=0.8;				
 // int x_temp,y_temp;
 int color_block;
 int board_status[8][8],view_status[8][8],created_status[8][8];
@@ -220,13 +220,19 @@ void check_game_over()
 	int i;
 	for ( i = 0; i < 4; ++i)
 	{
-		if(board_status[x[i]][y[i]]>=9)
+		if(board_status[x[i]][y[i]]>=8)
 		{
 			printf("Game Over\n");
 			printf("\n\nYour total score is %d\n",tetris_board->score );
 			exit(0);
 		}
 	}
+}
+void game_over()
+{
+	printf("Game Over\n");
+	printf("\n\nYour total score is %d\n",tetris_board->score );
+	exit(0);
 }
 bool collision()
 {
@@ -326,67 +332,86 @@ void fix_block_at_z()
 //The main code is implemented here
 void update_game()
 {
-	int type;
+	int type,i;
 	check_game_over();
 	BlockType type_block=squareshape;
 	if(flag==1)
 	{ 
 		printf("\n\n");
 		flag=0;
-		count=height/0.1;
+		// count=height/0.1;
 		type=rand()%1+ 1;
 		color_block=rand()%3;
 		printf("Created the blocks\n");
 		create_new_shape(type,color_block,type_block);
 		update_created_status(1);
 	}
-	else{
-		count--;
-	}
-	move_down();
+	// else{
+	// 	count--;
+	// }
+	// move_down();
+	// if(collision() && ())
 	if(collision())
 	{
 		// current_z=board_status[x_temp][y_temp];
 		// set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
+		for ( i = 0; i < 4; ++i)
+		{
+			if(z[i]==8)
+			{
+				game_over();
+			}
+		}
 		fix_block_at_z();
-		increment_board_status(); // make it right
+		increment_board_status(type); 
 		update_created_status(0);
 		tetris_board->score+=5;
 		printf("\nScore==%d\n",tetris_board->score );
-		place_block();	//make it right
 		check_game_over();
 		flag=1;
+	}
+	else
+	{
+		move_down();
 	}
 }
 
 //Update board status by 1 i.e now the blocks should come above the already placed block
-void increment_board_status()
+void increment_board_status(int type)
 {
 // tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
-	printf("Updating board statua\n");
+	printf("Updating board status\n");
 	int i,j;
-	if(k==1){
-		board_status[x_temp][y_temp]++;
-	} 
-	else if(k==2){
-		board_status[x_temp][y_temp]=count+1;
-		board_status[x_temp][y_temp+1]=count+1;
-		board_status[x_temp][y_temp+2]=count+1;
-	}
-	else if(k==3){
-		for ( i = 0; i < 2; ++i)
+	if(type==1)
+	{
+		for ( i = 0; i < 4; ++i)
 		{
-			for ( j = 0; j < 2; ++j)
-			{
-				board_status[x_temp+i][y_temp+j]=count;
-				printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
-				// board_status[x_temp][y_temp]++;break;
-			}
+			board_status[x[i]][y[i]]=z[i];
 		}
 	}
-	view_status[x_temp][y_temp]++;
-	// board_status[x_temp][y_temp]++;
-	int current_z=board_status[x_temp][y_temp];
+
+	// if(k==1){
+	// 	board_status[x_temp][y_temp]++;
+	// } 
+	// else if(k==2){
+	// 	board_status[x_temp][y_temp]=count+1;
+	// 	board_status[x_temp][y_temp+1]=count+1;
+	// 	board_status[x_temp][y_temp+2]=count+1;
+	// }
+	// else if(k==3){
+	// 	for ( i = 0; i < 2; ++i)
+	// 	{
+	// 		for ( j = 0; j < 2; ++j)
+	// 		{
+	// 			board_status[x_temp+i][y_temp+j]=count;
+	// 			printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
+	// 			// board_status[x_temp][y_temp]++;break;
+	// 		}
+	// 	}
+	// }
+	// view_status[x_temp][y_temp]++;
+	// // board_status[x_temp][y_temp]++;
+	// int current_z=board_status[x_temp][y_temp];
 	printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
 
 }
@@ -411,21 +436,25 @@ void increment_board_status()
 void move_block_max_down()
 {
 	int current_z=board_status[x_temp][y_temp];
-	while(count>current_z)
+	while(!collision())
 	{
-		count--;
-		move_block_down_by_one_step();
-		// current_z=board_status[x_temp][y_temp];
+		move_down();
 	}
-	if(count==current_z){
-		place_block();
-	}
-	// current_z=board_status[x_temp][y_temp];
-	if(current_z==5){		
-		printf("Game over(exited in update game case 2)\n");
-		printf("\n\nYour total score is %d\n",tetris_board->score );
-		exit(0);
-	}
+	// while(count>current_z)
+	// {
+	// 	count--;
+	// 	move_block_down_by_one_step();
+	// 	// current_z=board_status[x_temp][y_temp];
+	// }
+	// if(count==current_z){
+	// 	place_block();
+	// }
+	// // current_z=board_status[x_temp][y_temp];
+	// if(current_z==5){		
+	// 	printf("Game over(exited in update game case 2)\n");
+	// 	printf("\n\nYour total score is %d\n",tetris_board->score );
+	// 	exit(0);
+	// }
 	flag=1;
 }
 void move_block_right()
