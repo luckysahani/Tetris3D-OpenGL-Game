@@ -50,7 +50,7 @@ float height=0.8;
 int color_block;
 int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
-Block *current_block;
+Block *current_block, *current_block_array[4];
 GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
@@ -242,7 +242,7 @@ bool collision()
 	int i;
 	for ( i = 0; i < 4; ++i)
 	{
-		if(board_status[x[i]][y[i]]==z[i])
+		if(board_status[x[i]][y[i]]>=z[i])
 		{
 			return true;
 		}
@@ -276,15 +276,6 @@ void create_new_shape(int type,int color_block)
 			current_block=set_block(global_type_block, color_block,temp_block);
 			tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
 		}
-		// for (i = temp_x; i < temp_x+2; ++i)
-		// {
-		// 	for (j = temp_y; j < temp_y+2; ++j)
-		// 	{
-		// 		// current_z=board_status[i][j];
-		// 		current_block=set_block(global_type_block, color_block,block[i][j][z[]]);
-		// 		tetris_board_place_block(tetris_board,current_block, CELL(i, j,current_z),current_z);
-		// 	}
-		// }
 	}
 }
 //To move the block by 0.1 units downward
@@ -297,28 +288,12 @@ void move_down()
 	{
 		for ( i = 0; i < 4; ++i)
 		{
-			// current_z=board_status[x[i]][y[i]];
 			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
-			// if(placed_status[x[i]][y[i]][z[i]]==0)
 			view_status[x[i]][y[i]][z[i]]=0;
-			// tetris_board->board[CELL(x[i], y[i],z[i])] = NULL;
 			z[i]--;
 			view_status[x[i]][y[i]][z[i]]=1;
 			// current_block=set_block(global_type_block, color_block,current_block);
 			tetris_board_place_block_at_boardvalue(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
-			// for ( j = 0; j < 4; ++j)
-			// {
-			// 	z[j]--;
-			// 	current_block=set_block(global_type_block, color_block,block[x[i]][y[i]][z[i]]);
-			// tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
-			// }
-			// update_created_status(1);
-			// current_z=board_status[x_temp][y_temp];
-				// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
-			// current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
-			// printf("count==%f\n",count );
-			// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
-			// current_block->pos[1] -= 0.1;
 		}
 	}
 
@@ -356,53 +331,14 @@ void increment_board_status(int type)
 	{
 		printf("x = %d,y=%d,z=%d,board_status=%d,view_prev=%dand viewstatus=%d\n",x[i],y[i],z[i],board_status[x[i]][y[i]],view_status[x[i]][y[i]][z[i]-1],view_status[x[i]][y[i]][z[i]] );
 	}
-	for ( i = 0; i < 4; ++i)
-	{
-		for ( j = 0; j < z[i]; ++j)
-		{
-			// printf("view status=%d\n",view_status[x[i]][y[i]][j]);
-		}
-	}
-	// if(k==1){
-	// 	board_status[x_temp][y_temp]++;
-	// } 
-	// else if(k==2){
-	// 	board_status[x_temp][y_temp]=count+1;
-	// 	board_status[x_temp][y_temp+1]=count+1;
-	// 	board_status[x_temp][y_temp+2]=count+1;
-	// }
-	// else if(k==3){
-	// 	for ( i = 0; i < 2; ++i)
+	// for ( i = 0; i < 4; ++i)
+	// {
+	// 	for ( j = 0; j < z[i]; ++j)
 	// 	{
-	// 		for ( j = 0; j < 2; ++j)
-	// 		{
-	// 			board_status[x_temp+i][y_temp+j]=count;
-	// 			printf("Updating board status for (%d,%d)\n",x_temp+i,y_temp+j );
-	// 			// board_status[x_temp][y_temp]++;break;
-	// 		}
+	// 		printf("view status=%d\n",view_status[x[i]][y[i]][j]);
 	// 	}
 	// }
-	// view_status[x_temp][y_temp]++;
-	// // board_status[x_temp][y_temp]++;
-	// int current_z=board_status[x_temp][y_temp];
-	// printf("board_status with x_temp=%d,y_temp=%d ,ccell value==%d and board_status=%d\n\n",x_temp,y_temp, CELL(x_temp, y_temp,current_z),current_z);
-
 }
-
-
-
-
-// //Place the block at the bottom most possible and then increment the board status
-// void place_block()
-// {
-// 	int current_z=board_status[x_temp][y_temp];
-// 	set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
-// 	increment_board_status();
-// 	created_status[x_temp][y_temp]=0;
-// 	tetris_board->score+=5;
-// 	printf("\nScore==%d\n",tetris_board->score );
-// 	// showText();
-// }
 
 //The main code is implemented here
 void update_game()
@@ -422,15 +358,8 @@ void update_game()
 		create_new_shape(type,color_block);
 		update_created_status(1);
 	}
-	// else{
-	// 	count--;
-	// }
-	// move_down();
-	// if(collision() && ())
 	if(collision())
 	{
-		// current_z=board_status[x_temp][y_temp];
-		// set_z_to_zero(tetris_board, current_block, CELL(x_temp,y_temp,current_z),(current_z));
 		for ( i = 0; i < 4; ++i)
 		{
 			if(z[i]==8)
@@ -445,12 +374,10 @@ void update_game()
 		tetris_board->score+=5;
 		printf("\nScore==%d\n",tetris_board->score );
 		check_game_over();
-		for(i=0;i<4;++i)
-		{
-			printf("z==%f\n",tetris_board->board[CELL(x[i], y[i],0)]->pos[1] );
-			// printf("z==%d hi\n",z[i]);
-			// tetris_board_place_block_at_boardvalue(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
-		}
+		// for(i=0;i<4;++i)
+		// {
+		// 	printf("z==%f\n",tetris_board->board[CELL(x[i], y[i],0)]->pos[1] );
+		// }
 		flag=1;
 	}
 	else
@@ -461,7 +388,6 @@ void update_game()
 
 void move_block_max_down()
 {
-	// int current_z=board_status[x_temp][y_temp];
 	int i;
 	while(!collision())
 	{
@@ -475,46 +401,89 @@ void move_block_max_down()
 			game_over();
 		}
 	}
-	// fix_block_at_z();
 	increment_board_status(global_type);
 	update_created_status(0);
 	printf("\nScore==%d\n",tetris_board->score );
 	check_game_over();
-	// while(count>current_z)
-	// {
-	// 	count--;
-	// 	move_block_down_by_one_step();
-	// 	// current_z=board_status[x_temp][y_temp];
-	// }
-	// if(count==current_z){
-	// 	place_block();
-	// }
-	// // current_z=board_status[x_temp][y_temp];
-	// if(current_z==5){		
-	// 	printf("Game over(exited in update game case 2)\n");
-	// 	printf("\n\nYour total score is %d\n",tetris_board->score );
-	// 	exit(0);
-	// }
 	flag=1;
 }
-// void move_block_right()
+// bool check_right_collision()
 // {
-// 	executed=0;
-// 	int current_z=board_status[x_temp][y_temp];
-// 	if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)) )
+// 	int i;
+// 	if(global_type==1)
 // 	{
-// 		created_status[x_temp][y_temp]=0;
-// 		tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
-// 		x_temp++;
-// 		created_status[x_temp][y_temp]=1;
-// 		current_z=board_status[x_temp][y_temp];
-// 			// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
-// 		current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
-// 		printf("count==%f\n",count );
-// 		tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
+// 		for ( i = 0; i < 4; ++i)
+// 		{
+// 			if((x[i]>6) || (board_status[x[i]][y[i]] == z[i]) )
+// 			{
+// 				return false;
+// 			}
+// // 		}
 // 	}
-// 	executed=1;
+// 	return true;
 // }
+int max(int a,int b)
+{
+	if(a>b) return a;
+	return b;
+}
+int min(int a , int b)
+{
+	if(a<b) return a;
+	return b;
+}
+// int max4(int a,int b,int c,int d)
+// {
+// 	return max(max(a,b),max(c,d));
+// }
+// int min4(int a,int b,int c , int d)
+// {
+// 	return min(min(a,b),min(c,d));
+// }
+void move_block_right()
+{
+	executed=0;
+	int i;
+	bool check=true;
+	for ( i = 0; i < 4; ++i)
+	{
+		if((x[i]>6) || ((view_status[x[i]+1][y[i]][z[i]]==1)&&((x[i]+1)!=x[0])&&((x[i]+1)!=x[2])&&((x[i]+1)!=x[3])&&((x[i]+1)!=x[1]))) 
+		{
+			check=false;
+		}
+	}
+	if(check)  
+	{
+		update_created_status(0);
+		for (i=0;i<4;i++)
+		{
+			view_status[x[i]][y[i]][z[i]]=0;
+			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+		}
+		for (i=0;i<4;i++)
+		{
+			x[i]++;
+			view_status[x[i]][y[i]][z[i]]=1;
+			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
+		}
+		printf("moving right\n");
+		update_created_status(1);
+	}
+	// int current_z=board_status[x_temp][y_temp];
+	// if(!(x_temp > 6) && (count > 0.0) && (board_status[x_temp+1][y_temp] < (int)(count)) )
+	// {
+	// 	created_status[x_temp][y_temp]=0;
+	// 	tetris_board->board[CELL(x_temp,y_temp,current_z)] = NULL;
+	// 	x_temp++;
+	// 	created_status[x_temp][y_temp]=1;
+	// 	current_z=board_status[x_temp][y_temp];
+	// 		// tetris_board->board[CELL(x_temp,y_temp,current_z)] =current_block;
+	// 	current_block=set_block(current_type, color_block,block[x_temp][y_temp][current_z]);
+	// 	printf("count==%f\n",count );
+	// 	tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),(int)(count));
+	// }
+	executed=1;
+}
 // void move_block_left()
 // {
 // 	executed=0;
@@ -648,7 +617,7 @@ void keypressSpecial(int key, int x, int y){
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
-		// move_block_right();
+		move_block_right();
 	}
 
 }
