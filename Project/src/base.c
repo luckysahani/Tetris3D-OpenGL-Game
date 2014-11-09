@@ -71,14 +71,14 @@ void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 // 		p->pos[1] -= 0.1; 
 // 	}
 // }
-void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
-{
-	float temp=k;
-	temp=temp/10;
-	printf("setting p->pos[1] to %d and temp =%f\n",k ,temp);
-	p->pos[1]=temp;
-	printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
-}
+// void set_z_to_zero(Tetris_board *cboard, Block *p, int cell,int k)
+// {
+// 	float temp=k;
+// 	temp=temp/10;
+// 	printf("setting p->pos[1] to %d and temp =%f\n",k ,temp);
+// 	p->pos[1]=temp;
+// 	printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
+// }
 void reset_coordinates(Tetris_board *cboard, Block *p, int cell)
 {
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
@@ -103,7 +103,7 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10]) {
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
 	glPushMatrix();
 	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
 	GLdouble x, y;
@@ -235,56 +235,65 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 			// {
 			// 	/* code */
 			// }
-			for ( i = 0; i < 8; i++)
+			for ( i = 0; i < 9; i++)
 			{
 					/* code */
 					// printf("entering inside at i=%d and cell =%d\n",i,CELL(xcell, ycell,i));
 				
 					// Block *block = cboard->block[CELL(xcell, ycell,i)];//get_block(cboard, CELL(xcell, ycell,i));
-				if ((cboard->board[CELL(xcell, ycell,i)]) && (view_status[xcell][ycell][i]==1)) {
+				// printf("view_status=\n");
+				if ((view_status[xcell][ycell][i]==1)||(placed_status[xcell][ycell][i]==1)) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
-						// printf("Entered ohh really at cell =%d\n",CELL(xcell, ycell,i));
-					display_block(block, CELL(xcell, ycell,i)	);
+					// printf("Entered ohh really at cell =%d,x=%d,y=%d,z=%d\n",CELL(xcell, ycell,i),xcell,ycell,i);
+					// printf("view status=%d\n", view_status[xcell][ycell][i])
+					if(!(cboard->board[CELL(xcell, ycell,i)]))
+					{
+						printf("no cell how can this be possible\n");
+					}
+					// printf("z==%f\n",block->pos[1] );
+					display_block(block, CELL(xcell, ycell,i));
 				}
+				// printf("\n");
 			}
+			// printf("\n\n\n");
 		}
 	}
 					//Now working on removing the layer if it is complete
 
 
-		
+		// printf("\n");
 		xcell=-1;
-		int check=1;
+		int check=0;
 		int count=0;
 		Block *block;
-		for (x=-0.5f; x<0.5f; x+=step)
-		{
-			xcell++;
-			ycell = NUM_CELLS;
-			// count=0;
-			for (y=-0.5f; y<0.5f; y+=step)
-			{
-				ycell--;
-				// if(board_status[xcell][ycell]>0)
-				// {
-					if (cboard->board[CELL(xcell, ycell,0)])
-					{
-						count++;
-						// printf("count==%d\n",count );
+		// for (x=-0.5f; x<0.5f; x+=step)
+		// {
+		// 	xcell++;
+		// 	ycell = NUM_CELLS;
+		// 	// count=0;
+		// 	for (y=-0.5f; y<0.5f; y+=step)
+		// 	{
+		// 		ycell--;
+		// 		// if(board_status[xcell][ycell]>0)
+		// 		// {
+		// 			if (cboard->board[CELL(xcell, ycell,0)])
+		// 			{
+		// 				count++;
+		// 				// printf("count==%d\n",count );
 
-					}
-					else
-					{
+		// 			}
+		// 			else
+		// 			{
 
-						check=0;
-					}
-					// if(count>2){printf("count is > 2\n");}
-				// }
+		// 				check=0;
+		// 			}
+		// 			// if(count>2){printf("count is > 2\n");}
+		// 		// }
 
 
-			}
+		// 	}
 
-		}
+		// }
 		// check=1;
 		// if(count>5){check=1;}
 

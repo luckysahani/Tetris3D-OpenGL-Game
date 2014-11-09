@@ -9,7 +9,7 @@ Viewer* create_viewer(Placeable *object)
 	if (object) {
 		printf("Object viewer set\n");
 		v->pos[0] = object->pos[0] ;
-		v->pos[1] = object->pos[1] + 0.55f;
+		v->pos[1] = object->pos[1] + 0.85f;
 		v->pos[2] = object->pos[2] + 0.85f;
         observe_object(v, object);
 	}
