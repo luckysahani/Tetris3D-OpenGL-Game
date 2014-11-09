@@ -242,7 +242,7 @@ bool collision()
 	int i;
 	for ( i = 0; i < 4; ++i)
 	{
-		if(board_status[x[i]][y[i]]>=z[i])
+		if(board_status[x[i]][y[i]]>=z[i]) 
 		{
 			return true;
 		}
