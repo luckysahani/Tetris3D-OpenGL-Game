@@ -57,7 +57,7 @@ void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int 
 void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	/* invert the position of the pieces along the y-axis */
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-	p->pos[1] = 0.8;//((double) rand() / (RAND_MAX))/8;
+	p->pos[1] = 1;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
 	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
@@ -177,44 +177,44 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 	}
 		// printf("\n");
 		xcell=-1;
-		int check=0;
+		int check=1;
 		int count=0;
 		Block *block;
-		// for (x=-0.5f; x<0.5f; x+=step)
-		// {
-		// 	xcell++;
-		// 	ycell = NUM_CELLS;
-		// 	// count=0;
-		// 	for (y=-0.5f; y<0.5f; y+=step)
-		// 	{
-		// 		ycell--;
-		// 		// if(board_status[xcell][ycell]>0)
-		// 		// {
-		// 			if (cboard->board[CELL(xcell, ycell,0)])
-		// 			{
-		// 				count++;
-		// 				// printf("count==%d\n",count );
+		for (x=-0.5f; x<0.5f; x+=step)
+		{
+			xcell++;
+			ycell = NUM_CELLS;
+			// count=0;
+			for (y=-0.5f; y<0.5f; y+=step)
+			{
+				ycell--;
+				// if(board_status[xcell][ycell]>0)
+				// {
+					if (view_status[xcell][ycell][0]==1)
+					{
+						count++;
+						// printf("count==%d\n",count );
 
-		// 			}
-		// 			else
-		// 			{
+					}
+					else
+					{
 
-		// 				check=0;
-		// 			}
-		// 			// if(count>2){printf("count is > 2\n");}
-		// 		// }
+						check=0;
+					}
+					// if(count>2){printf("count is > 2\n");}
+				// }
 
 
-		// 	}
+			}	
 
-		// }
+		}	
 		// check=1;
 		// if(count>5){check=1;}
 
 		// printf("count==%d\n",count );
 		if(check==1)
 		{
-			printf("\n\n \n looks like its fully occupied\n \n \n");
+			printf("\n\n \n Looks like its fully occupied: Well done\n \n \n");
 			cboard->score+=100;
 			xcell=-1;
 			for (x=-0.5f; x<0.5f; x+=step)
@@ -225,25 +225,25 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 				for (y=-0.5f; y<0.5f; y+=step)
 				{
 					ycell--;
-					if((board_status[xcell][ycell]>0)&&(cboard->board[CELL(xcell, ycell,0)]))
-					{
-						for ( i = 0; i < board_status[xcell][ycell]; i++)
-						{
-							block=cboard->board[CELL(xcell, ycell,i)];
-							if(i==0)
-							{
-								cboard->board[CELL(xcell, ycell,0)]=NULL;
-							}
-							else
-							{
-								cboard->board[CELL(xcell, ycell,i-1)]=block;
-								cboard->board[CELL(xcell, ycell,i-1)]->pos[1]--;
-							}
-						}
-						board_status[xcell][ycell]--;
-						// block=cboard->board[CELL(xcell, ycell,0)];
-						// cboard->board[CELL(xcell, ycell,0)]=NULL;
-					}
+					// if((board_status[xcell][ycell]>0)&&(cboard->board[CELL(xcell, ycell,0)]))
+					// {
+					// 	for ( i = 0; i < board_status[xcell][ycell]; i++)
+					// 	{
+					// 		block=cboard->board[CELL(xcell, ycell,i)];
+					// 		if(i==0)
+					// 		{
+					// 			cboard->board[CELL(xcell, ycell,0)]=NULL;
+					// 		}
+					// 		else
+					// 		{
+					// 			cboard->board[CELL(xcell, ycell,i-1)]=block;
+					// 			cboard->board[CELL(xcell, ycell,i-1)]->pos[1]--;
+					// 		}
+					// 	}
+					// 	board_status[xcell][ycell]--;
+					// 	// block=cboard->board[CELL(xcell, ycell,0)];
+					// 	// cboard->board[CELL(xcell, ycell,0)]=NULL;
+					// }
 				}
 			}
 		}
