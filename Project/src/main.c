@@ -265,19 +265,40 @@ void create_new_shape(int type,int color_block)
 	if(type==1)
 	{
 		// printf("type==%d\n",type );
-		int temp_x=rand()%6;
-		int temp_y=rand()%6;
+		int temp_x=rand()%7;
+		int temp_y=rand()%7;
 		x[0]=x[1]=temp_x;
 		x[2]=x[3]=temp_x+1;
 		y[0]=y[2]=temp_y;
 		y[1]=y[3]=temp_y+1;
 		z[0]=z[1]=z[2]=z[3]=8;
+		// z[3]=8;
 		for ( i = 0; i < 4; ++i)
 		{
-			temp_block=create_block(ishape, 1);
+			temp_block=create_block(squareshape, 1);
 			current_block=set_block(global_type_block, color_block,temp_block);
 			tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
 		}
+	}
+	if(type==2)
+	{
+		int temp_x=rand()%6;
+		int temp_y=rand()%7;
+		x[0]=temp_x;
+		x[1]=temp_x + 1;
+		x[2]=x[3]=temp_x+2;
+		y[3]=temp_y;
+		// y[1]=temp_y
+		y[0]=y[1]=y[2]=temp_y+1;
+		z[0]=z[1]=z[2]=z[3]=8;
+		// z[3]=8;
+		for ( i = 0; i < 4; ++i)
+		{
+			temp_block=create_block(squareshape, 1);
+			current_block=set_block(global_type_block, color_block,temp_block);
+			tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+		}
+		
 	}
 }
 //To move the block by 0.1 units downward
@@ -321,11 +342,21 @@ void fix_block_at_z()
 void increment_board_status(int type)
 {
 // tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
+	if(!collision()) return;
 	printf("Updating board status\n");
 	int i,j;
 	if(type==1)
 	{
 		// printf("entered\n");
+		for ( i = 0; i < 4; ++i)
+		{
+			board_status[x[i]][y[i]]=z[i]+1;
+			view_status[x[i]][y[i]][z[i]]=1;
+			placed_status[x[i]][y[i]][z[i]]=1;
+		}
+	}
+	else if(type==2)
+	{
 		for ( i = 0; i < 4; ++i)
 		{
 			board_status[x[i]][y[i]]=z[i]+1;
@@ -358,7 +389,8 @@ void update_game()
 		printf("\n\n");
 		flag=0;
 		// count=height/0.1;
-		type= 1;
+		// type= rand()%3;
+		type=2;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -377,6 +409,12 @@ void update_game()
 		}
 		printf("type==%d\n",global_type );
 		// fix_block_at_z();
+		if(!collision())
+		{
+			allow_movement=true;
+			move_down();
+			return;
+		}
 		increment_board_status(global_type); 
 		update_created_status(0);
 		tetris_board->score+=5;
