@@ -23,8 +23,8 @@
 #include <stdlib.h>  
 #include <time.h>
 
-#define HEIGHT 800
-#define WIDTH 800
+#define HEIGHT 600
+#define WIDTH 1000
 
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
@@ -88,7 +88,6 @@ void init() {
 	}
 	tetris_board->score=0;
 	glClearColor (0.8, 0.8, 1.0, 1.0);
-// glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_NORMALIZE);
@@ -126,12 +125,35 @@ int save_screenshot(char* filename, int w, int h)
 	return 1;
 }
 
+//--------------------------------------------
+void drawText(const char *text, int length, int x, int y){
+	 glMatrixMode(GL_PROJECTION); // change the current matrix to PROJECTION
+	 double matrix[16]; // 16 doubles in stack memory
+	 glGetDoublev(GL_PROJECTION_MATRIX, matrix); // get the values from PROJECTION matrix to local variable
+	 glColor3f(0,0,0);
+	 glLoadIdentity(); // reset PROJECTION matrix to identity matrix
+	 glOrtho(0, 800, 0, 600, -5, 5); // orthographic perspective
+	 glMatrixMode(GL_MODELVIEW); // change current matrix to MODELVIEW matrix again
+	 glLoadIdentity(); // reset it to identity matrix
+	 glPushMatrix(); // push current state of MODELVIEW matrix to stack
+	 glLoadIdentity(); // reset it again. (may not be required, but it my convention)
+	 glColor3f(0.0, 0.0, 0.0);
+	 glRasterPos2i(x, y); // raster position in 2D
+	 int i;
+	 for(i=0; i<length; i++){
+	  	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]); // generation of characters in our text with 9 by 15 GLU font
+		}
+	 glPopMatrix(); // get MODELVIEW matrix value from stack
+	 glMatrixMode(GL_PROJECTION); // change current matrix mode to PROJECTION
+	 glLoadMatrixd(matrix); // reset
+	 glMatrixMode(GL_MODELVIEW); // change current matrix mode to MODELVIEW
+}
+
+//--------------------------------------------
+
 void display() {
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	// glEnable(GL_TEXTURE_2D);
-	// glBindTexture(GL_TEXTURE_2D, texture);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
 	glLoadIdentity();
 
@@ -145,9 +167,29 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLightB);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
+	glViewport(0, 0, WIDTH/2+100, HEIGHT);
+  	// Perspective Projection
 
 	observe_from_viewer(viewer);
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
+
+	// Now we need orthgraphic view
+ 	// Lower left window
+ 	glViewport(WIDTH/2+200, 0, 300, HEIGHT);
+	glPushMatrix();
+		char buf[4]={'\0'};
+		sprintf(buf, "%d", 50-speed);
+		glDisable(GL_LIGHTING);
+		drawText("Speed: ",strlen("Score: "),10,180);
+		drawText(buf,strlen(buf), 200, 180);
+		sprintf(buf, "%d", tetris_board->score);
+		drawText("Score: ",strlen("Score: "),10,200);
+		drawText(buf,strlen(buf), 200, 200);
+		glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
+	glutWireTeapot(0.5);
 	glFlush();
 	glutSwapBuffers();
 }
@@ -273,7 +315,7 @@ void create_new_shape(int type,int color_block)
 		for ( i = 0; i < 4; ++i)
 		{
 			temp_block=create_block(ishape, 1);
-			current_block=set_block(global_type_block, color_block,temp_block);
+			current_block= set_block(global_type_block, color_block,temp_block);
 			tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
 		}
 	}
@@ -671,7 +713,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	alutInit (&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-	glutInitWindowSize (1200, 1000);
+	glutInitWindowSize (WIDTH, HEIGHT);
 	glutInitWindowPosition (100,100);
 	glutCreateWindow ("3D-Tetris");
 	glutDisplayFunc(display);

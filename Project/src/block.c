@@ -94,6 +94,9 @@ Block* create_block(BlockType type, PlayerType player)
 	block->color_selected[R] = block->color[R];
 	block->color_selected[G] = block->color[G]; 
 	block->color_selected[B] = block->color[B];
+	block->color_specular[R] = block->color[R];
+	block->color_specular[G] = block->color[G]; 
+	block->color_specular[B] = block->color[B];
 
 	block->type = type;
 	block->player = player;
