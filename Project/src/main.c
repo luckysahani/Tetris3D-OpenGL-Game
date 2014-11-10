@@ -55,7 +55,8 @@ GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
-int global_type=1;		
+int global_type=1,mode;		
+bool allow_movement;
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -203,63 +204,6 @@ void reshape (int w, int h) {
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
 }
-
-// //This creates an Square shape Object
-// void create_squareshape_block()
-// {
-// 	while(y_temp==0 && x_temp==0)
-// 	{
-// 		y_temp=rand()%8;
-// 		x_temp=rand()%8;
-// 	}
-// 	int current_z=board_status[x_temp][y_temp];
-// // Block *square=current_block;
-// 	printf("SquareShape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
-// 	current_type=squareshape;
-// 	current_block=set_block(squareshape, color_block,block[x_temp][y_temp][current_z]);
-// // current_block=block[x_temp][y_temp][current_z];
-// 	// glmScale(current_block->model,0.6);
-// 	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
-// }
-
-// //This creates an Ishape Object
-// void create_ishape_block()
-// {
-// 	while(y_temp>5)
-// 	{
-// 		y_temp=rand()%8;
-// 	}
-// 	int current_z=board_status[x_temp][y_temp];
-// 	current_type=ishape;
-// 	printf("Ishape created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
-// 	current_block= set_block(ishape, color_block,block[x_temp][y_temp][current_z]);
-// // current_block=block[x_temp][y_temp][current_z];
-// 	tetris_board_place_block(tetris_board, current_block, CELL(x_temp, y_temp,current_z),current_z);
-// }
-
-// //This creates an Cube Object
-// void create_cube_block()
-// {
-// 	while(y_temp>6)
-// 	{
-// 		y_temp=rand()%8;
-// 	}
-// 	while(x_temp>6)
-// 	{
-// 		x_temp=rand()%8;
-// 	}
-// 	while(y_temp==0 && x_temp==0)
-// 	{
-// 		y_temp=rand()%8;
-// 		x_temp=rand()%8;
-// 	}
-// 	int current_z=board_status[x_temp][y_temp];
-// 	current_type=cube;
-// 	printf("Cube created at x_temp==%d,y_temp==%d,color=%d,cell value =%d and board_staus=%d\n",x_temp,y_temp,color_block, CELL(x_temp, y_temp,current_z),current_z );
-// 	current_block=set_block(cube, color_block,block[x_temp][y_temp][current_z]);
-// 	// glmScale(current_block->model,0.6);
-// 	tetris_board_place_block(tetris_board,current_block, CELL(x_temp, y_temp,current_z),current_z);
-// }
 void check_game_over()
 {
 	int i;
@@ -302,23 +246,59 @@ void update_created_status(int k)
 void create_new_shape(int type,int color_block)
 {
 	int i,current_z;
+	printf("Creating block\n");
 	if(type==1)
 	{
 		// printf("type==%d\n",type );
-		int temp_x=rand()%6;
-		int temp_y=rand()%6;
+		int temp_x=rand()%7;
+		int temp_y=rand()%7;
 		x[0]=x[1]=temp_x;
 		x[2]=x[3]=temp_x+1;
 		y[0]=y[2]=temp_y;
 		y[1]=y[3]=temp_y+1;
 		z[0]=z[1]=z[2]=z[3]=8;
-		for ( i = 0; i < 4; ++i)
-		{
-			temp_block=create_block(ishape, 1);
-			current_block= set_block(global_type_block, color_block,temp_block);
-			tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
-		}
+
 	}
+	else if(type==2)
+	{
+		int temp_x=rand()%6;
+		int temp_y=rand()%7;
+		x[0]=temp_x;
+		x[1]=temp_x + 1;
+		x[2]=x[3]=temp_x+2;
+		y[3]=temp_y;
+		y[0]=y[1]=y[2]=temp_y+1;
+		z[0]=z[1]=z[2]=z[3]=8;
+	}
+	else if(type==3)
+	{
+		int temp_x=rand()%6;
+		int temp_y=rand()%7;
+		x[0]=temp_x;
+		x[1]=x[3]=temp_x + 1;
+		x[2]=temp_x+2;
+		y[3]=temp_y;
+		y[0]=y[1]=y[2]=temp_y+1;
+		z[0]=z[1]=z[2]=z[3]=8;
+	}
+	else if(type==4)
+	{
+		int temp_x=rand()%5;
+		int temp_y=rand()%8;
+		x[0]=temp_x;
+		x[1]=temp_x + 1;
+		x[2]=temp_x + 2;
+		x[3]=temp_x + 3;
+		y[0]=y[1]=y[2]=y[3]=temp_y;
+		z[0]=z[1]=z[2]=z[3]=8;		
+	}
+	for ( i = 0; i < 4; ++i)
+	{
+		temp_block=create_block(squareshape, 1);
+		current_block=set_block(global_type_block, color_block,temp_block);
+		tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+	}
+
 }
 //To move the block by 0.1 units downward
 void move_down()
@@ -328,7 +308,11 @@ void move_down()
 	printf("moved down 1 step\n");
 	if(executed==1)
 	{
-		for ( i = 0; i < 4; ++i)
+		for ( i = 0; i < 4 ; ++i)
+		{
+			if(z[i]==0) return;
+		}
+		for ( i = 0; i < 4 ; ++i)
 		{
 			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
 			view_status[x[i]][y[i]][z[i]]=0;
@@ -357,29 +341,22 @@ void fix_block_at_z()
 void increment_board_status(int type)
 {
 // tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
+	if(!collision()) return;
 	printf("Updating board status\n");
 	int i,j;
-	if(type==1)
-	{
-		// printf("entered\n");
+	// if(type==1)
+	// {
 		for ( i = 0; i < 4; ++i)
 		{
 			board_status[x[i]][y[i]]=z[i]+1;
 			view_status[x[i]][y[i]][z[i]]=1;
 			placed_status[x[i]][y[i]][z[i]]=1;
 		}
-	}
+	// }
 	for(i=0;i<4;++i)
 	{
 		printf("x = %d,y=%d,z=%d,board_status=%d,view_prev=%dand viewstatus=%d\n",x[i],y[i],z[i],board_status[x[i]][y[i]],view_status[x[i]][y[i]][z[i]-1],view_status[x[i]][y[i]][z[i]] );
 	}
-	// for ( i = 0; i < 4; ++i)
-	// {
-	// 	for ( j = 0; j < z[i]; ++j)
-	// 	{
-	// 		printf("view status=%d\n",view_status[x[i]][y[i]][j]);
-	// 	}
-	// }
 }
 
 //The main code is implemented here
@@ -390,18 +367,21 @@ void update_game()
 	global_type_block=squareshape;
 	if(flag==1)
 	{ 
+		allow_movement=true;
 		printf("\n\n");
 		flag=0;
 		// count=height/0.1;
-		type= 1;
+		type= rand()%4 +1;
+		// type=2;
 		global_type=type;
 		color_block=rand()%3;
-		printf("Created the blocks\n");
+		printf("Creating the blocks\n");
 		create_new_shape(type,color_block);
 		update_created_status(1);
 	}
 	if(collision())
 	{
+		allow_movement=false;
 		for ( i = 0; i < 4; ++i)
 		{
 			if(z[i]==8)
@@ -411,6 +391,12 @@ void update_game()
 		}
 		printf("type==%d\n",global_type );
 		// fix_block_at_z();
+		if(!collision())
+		{
+			allow_movement=true;
+			move_down();
+			return;
+		}
 		increment_board_status(global_type); 
 		update_created_status(0);
 		tetris_board->score+=5;
@@ -433,10 +419,14 @@ void move_block_max_down()
 	int i;
 	while(!collision())
 	{
+		for ( i = 0; i < 4 ; ++i)
+		{
+			if(z[i]==0) goto a;
+		}
 		move_down();
 		tetris_board->score+=5;
 	}
-	for ( i = 0; i < 4; ++i)
+	a : for ( i = 0; i < 4; ++i)
 	{
 		if(z[i]==8)
 		{
@@ -584,6 +574,10 @@ void move_block_down()
 	executed=1;
 }
 
+void rotate()
+{
+
+}
 
 
 
@@ -599,6 +593,10 @@ void timer(int extra) {
 	{
 		speed--;
 		printf("speed increased\n");
+	}
+	if(speed< 30)
+	{
+		speed=30;
 	}
 	time_count++;
 	time_status++;
@@ -642,21 +640,22 @@ void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
 		// if(!collision())
+		if(allow_movement)
 		move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
-		// if(!collision())
+		if(allow_movement)
 		move_block_down();
 	}
 	if (key== GLUT_KEY_LEFT){
 		loadSound("./wav/tick.wav"); playSound();
-		// if(!collision())
+		if(allow_movement)
 		move_block_left();
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
-		// if(!collision())
+		if(allow_movement)
 		move_block_right();
 	}
 
