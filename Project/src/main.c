@@ -56,6 +56,7 @@ BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
 int global_type=1;		
+bool allow_movement;
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -260,6 +261,7 @@ void update_created_status(int k)
 void create_new_shape(int type,int color_block)
 {
 	int i,current_z;
+	printf("Creating block\n");
 	if(type==1)
 	{
 		// printf("type==%d\n",type );
@@ -286,7 +288,11 @@ void move_down()
 	printf("moved down 1 step\n");
 	if(executed==1)
 	{
-		for ( i = 0; i < 4; ++i)
+		for ( i = 0; i < 4 ; ++i)
+		{
+			if(z[i]==0) return;
+		}
+		for ( i = 0; i < 4 ; ++i)
 		{
 			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
 			view_status[x[i]][y[i]][z[i]]=0;
@@ -348,18 +354,20 @@ void update_game()
 	global_type_block=squareshape;
 	if(flag==1)
 	{ 
+		allow_movement=true;
 		printf("\n\n");
 		flag=0;
 		// count=height/0.1;
 		type= 1;
 		global_type=type;
 		color_block=rand()%3;
-		printf("Created the blocks\n");
+		printf("Creating the blocks\n");
 		create_new_shape(type,color_block);
 		update_created_status(1);
 	}
 	if(collision())
 	{
+		allow_movement=false;
 		for ( i = 0; i < 4; ++i)
 		{
 			if(z[i]==8)
@@ -391,10 +399,14 @@ void move_block_max_down()
 	int i;
 	while(!collision())
 	{
+		for ( i = 0; i < 4 ; ++i)
+		{
+			if(z[i]==0) goto a;
+		}
 		move_down();
 		tetris_board->score+=5;
 	}
-	for ( i = 0; i < 4; ++i)
+	a : for ( i = 0; i < 4; ++i)
 	{
 		if(z[i]==8)
 		{
@@ -600,21 +612,22 @@ void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
 		// if(!collision())
+		if(allow_movement)
 		move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
-		// if(!collision())
+		if(allow_movement)
 		move_block_down();
 	}
 	if (key== GLUT_KEY_LEFT){
 		loadSound("./wav/tick.wav"); playSound();
-		// if(!collision())
+		if(allow_movement)
 		move_block_left();
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
-		// if(!collision())
+		if(allow_movement)
 		move_block_right();
 	}
 
