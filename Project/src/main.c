@@ -55,7 +55,7 @@ GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
-int global_type=1,mode,speed_control=500;		
+int global_type=1,mode,speed_control=250;		
 bool allow_movement;
 
 void loadSound(char* filename){		
@@ -250,15 +250,16 @@ void create_new_shape(int type,int color_block)
 	mode=0;
 	if(type==1)
 	{
-		// printf("type==%d\n",type );
 		int temp_x=rand()%7;
 		int temp_y=rand()%7;
-		x[0]=x[1]=temp_x;
-		x[2]=x[3]=temp_x+1;
-		y[0]=y[2]=temp_y;
-		y[1]=y[3]=temp_y+1;
+		x[0]=x[2]=temp_x;
+		x[1]=x[3]=temp_x+1;
+		y[0]=y[1]=temp_y;
+		y[2]=y[3]=temp_y+1;
 		z[0]=z[1]=z[2]=z[3]=8;
-
+		// x[4]={temp_x,temp_x+1,temp_x,temp_x+1};
+		// y[4]={temp_y,temp_y,temp_y+1,temp_y+1};
+		// z[4]={8,8,8,8};
 	}
 	else if(type==2)
 	{
@@ -373,7 +374,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		// type=2;
+		type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -580,44 +581,58 @@ void rotate_z()
 	int i,xnew[4],ynew[4],znew[4];
 	if(global_type==1)
 	{
-		
-		if(mode%2==1)
+
+		if(((mode%2 ==1) && x[0]>6 && x[2]>6 ) || ((mode%2==0) && z[0]>7 && z[2]>7) )
 		{
+			return;
+		}
+		if((mode%2==1) &&  (view_status[x[0]+1][y[0]][z[0]]!=1) && (view_status[x[2]+1][y[2]][z[2]+1]!=1) )
+		{
+			// int xnew[4]={x[0],x[0]+1,x[0],x[0]+1};
+			// int ynew[4]={y[0],y[0],y[2],y[2]};
+			// int znew[4]={z[0],z[0],z[0],z[0]};
 			xnew[0]=xnew[2]=x[0];
 			xnew[1]=xnew[3]=x[0]+1;
 			ynew[0]=ynew[1]=y[0];
 			ynew[2]=ynew[3]=y[2];
 			znew[0]=znew[1]=znew[2]=znew[3]=z[0];
-			for ( i = 0; i < 4; ++i)
-			{
-				x[i]=xnew[i];
-				y[i]=ynew[i];
-				z[i]=znew[i];
-			}
-			mode++;
-			// x[0]=x[1]=temp_x;
-			// x[2]=x[3]=temp_x+1;
-			// y[0]=y[2]=temp_y;
-			// y[1]=y[3]=temp_y+1;
-			// z[0]=z[1]=z[2]=z[3]=8;
 		}
 		else if((mode%2==0) && (view_status[x[0]][y[0]][z[0]+1]!=1) && (view_status[x[2]][y[2]][z[2]+1]!=1) )
 		{
-			xnew[1]=xnew[2]=xnew[3]=xnew[4]=x[0];
+			// int xnew[4]={x[0],x[0],x[2],x[2]};
+			// int ynew[4]={y[0],y[0],y[2],y[2]};
+			// int znew[4]={z[0],z[0]+1,z[2],z[2]+1};
+			xnew[0]=xnew[1]=x[0];
+			xnew[3]=xnew[2]=x[2];
 			ynew[0]=ynew[1]=y[0];
-			ynew[2]=ynew[2]=y[2];
+			ynew[2]=ynew[3]=y[2];
 			znew[0]=z[0];
 			znew[2]=z[2];
 			znew[1]=z[0]+1;
 			znew[3]=z[2]+1;
-			for ( i = 0; i < 4; ++i)
-			{
-				x[i]=xnew[i];
-				y[i]=ynew[i];
-				z[i]=znew[i];
-			}
-			mode++;
 		}
+		else
+		{
+			return;
+		}
+		update_created_status(0);
+		for ( i = 0; i < 4; ++i)
+		{
+			view_status[x[i]][y[i]][z[i]]=0;
+			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+		}
+		for ( i = 0; i < 4; ++i)
+		{
+			x[i]=xnew[i];
+			y[i]=ynew[i];
+			z[i]=znew[i];
+			// printf("check 1\n");
+			view_status[x[i]][y[i]][z[i]]=1;
+			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
+		}
+		update_created_status(1);
+		mode++;
+		printf("mode changed to %d\n",mode%2);
 	}
 
 }
@@ -635,7 +650,7 @@ void timer(int extra) {
 	if(time_count%speed_control==0)
 	{
 		speed--;
-		speed_control+=50;
+		speed_control+=50+speed_control;
 		printf("speed increased\n");
 	}
 	// if(speed< 30)
