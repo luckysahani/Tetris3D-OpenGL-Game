@@ -55,7 +55,7 @@ GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
-int global_type=1,mode;		
+int global_type=1,mode,speed_control=500;		
 bool allow_movement;
 
 void loadSound(char* filename){		
@@ -205,6 +205,7 @@ void create_new_shape(int type,int color_block)
 {
 	int i,current_z;
 	printf("Creating block\n");
+	mode=0;
 	if(type==1)
 	{
 		// printf("type==%d\n",type );
@@ -533,6 +534,48 @@ void move_block_down()
 
 void rotate()
 {
+	int i,xnew[4],ynew[4],znew[4];
+	if(global_type==1)
+	{
+		
+		if(mode%2==1)
+		{
+			xnew[0]=xnew[2]=x[0];
+			xnew[1]=xnew[3]=x[0]+1;
+			ynew[0]=ynew[1]=y[0];
+			ynew[2]=ynew[3]=y[2];
+			znew[0]=znew[1]=znew[2]=znew[3]=z[0];
+			for ( i = 0; i < 4; ++i)
+			{
+				x[i]=xnew[i];
+				y[i]=ynew[i];
+				z[i]=znew[i];
+			}
+			mode++;
+			// x[0]=x[1]=temp_x;
+			// x[2]=x[3]=temp_x+1;
+			// y[0]=y[2]=temp_y;
+			// y[1]=y[3]=temp_y+1;
+			// z[0]=z[1]=z[2]=z[3]=8;
+		}
+		else if((mode%2==0) && (view_status[x[0]][y[0]][z[0]+1]!=1) && (view_status[x[2]][y[2]][z[2]+1]!=1) )
+		{
+			xnew[1]=xnew[2]=xnew[3]=xnew[4]=x[0];
+			ynew[0]=ynew[1]=y[0];
+			ynew[2]=ynew[2]=y[2];
+			znew[0]=z[0];
+			znew[2]=z[2];
+			znew[1]=z[0]+1;
+			znew[3]=z[2]+1;
+			for ( i = 0; i < 4; ++i)
+			{
+				x[i]=xnew[i];
+				y[i]=ynew[i];
+				z[i]=znew[i];
+			}
+			mode++;
+		}
+	}
 
 }
 
@@ -546,15 +589,16 @@ void timer(int extra) {
 		time_status=0;
 		update_game();
 	}
-	if(time_count%250==0)
+	if(time_count%speed_control==0)
 	{
 		speed--;
+		speed_control+=50;
 		printf("speed increased\n");
 	}
-	if(speed< 30)
-	{
-		speed=30;
-	}
+	// if(speed< 30)
+	// {
+	// 	speed=30;
+	// }
 	time_count++;
 	time_status++;
 	glutTimerFunc(1, timer, 0);
@@ -569,6 +613,10 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'b') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
+	if (key == 'r')
+	{
+		rotate_z();
+	}
 	if (key == 'x') 
 	{ 
 		printf("\n\nYour total score is %d\n",tetris_board->score );
