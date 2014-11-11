@@ -576,7 +576,7 @@ void move_block_down()
 	executed=1;
 }
 
-void rotate_z()
+void rotate_z() 
 {
 	int i,xnew[4],ynew[4],znew[4];
 	if(global_type==1)
