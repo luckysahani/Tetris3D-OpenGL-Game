@@ -1,8 +1,12 @@
 INC = -I./src
-LDFLAGS = $(INC) -L/usr/X11R6/lib -lGL -lGLU -lglut -lm -lalut `pkg-config --libs freealut`
+IFLAGS		=	-I/usr/include		\
+			-I/usr/include/GL	\
+			-I/usr/X11R6/include	\
+			-I/usr/X11R6/include/GL
+LDFLAGS = $(INC) -L/usr/lib	-L/usr/X11R6/lib -lX11 -lGL -lGLU -lglut -ljpeg  -lm -lalut `pkg-config --libs freealut` 
 CC = gcc
 main: clean
-	$(CC)    src/main.c src/glm.h src/glm.c src/block.h src/block.c src/base.h src/base.c src/viewer.h src/viewer.c   $(LDFLAGS) -o base
+	$(CC)  $(IFLAGS)  src/main.c src/glm.h src/glm.c src/block.h src/block.c src/base.h src/base.c src/viewer.h src/viewer.c   $(LDFLAGS) -o base
 
 clean:
 	rm -rf base
