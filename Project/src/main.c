@@ -57,7 +57,7 @@ int time_status=0,time_count=0,isClicked_right,isClicked_left,flag=1,temp=0;
 float height=0.8;				
 // int x_temp,y_temp;
 int color_block,speed=50;
-int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
+int board_status[8][8],view_status[8][8][12],created_status[8][8],placed_status[8][8][12];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
 GLuint texture;
@@ -65,7 +65,7 @@ BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
 int global_type=1,mode,speed_control=250;		
-bool allow_movement;
+bool allow_movement,rotated;
 
 // Some variables for textures
 static float	plane_xy[3] = {1, 0, 0};
@@ -173,7 +173,7 @@ void init() {
 		for ( j = 0; j < 8; ++j)
 		{
 			board_status[i][j]=0;
-			for ( k = 0; k < 10; k++)
+			for ( k = 0; k < 12; k++)
 			{
 				view_status[i][j][k]=0;
 				placed_status[i][j][k]=0;
@@ -315,6 +315,9 @@ void drawText(const char *text, int length, int x, int y){
 //--------------------------------------------
 
 void display() {
+	// gluBuild2DMipMaps();
+
+
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
@@ -330,7 +333,7 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLightB);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
-	glViewport(0, 0, WIDTH/2+100, HEIGHT);
+	glViewport(0, 0, WIDTH/2+200, HEIGHT);
   	// Perspective Projection
 
 	observe_from_viewer(viewer);
@@ -338,7 +341,7 @@ void display() {
 
 	// Now we need orthgraphic view
  	// Lower left window
- 	glViewport(WIDTH/2+200, 0, 300, HEIGHT);
+ 	glViewport(WIDTH/2+300, 0, 300, HEIGHT);
 	glPushMatrix();
 		char buf[4]={'\0'};
 		sprintf(buf, "%d", 50-speed);
@@ -351,7 +354,7 @@ void display() {
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
 
-	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
+	glViewport(WIDTH/2+300, HEIGHT/2, 300, HEIGHT/2);
 	glEnable (GL_TEXTURE_GEN_S);
   	glEnable (GL_TEXTURE_GEN_T);
   	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -430,7 +433,7 @@ void create_new_shape(int type,int color_block)
 		x[1]=x[3]=temp_x+1;
 		y[0]=y[1]=temp_y;
 		y[2]=y[3]=temp_y+1;
-		z[0]=z[1]=z[2]=z[3]=8;
+		z[0]=z[1]=z[2]=z[3]=12;
 		// x[4]={temp_x,temp_x+1,temp_x,temp_x+1};
 		// y[4]={temp_y,temp_y,temp_y+1,temp_y+1};
 		// z[4]={8,8,8,8};
@@ -444,7 +447,7 @@ void create_new_shape(int type,int color_block)
 		x[2]=x[3]=temp_x+2;
 		y[3]=temp_y;
 		y[0]=y[1]=y[2]=temp_y+1;
-		z[0]=z[1]=z[2]=z[3]=8;
+		z[0]=z[1]=z[2]=z[3]=12;
 	}
 	else if(type==3)
 	{
@@ -455,7 +458,7 @@ void create_new_shape(int type,int color_block)
 		x[2]=temp_x+2;
 		y[3]=temp_y;
 		y[0]=y[1]=y[2]=temp_y+1;
-		z[0]=z[1]=z[2]=z[3]=8;
+		z[0]=z[1]=z[2]=z[3]=12;
 	}
 	else if(type==4)
 	{
@@ -466,7 +469,7 @@ void create_new_shape(int type,int color_block)
 		x[2]=temp_x + 2;
 		x[3]=temp_x + 3;
 		y[0]=y[1]=y[2]=y[3]=temp_y;
-		z[0]=z[1]=z[2]=z[3]=8;		
+		z[0]=z[1]=z[2]=z[3]=12;		
 	}
 	for ( i = 0; i < 4; ++i)
 	{
@@ -490,6 +493,7 @@ void move_down()
 		}
 		for ( i = 0; i < 4 ; ++i)
 		{
+			while(rotated);
 			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
 			view_status[x[i]][y[i]][z[i]]=0;
 			z[i]--;
@@ -548,7 +552,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		type=3;
+		type=2;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -752,6 +756,7 @@ void move_block_down()
 
 void rotate_z() 
 {
+	rotated=true;
 	int i,j,xnew[4],ynew[4],znew[4];
 	int mat[4][4];
 	if(global_type==1)
@@ -820,13 +825,14 @@ void rotate_z()
 		printf("mode changed to %d\n",mode%2);
 	}
 
+	// else if(global_type==2)
+	// {
+
+	// }
 	else if(global_type==2)
 	{
-
-	}
-	else if(global_type==3)
-	{
 		int num=4;
+		executed=0;
 		// int mat[][4] = {{6,1,6,1},{7,1,6,1},{6,2,6,1},{7,2,6,1}};
 		for ( i = 0; i < 4; ++i)
 		{
@@ -838,30 +844,69 @@ void rotate_z()
 		}
 		int **res = rotate(mat,antclkwise,Y_axis,num);
 		int i,j;
-		printf("\n");
-		for(i=0;i<4;i++){
+		for(i=0;i<4;i++)
+		{
 			for(j=0;j<num;j++) printf("%d ",res[i][j]);
 			putchar('\n');
 		}
+		for(i=0;i<4;i++)
+		{
+			if(res[0][i]<0 || res[0][i]>7 || res[1][i]<0 || res[1][i]>7 || res[2][i]<0 || res[2][i]>8)
+			{
+				return;
+			}
+		}
+
+		printf("\n");
 		update_created_status(0);
 		for ( i = 0; i < 4; ++i)
 		{
+			if(view_status[x[i]][y[i]][z[i]]==0)
+			{
+				printf("Impossible\n");
+				printf("x=%d,y=%d,z=%d and view_sattus=%d\n",x[i],y[i],z[i], view_status[x[i]][y[i]][z[i]]);
+			}
 			view_status[x[i]][y[i]][z[i]]=0;
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+		}
+		for(i=0;i<4;i++)
+		{
+			if((view_status[res[0][i]][res[1][i]][res[2][i]]==1)  )
+			{
+				for ( i = 0; i < 4; ++i)
+				{
+					view_status[x[i]][y[i]][z[i]]=1;
+					update_created_status(1);
+				}
+				return;
+			}
 		}
 		for ( i = 0; i < 4; ++i)
 		{
 			x[i]=res[0][i];
 			y[i]=res[1][i];
 			z[i]=res[2][i];
-			// printf("check 1\n");
 			view_status[x[i]][y[i]][z[i]]=1;
 			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
+			printf("x=%d,y=%d,z=%d and view_sattus=%d\n",x[i],y[i],z[i], view_status[x[i]][y[i]][z[i]]);
+			putchar('\n');
 		}
 		update_created_status(1);
-		mode++;
+		executed=1;
+		// for ( i = 0; i < 4; ++i)
+		// {
+		// }
+		// for(i=0;i<4;i++)
+		// {
+		// 	// for(j=0;j<3;j++)
+		// 	// {
+		// 		// printf("x=%d,y=%d,z=%d \n",res[0][i],res[1][i],res[2][i]);
+		// 	// }
+		// }
+		// mode++;
 		// printf("mode changed to %d\n",mode%2);
 	}
+	rotated=false;
 }
 
 
