@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+#include<string.h>
 #define X_axis 50
 #define Y_axis 51
 #define Z_axis 52
@@ -9,12 +9,12 @@
 #define antclkwise -1
 
 
-float **rotate(float inp[][4], int dir, int axis, int num){
-	float Rx[4][4] = {{1,0,0,0},{0,0,-1*dir,0},{0,1*dir,0,0},{0,0,0,1}};
-	float Ry[4][4] = {{0,0,1*dir,0},{0,1,0,0},{-1*dir,0,0,0},{0,0,0,1}};
-	float Rz[4][4] = {{0,-1*dir,0,0},{1*dir,0,0,0},{0,0,1,0},{0,0,0,1}};
+int **rotate(int inp[][4], int dir, int axis, int num){
+	int Rx[4][4] = {{1,0,0,0},{0,0,-1*dir,0},{0,1*dir,0,0},{0,0,0,1}};
+	int Ry[4][4] = {{0,0,1*dir,0},{0,1,0,0},{-1*dir,0,0,0},{0,0,0,1}};
+	int Rz[4][4] = {{0,-1*dir,0,0},{1*dir,0,0,0},{0,0,1,0},{0,0,0,1}};
 
-	float R[4][4];
+	int R[4][4];
 	switch(axis){
 		case X_axis:
 			memcpy(R, Rx, sizeof(int) * 4 * 4);
@@ -29,64 +29,69 @@ float **rotate(float inp[][4], int dir, int axis, int num){
 			return;
 	}
 	
-	float **res;
+	int **res;
 	int i,j,k;
-	res = (float**)calloc(4,sizeof(float*));
-	for(i=0;i<4;i++) res[i] = (float*)calloc(num,sizeof(float));
+	res = (int**)calloc(4,sizeof(int*));
+	for(i=0;i<4;i++) res[i] = (int*)calloc(num,sizeof(int));
 
-	float mat[4][num];
+	int mat[4][num];
 	for(i=0;i<4;i++) for(j=0;j<num;j++) mat[i][j] = inp[j][i];
+	for(i=0;i<4;i++){
+		for(j=0;j<num;j++) printf("%d ",mat[i][j]);
+		putchar('\n');
+	}
+	putchar('\n');
 	
-	float min=INT_MAX,max=INT_MIN;
-	float tx,ty,tz;
+	int min=INT_MAX,max=INT_MIN;
+	int tx,ty,tz;
 
 	for(i=0;i<num;i++){
 		if(mat[0][i]>max) max = mat[0][i];
 		if(mat[0][i]<min) min = mat[0][i];
 	}
-	tx = ((float)max+(float)min)/2;
+	tx = (max+min)/2;
 	min=INT_MAX,max=INT_MIN;
 	for(i=0;i<num;i++){
 		if(mat[1][i]>max) max = mat[1][i];
 		if(mat[1][i]<min) min = mat[1][i];
 	}
-	ty = ((float)max+(float)min)/2;
+	ty = (max+min)/2;
 	min=INT_MAX,max=INT_MIN;
 	for(i=0;i<num;i++){
 		if(mat[1][i]>max) max = mat[2][i];
 		if(mat[1][i]<min) min = mat[2][i];
 	}
-	tz = ((float)max+(float)min)/2;
+	tz = (max+min)/2;
 	min=INT_MAX,max=INT_MIN;
+	//printf("%d %d %d\n",tx,ty,tz);
 
-	float T[4][4] = {1,0,0,-tx,0,1,0,-ty,0,0,1,-tz,0,0,0,1};	
-	float Tb[4][4] = {1,0,0,tx,0,1,0,ty,0,0,1,tz,0,0,0,1};	
+	int T[4][4] = {1,0,0,-tx,0,1,0,-ty,0,0,1,-tz,0,0,0,1};	
+	int Tb[4][4] = {1,0,0,tx,0,1,0,ty,0,0,1,tz,0,0,0,1};	
 
-	float res2[4][4];
-	float res1[4][4];
+	int res2[4][4];
+	int res1[4][4];
 	for(i=0;i<4;i++) for(j=0;j<4;j++) res2[i][j]=0;
 	for(i=0;i<4;i++) for(j=0;j<4;j++) res1[i][j]=0;
 
 	for(i=0;i<4;i++) for(j=0;j<4;j++) for(k=0;k<4;k++) res2[i][j]+=Tb[i][k]*R[k][j];
 	for(i=0;i<4;i++) for(j=0;j<4;j++) for(k=0;k<4;k++) res1[i][j]+=res2[i][k]*T[k][j];
 	for(i=0;i<4;i++) for(j=0;j<num;j++) for(k=0;k<4;k++) res[i][j]+=res1[i][k]*mat[k][j];
+	//for(i=0;i<4;i++){
+	//	for(j=0;j<4;j++) printf("%d ",R[i][j]);
+	//	putchar('\n');
+	//}
+	//putchar('\n');
 
 	return res;
 }
 
 int main(){
 	int num=4;
-	float mat[][4] = {{0,0,0,1},{-1,0,0,1},{1,0,0,1},{0,1,0,1}};
-	// float mat[][4] = {{0,0,0,1},{2,0,0,1},{2,1,0,1},{0,1,0,1},{0,0,-1,1},{2,0,-1,1},{2,1,-1,1},{0,1,-1,1}};
-	float **res = rotate(mat,clkwise,Z_axis,num);
+	int mat[][4] = {{6,1,6,1},{7,1,6,1},{6,2,6,1},{7,2,6,1}};
+	int **res = rotate(mat,antclkwise,Z_axis,num);
 	int i,j;
-	for(i=0;i<num;i++){
-		for(j=0;j<4;j++) printf("%.1f ",mat[i][j]);
-		putchar('\n');
-	}
-	putchar('\n');
 	for(i=0;i<4;i++){
-		for(j=0;j<num;j++) printf("%.1f ",res[i][j]);
+		for(j=0;j<num;j++) printf("%d ",res[i][j]);
 		putchar('\n');
 	}
 

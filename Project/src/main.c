@@ -493,7 +493,7 @@ void move_down()
 		}
 		for ( i = 0; i < 4 ; ++i)
 		{
-			while(rotated);
+			// while(rotated);
 			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
 			view_status[x[i]][y[i]][z[i]]=0;
 			z[i]--;
@@ -552,7 +552,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		type=2;
+		type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
