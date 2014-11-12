@@ -422,7 +422,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		// type=1;
+		type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -643,16 +643,22 @@ void rotate_try(int axis)
 			ynew[i]=y[i];
 			znew[i]=z[i];
 		}
-		if((mode%3==1) &&  (view_status[x[0]+1][y[0]][z[0]]!=1) && (view_status[x[2]+1][y[2]][z[2]+1]!=1) )
+		if((mode%3==2) &&  (view_status[x[0]][y[0]+1][z[0]]!=1) && (view_status[x[0]+1][y[0]+1][z[0]]!=1) )
 		{
 			// int xnew[4]={x[0],x[0]+1,x[0],x[0]+1};
 			// int ynew[4]={y[0],y[0],y[2],y[2]};
 			// int znew[4]={z[0],z[0],z[0],z[0]};
+			// xnew[0]=xnew[2]=x[0];
+			// xnew[1]=xnew[3]=x[0]+1;
+			// ynew[0]=ynew[1]=y[0];
+			// ynew[2]=ynew[3]=y[2];
+			// znew[0]=znew[1]=znew[2]=znew[3]=z[0];
 			xnew[0]=xnew[2]=x[0];
 			xnew[1]=xnew[3]=x[0]+1;
 			ynew[0]=ynew[1]=y[0];
-			ynew[2]=ynew[3]=y[2];
+			ynew[2]=ynew[3]=y[0]+1;
 			znew[0]=znew[1]=znew[2]=znew[3]=z[0];
+
 		}
 		else if((mode%3==0) && (view_status[x[0]][y[0]][z[0]+1]!=1) && (view_status[x[2]][y[2]][z[2]+1]!=1) )
 		{
@@ -670,9 +676,10 @@ void rotate_try(int axis)
 			znew[3]=z[2]+1;
 
 		}
-		else if((mode%3==2) && ())
+		else if((mode%3==1) && (view_status[x[0]+1][y[0]][z[0]+1]!=1) && (view_status[x[0]+1][y[0]][z[0]+1]!=1) )
 		{
-			
+			xnew[3]=xnew[2]=x[0]+1;
+			ynew[3]=ynew[2]=y[0];
 		}
 		else
 		{
