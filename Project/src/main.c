@@ -34,7 +34,10 @@
 #define Z_axis 52
 #define clkwise 1
 #define antclkwise -1
-
+#define LEFT 0
+#define RIGHT 1
+#define TOP 2
+#define DOWN 3
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -64,7 +67,8 @@ GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
-int global_type=1,mode,speed_control=250;		
+int global_type=1,mode,speed_control=250;	
+int up,left,right,down;	
 bool allow_movement;
 
 void loadSound(char* filename){		
@@ -860,12 +864,16 @@ void keypressed(unsigned char key, int x, int y) {
 	}
 
 }
+void check_block_up()
+{
+	if(viewer->pos[2]<0)
+}
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
 		// if(!collision())
 		if(allow_movement)
-		move_block_up();
+		check_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
