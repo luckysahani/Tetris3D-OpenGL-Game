@@ -548,7 +548,9 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		type=3;
+		type=1;
+		// type=2;
+		// type=3;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -836,7 +838,7 @@ void rotate_z()
 			mat[i][3]=1;
 
 		}
-		int **res = rotate(mat,antclkwise,Y_axis,num);
+		int **res = rotate(mat,antclkwise,X_axis,num);
 		int i,j;
 		printf("\n");
 		for(i=0;i<4;i++){
