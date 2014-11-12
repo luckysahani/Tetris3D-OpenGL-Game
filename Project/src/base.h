@@ -39,14 +39,14 @@ typedef struct {
 
     int score;
 
-	PlayerType player_turn;
+	PlayerType player_turn;        
 
 	Block **board;
 } Tetris_board;
 
 Tetris_board *create_tetris_board();
 void destroy_tetris_board(Tetris_board *cboard);
-void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]);
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][12],int placed_status[8][8][12]);
 
 // void highlight_cell(Tetris_board *cboard, int x, int y);
 // void highlight_cell_up(Tetris_board *cboard);

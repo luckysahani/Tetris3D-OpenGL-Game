@@ -51,17 +51,17 @@ void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int 
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
 	p->pos[1] = (float)((float)(k)/10);//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
-	//printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
+	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
 	cboard->board[cell] = p;
 }
 void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	/* invert the position of the pieces along the y-axis */
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-	p->pos[1] = 1;//((double) rand() / (RAND_MAX))/8;
+	p->pos[1] = 0.9;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
 	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
-
+// 
 	cboard->board[cell] = p;
 }
 
@@ -104,8 +104,10 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
+void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][12],int placed_status[8][8][12]) {
 	GLdouble x, y;
+	// glPushMatrix();		
+	// glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
 	int color = 0;
 	int xcell = -1;
 	int ycell;
@@ -152,7 +154,7 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 			// glVertex3d(x, 0, y+step);
 			// glEnd();
 			/* draw block at cell */
-			for ( i = 0; i < 9; i++)
+			for ( i = 0; i < 10; i++)
 			{
 				if ((view_status[xcell][ycell][i]==1)) {
 					Block *block = cboard->board[CELL(xcell, ycell,i)];
@@ -164,7 +166,17 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 						printf("no cell how can this be possible\n");
 					}
 					else
-					display_block(block, CELL(xcell, ycell,i));
+					{
+						view_status[xcell][ycell][i]=1;
+						display_block(block, CELL(xcell, ycell,i));
+					}
+				}
+				else
+				{
+					// if(cboard->board[CELL(xcell, ycell,i)])
+					// {
+					// 	printf("impossible\n");
+					// }
 				}
 			}
 		}
@@ -208,7 +220,7 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 				for (y=-0.5f; y<0.5f; y+=step)
 				{
 					ycell--;
-					for ( i = 0; i < 9; ++i)
+					for ( i = 0; i < 10; ++i)
 					{
 						if(view_status[xcell][ycell][i]==1)
 						{
@@ -219,7 +231,7 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 					{
 						board_status[xcell][ycell]--;
 					}
-					for ( i = 0; i < 9; ++i)
+					for ( i = 0; i < 10; ++i)
 					{
 						if((view_status[xcell][ycell][i]==1) && (cboard->board[CELL(xcell, ycell,i)]))
 						{
@@ -246,6 +258,7 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 			}
 			printf("exited\n");
 		}
+		// glPopMatrix();
 }
 void drawGrid() {
 	glPushMatrix();
@@ -298,7 +311,7 @@ void drawFloor() {
 	}
 	glEnable(GL_LIGHTING);
 }
-void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][12],int placed_status[8][8][12]) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glPushMatrix();
 	glColor3f(1.0,1.0,1.0);
