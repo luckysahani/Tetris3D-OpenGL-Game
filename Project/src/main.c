@@ -34,7 +34,7 @@
 #define Z_axis 52
 #define clkwise 1
 #define antclkwise -1
-int texture[0];
+int texture[5];
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -85,7 +85,7 @@ typedef struct Image {
 
 int LoadGLTextures() {
 	/* load an image file directly as a new OpenGL texture */
-    texture[0] = SOIL_load_OGL_texture(	"a.tga",
+    texture[0] = SOIL_load_OGL_texture(	"marble.jpg",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
@@ -296,6 +296,7 @@ void check_game_over()
 		{
 			printf("Game Over\n");
 			printf("\n\nYour total score is %d\n",tetris_board->score );
+			alutExit();
 			exit(0);
 		}
 	}
@@ -304,6 +305,7 @@ void game_over()
 {
 	printf("Game Over\n");
 	printf("\n\nYour total score is %d\n",tetris_board->score );
+	alutExit();
 	exit(0);
 }
 bool collision()
@@ -380,7 +382,7 @@ void create_new_shape(int type,int color_block)
 	for ( i = 0; i < 4; ++i)
 	{
 		current_block=create_block(squareshape, color_block);
-		current_block=set_block(global_type_block, color_block,current_block);
+		// current_blockx=set_block(global_type_block, color_block,current_block);
 		tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
 		// view_status[x[i]][y[i]][z[i]]=1;
 	}
@@ -902,6 +904,7 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'x') 
 	{ 
 		printf("\n\nYour total score is %d\n",tetris_board->score );
+		alutExit();
 		exit(0);
 	}
 	if( key == ' ')
@@ -1031,7 +1034,6 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
-
 	return 0;
 }
 
