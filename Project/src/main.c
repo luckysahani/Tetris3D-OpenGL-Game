@@ -886,13 +886,14 @@ void keypressSpecial(int key, int x, int y){
 }
 void mouseMove(int x, int y) 
 { 	
-	if (isClicked_left) { 
-		viewer->pos[2]-=0.05;
-	}
-	else if (isClicked_right)
-	{
-		viewer->pos[2]+=0.05;
-	}
+	// if (isClicked_left) { 
+	// 	viewer->pos[2]-=0.05;
+	// }
+	// else if (isClicked_right)
+	// {
+	// 	viewer->pos[2]+=0.05;
+	// }
+
 }
 void mouseButton(int button, int state, int x, int y) 
 {
@@ -929,6 +930,7 @@ void mouseButton(int button, int state, int x, int y)
 	{
 		viewer->pos[0]+=0.05;
 	}
+	printf("viewer == (%f,%f)\n", viewer->pos[0],viewer->pos[2] );
 }
 
 
