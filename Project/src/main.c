@@ -21,10 +21,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>  
+#include <jpeglib.h>
+#include <jerror.h>
 #include <time.h>
-
+#include <limits.h>
+#include <string.h>
 #define HEIGHT 800
-#define WIDTH 800
+#define WIDTH 1200
+#define NUM_TEXTURES 2
+#define X_axis 50
+#define Y_axis 51
+#define Z_axis 52
+#define clkwise 1
+#define antclkwise -1
 
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
@@ -55,7 +64,7 @@ GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
-int global_type=1,mode;		
+int global_type=1,mode,speed_control=250;		
 bool allow_movement;
 
 void loadSound(char* filename){		
@@ -69,11 +78,9 @@ void playSound(){
 
 
 void init() {
-/* the tetris_board and the table and the player (viewer)*/
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
-// itn k=0.0;
 	for ( i = 0; i < 8; ++i)
 	{
 		for ( j = 0; j < 8; ++j)
@@ -89,7 +96,6 @@ void init() {
 	}
 	tetris_board->score=0;
 	glClearColor (0.8, 0.8, 1.0, 1.0);
-// glClearColor (0.0f,0.2f,0.2f, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_NORMALIZE);
@@ -162,6 +168,85 @@ void reshape (int w, int h) {
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
 }
+
+int **rotate(int inp[][4], int dir, int axis, int num){
+	printf("entered rotate function by purswani\n");
+	int Rx[4][4] = {{1,0,0,0},{0,0,-1*dir,0},{0,1*dir,0,0},{0,0,0,1}};
+	int Ry[4][4] = {{0,0,1*dir,0},{0,1,0,0},{-1*dir,0,0,0},{0,0,0,1}};
+	int Rz[4][4] = {{0,-1*dir,0,0},{1*dir,0,0,0},{0,0,1,0},{0,0,0,1}};
+
+	int R_temp[4][4];
+	switch(axis){
+		case X_axis:
+			memcpy(R_temp, Rx, sizeof(int) * 4 * 4);
+			break;
+		case Y_axis:
+			memcpy(R_temp, Ry, sizeof(int) * 4 * 4);
+			break;
+		case Z_axis:
+			memcpy(R_temp, Rz, sizeof(int) * 4 * 4);
+			break;
+		defualt:
+			return;
+	}
+	
+	int **res;
+	int i,j,k;
+	res = (int**)calloc(4,sizeof(int*));
+	for(i=0;i<4;i++) res[i] = (int*)calloc(num,sizeof(int));
+
+	int mat[4][num];
+	for(i=0;i<4;i++) for(j=0;j<num;j++) mat[i][j] = inp[j][i];
+	for(i=0;i<4;i++){
+		for(j=0;j<num;j++) printf("%d ",mat[i][j]);
+		putchar('\n');
+	}
+	putchar('\n');
+	
+	int min=INT_MAX,max=INT_MIN;
+	int tx,ty,tz;
+
+	for(i=0;i<num;i++){
+		if(mat[0][i]>max) max = mat[0][i];
+		if(mat[0][i]<min) min = mat[0][i];
+	}
+	tx = (max+min)/2;
+	min=INT_MAX,max=INT_MIN;
+	for(i=0;i<num;i++){
+		if(mat[1][i]>max) max = mat[1][i];
+		if(mat[1][i]<min) min = mat[1][i];
+	}
+	ty = (max+min)/2;
+	min=INT_MAX,max=INT_MIN;
+	for(i=0;i<num;i++){
+		if(mat[1][i]>max) max = mat[2][i];
+		if(mat[1][i]<min) min = mat[2][i];
+	}
+	tz = (max+min)/2;
+	min=INT_MAX,max=INT_MIN;
+	//printf("%d %d %d\n",tx,ty,tz);
+
+	int T[4][4] = {1,0,0,-tx,0,1,0,-ty,0,0,1,-tz,0,0,0,1};	
+	int Tb[4][4] = {1,0,0,tx,0,1,0,ty,0,0,1,tz,0,0,0,1};	
+
+	int res2[4][4];
+	int res1[4][4];
+	for(i=0;i<4;i++) for(j=0;j<4;j++) res2[i][j]=0;
+	for(i=0;i<4;i++) for(j=0;j<4;j++) res1[i][j]=0;
+
+	for(i=0;i<4;i++) for(j=0;j<4;j++) for(k=0;k<4;k++) res2[i][j]+=Tb[i][k]*R_temp[k][j];
+	for(i=0;i<4;i++) for(j=0;j<4;j++) for(k=0;k<4;k++) res1[i][j]+=res2[i][k]*T[k][j];
+	for(i=0;i<4;i++) for(j=0;j<num;j++) for(k=0;k<4;k++) res[i][j]+=res1[i][k]*mat[k][j];
+	//for(i=0;i<4;i++){
+	//	for(j=0;j<4;j++) printf("%d ",R[i][j]);
+	//	putchar('\n');
+	//}
+	//putchar('\n');
+	printf("exied rotate function by purswani\n");
+
+	return res;
+}
+
 void check_game_over()
 {
 	int i;
@@ -205,16 +290,19 @@ void create_new_shape(int type,int color_block)
 {
 	int i,current_z;
 	printf("Creating block\n");
+	mode=0;
 	if(type==1)
 	{
-		// printf("type==%d\n",type );
 		int temp_x=rand()%7;
 		int temp_y=rand()%7;
-		x[0]=x[1]=temp_x;
-		x[2]=x[3]=temp_x+1;
-		y[0]=y[2]=temp_y;
-		y[1]=y[3]=temp_y+1;
+		x[0]=x[2]=temp_x;
+		x[1]=x[3]=temp_x+1;
+		y[0]=y[1]=temp_y;
+		y[2]=y[3]=temp_y+1;
 		z[0]=z[1]=z[2]=z[3]=8;
+		// x[4]={temp_x,temp_x+1,temp_x,temp_x+1};
+		// y[4]={temp_y,temp_y,temp_y+1,temp_y+1};
+		// z[4]={8,8,8,8};
 	}
 	else if(type==2)
 	{
@@ -251,9 +339,10 @@ void create_new_shape(int type,int color_block)
 	}
 	for ( i = 0; i < 4; ++i)
 	{
-		temp_block=create_block(squareshape, 1);
-		current_block=set_block(global_type_block, color_block,temp_block);
+		current_block=create_block(squareshape, color_block);
+		current_block=set_block(global_type_block, color_block,current_block);
 		tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+		// view_status[x[i]][y[i]][z[i]]=1;
 	}
 
 }
@@ -279,6 +368,11 @@ void move_down()
 			tetris_board_place_block_at_boardvalue(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
 		}
 	}
+	else
+	{
+		printf("executed =0\n");;
+	}
+	printf("moved 1 step\n");
 
 }
 void fix_block_at_z()
@@ -297,7 +391,6 @@ void fix_block_at_z()
 //Update board status by 1 i.e now the blocks should come above the already placed block
 void increment_board_status(int type)
 {
-// tetris_board_place_block_at_boardvalue(tetris_board, current_block, CELL(x_temp, y_temp,current_z),temp);
 	if(!collision()) return;
 	printf("Updating board status\n");
 	int i,j;
@@ -329,7 +422,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		// type=2;
+		// type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -531,9 +624,175 @@ void move_block_down()
 	executed=1;
 }
 
-void rotate()
+void rotate_try(int axis)
 {
+	int i,j,xnew[4],ynew[4],znew[4];
+	int mat[4][4];
+	printf("Entered rotate_try()\n");
+	if(global_type==1)
+	{
+		// printf("ent\n");
+		if(((mode%3 ==1) && x[0]>6 && x[2]>6 ) || ((mode%3==0) && z[0]>7 && z[2]>7) )
+		{
+			printf("returned in type=1\n");
+			return;
+		}
+		for ( i = 0; i < 4; ++i)
+		{
+			xnew[i]=x[i];
+			ynew[i]=y[i];
+			znew[i]=z[i];
+		}
+		if((mode%3==1) &&  (view_status[x[0]+1][y[0]][z[0]]!=1) && (view_status[x[2]+1][y[2]][z[2]+1]!=1) )
+		{
+			// int xnew[4]={x[0],x[0]+1,x[0],x[0]+1};
+			// int ynew[4]={y[0],y[0],y[2],y[2]};
+			// int znew[4]={z[0],z[0],z[0],z[0]};
+			xnew[0]=xnew[2]=x[0];
+			xnew[1]=xnew[3]=x[0]+1;
+			ynew[0]=ynew[1]=y[0];
+			ynew[2]=ynew[3]=y[2];
+			znew[0]=znew[1]=znew[2]=znew[3]=z[0];
+		}
+		else if((mode%3==0) && (view_status[x[0]][y[0]][z[0]+1]!=1) && (view_status[x[2]][y[2]][z[2]+1]!=1) )
+		{
+			// int xnew[4]={x[0],x[0],x[2],x[2]};
+			// int ynew[4]={y[0],y[0],y[2],y[2]};
+			// int znew[4]={z[0],z[0]+1,z[2],z[2]+1};
+			// printf("old coordunates are \n");
+			xnew[0]=xnew[1]=x[0];
+			xnew[3]=xnew[2]=x[2];
+			ynew[0]=ynew[1]=y[0];
+			ynew[2]=ynew[3]=y[2];
+			znew[0]=z[0];
+			znew[2]=z[2];
+			znew[1]=z[0]+1;
+			znew[3]=z[2]+1;
 
+		}
+		else if((mode%3==2) && ())
+		{
+			
+		}
+		else
+		{
+			return;
+		}
+		for ( i = 0; i < 4; ++i)
+		{
+			printf("Old coordinates are (%d,%d,%d)\n",x[i],y[i],z[i] );
+		}
+		for ( i = 0; i < 4; ++i)
+		{
+			printf("New coordinates are (%d,%d,%d)\n",xnew[i],ynew[i],znew[i] );
+		}
+		update_created_status(0);
+		for ( i = 0; i < 4; ++i)
+		{
+			view_status[x[i]][y[i]][z[i]]=0;
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+		}
+		for ( i = 0; i < 4; ++i)
+		{
+			x[i]=xnew[i];
+			y[i]=ynew[i];
+			z[i]=znew[i];
+			// printf("check 1\n");
+			view_status[x[i]][y[i]][z[i]]=1;
+			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
+		}
+		update_created_status(1);
+		mode++;
+		printf("mode changed to %d\n",mode%2);
+	}
+
+	// else if(global_type==2)
+	// {
+
+	// }
+	else 
+	{
+		int num=4;
+		executed=0;
+		// int mat[][4] = {{6,1,6,1},{7,1,6,1},{6,2,6,1},{7,2,6,1}};
+		for ( i = 0; i < 4; ++i)
+		{
+			mat[i][0]=x[i];
+			mat[i][1]=y[i];
+			mat[i][2]=z[i];
+			mat[i][3]=1;
+
+		}
+		int **res = rotate(mat,antclkwise,axis,num);
+		int i,j;
+		for(i=0;i<4;i++)
+		{
+			for(j=0;j<num;j++) printf("%d ",res[i][j]);
+			putchar('\n');
+		}
+		for(i=0;i<4;i++)
+		{
+			if(res[0][i]<0 || res[0][i]>7 || res[1][i]<0 || res[1][i]>7 || res[2][i]<0 || res[2][i]>8)
+			{
+				printf("retunred\n");
+				goto b;
+			}
+		}
+
+		printf("\n");
+		update_created_status(0);
+		for ( i = 0; i < 4; ++i)
+		{
+			if(view_status[x[i]][y[i]][z[i]]==0)
+			{
+				printf("Impossible\n");
+				printf("x=%d,y=%d,z=%d and view_sattus=%d\n",x[i],y[i],z[i], view_status[x[i]][y[i]][z[i]]);
+			}
+			view_status[x[i]][y[i]][z[i]]=0;
+			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+		}
+		for(i=0;i<4;i++)
+		{
+			if((view_status[res[0][i]][res[1][i]][res[2][i]]==1)  )
+			{
+				for ( i = 0; i < 4; ++i)
+				{
+					view_status[x[i]][y[i]][z[i]]=1;
+					tetris_board->board[CELL(x[i], y[i],z[i])]=current_block_array[i];
+					update_created_status(1);
+				}
+				return;
+			}
+		}
+		for ( i = 0; i < 4; ++i)
+		{
+			x[i]=res[0][i];
+			y[i]=res[1][i];
+			z[i]=res[2][i];
+			view_status[x[i]][y[i]][z[i]]=1;
+			current_block_array[i]=create_block(squareshape, color_block);
+			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
+			printf("x=%d,y=%d,z=%d and view_sattus=%d\n",x[i],y[i],z[i], view_status[x[i]][y[i]][z[i]]);
+			putchar('\n');
+		}
+		b:
+		update_created_status(1);
+		executed=1;
+		// for ( i = 0; i < 4; ++i)
+		// {
+		// }
+		// for(i=0;i<4;i++)
+		// {
+		// 	// for(j=0;j<3;j++)
+		// 	// {
+		// 		// printf("x=%d,y=%d,z=%d \n",res[0][i],res[1][i],res[2][i]);
+		// 	// }
+		// }
+		// mode++;
+		// printf("mode changed to %d\n",mode%2);
+	}
 }
 
 
@@ -546,18 +805,16 @@ void timer(int extra) {
 		time_status=0;
 		update_game();
 	}
-	if(time_count%250==0)
+	if(time_count%speed_control==0)
 	{
 		speed--;
+		speed_control+=50+speed_control;
 		printf("speed increased\n");
-	}
-	if(speed< 30)
-	{
-		speed=30;
 	}
 	time_count++;
 	time_status++;
 	glutTimerFunc(1, timer, 0);
+	// glutTimerFunc(200, update_game,0);	
 	// glutTimerFunc(200, update_game,0);	
 }
 
@@ -569,6 +826,9 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'b') { viewer->pos[1]+=0.05; }
 	if (key == 'n') { viewer->pos[1]-=0.05; }
 	if (key == 'z') { save_screenshot("a.tga",WIDTH,HEIGHT); }
+	if( key == 'r') {rotate_try(X_axis);}
+	if( key == 't') {rotate_try(Y_axis);}
+	if( key == 'y') {rotate_try(Z_axis);}
 	if (key == 'x') 
 	{ 
 		printf("\n\nYour total score is %d\n",tetris_board->score );
