@@ -85,7 +85,7 @@ typedef struct Image {
 
 int LoadGLTextures() {
 	/* load an image file directly as a new OpenGL texture */
-    texture[0] = SOIL_load_OGL_texture(	"marble.jpg",
+    texture[0] = SOIL_load_OGL_texture(	"a.tga",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
@@ -462,7 +462,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		type=1;
+		// type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -672,7 +672,7 @@ void rotate_try(int axis)
 	if(global_type==1)
 	{
 		// printf("ent\n");
-		if(((mode%3 ==1) && x[0]>6 && x[2]>6 ) || ((mode%3==0) && z[0]>7 && z[2]>7) )
+		if(((mode%3 ==1) && x[0]>6 && x[2]>6 ) || ((mode%3==0) && z[0]>6 && z[2]>6) || ( mode%3==2 && x[0]>6 && y[0]>6) )
 		{
 			printf("returned in type=1\n");
 			return;
@@ -763,12 +763,14 @@ void rotate_try(int axis)
 		int num=4;
 		executed=0;
 		// int mat[][4] = {{6,1,6,1},{7,1,6,1},{6,2,6,1},{7,2,6,1}};
+
 		for ( i = 0; i < 4; ++i)
 		{
 			mat[i][0]=x[i];
 			mat[i][1]=y[i];
 			mat[i][2]=z[i];
 			mat[i][3]=1;
+			if(z[i]==0) goto b;
 
 		}
 		int **res = rotate(mat,antclkwise,axis,num);
@@ -780,7 +782,7 @@ void rotate_try(int axis)
 		}
 		for(i=0;i<4;i++)
 		{
-			if(res[0][i]<0 || res[0][i]>7 || res[1][i]<0 || res[1][i]>7 || res[2][i]<0 || res[2][i]>8)
+			if(res[0][i]<0 || res[0][i]>7 || res[1][i]<0 || res[1][i]>7 || res[2][i]<0 || res[2][i]>7)
 			{
 				printf("retunred\n");
 				goto b;
@@ -789,6 +791,27 @@ void rotate_try(int axis)
 
 		printf("\n");
 		update_created_status(0);
+		bool l;
+		for(i=0;i<4;i++)
+		{
+			if((view_status[res[0][i]][res[1][i]][res[2][i]]==1)  )
+			{
+				l=true;
+				for(j=0;j<4;j++)
+				{
+					if((res[0][j]==x[j] && res[1][j]==y[j] && res[2][j]==z[j]))
+					{
+						l=false;
+					}
+				}
+				if(l==true) 
+				{
+					printf("can't be\n");
+					goto b;
+				}
+			}
+		}
+		printf("possible\n");
 		for ( i = 0; i < 4; ++i)
 		{
 			if(view_status[x[i]][y[i]][z[i]]==0)
@@ -797,22 +820,22 @@ void rotate_try(int axis)
 				printf("x=%d,y=%d,z=%d and view_sattus=%d\n",x[i],y[i],z[i], view_status[x[i]][y[i]][z[i]]);
 			}
 			view_status[x[i]][y[i]][z[i]]=0;
-			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
-			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+			// current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
 		}
-		for(i=0;i<4;i++)
-		{
-			if((view_status[res[0][i]][res[1][i]][res[2][i]]==1)  )
-			{
-				for ( i = 0; i < 4; ++i)
-				{
-					view_status[x[i]][y[i]][z[i]]=1;
-					tetris_board->board[CELL(x[i], y[i],z[i])]=current_block_array[i];
-					update_created_status(1);
-				}
-				return;
-			}
-		}
+		// printf("hi\n");
+		// for(i=0;i<4;i++)
+		// {
+		// 	if((view_status[res[0][i]][res[1][i]][res[2][i]]==1)  )
+		// 	{
+		// 		for ( i = 0; i < 4; ++i)
+		// 		{
+		// 			view_status[x[i]][y[i]][z[i]]=1;
+		// 			tetris_board->board[CELL(x[i], y[i],z[i])]=current_block_array[i];
+		// 			update_created_status(1);
+		// 		}
+		// 		return;
+		// 	}
+		// }
 		for ( i = 0; i < 4; ++i)
 		{
 			x[i]=res[0][i];
@@ -822,7 +845,7 @@ void rotate_try(int axis)
 			current_block_array[i]=create_block(squareshape, color_block);
 			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
 			printf("x=%d,y=%d,z=%d and view_sattus=%d\n",x[i],y[i],z[i], view_status[x[i]][y[i]][z[i]]);
-			putchar('\n');
+			// putchar('\n');
 		}
 		b:
 		update_created_status(1);
@@ -933,7 +956,22 @@ void mouseMove(int x, int y)
 	// {
 	// 	viewer->pos[2]+=0.05;
 	// }
+	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
+	{
 
+	}
+	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
+	{
+
+	}
+	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
+	{
+
+	}
+	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
+	{
+
+	}
 }
 void mouseButton(int button, int state, int x, int y) 
 {
