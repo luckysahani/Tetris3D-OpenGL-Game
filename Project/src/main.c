@@ -6,7 +6,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <SOIL.h>
+
 #include "base.h"
 #include "block.h"
 // #include "placer.h"
@@ -34,7 +34,7 @@
 #define Z_axis 52
 #define clkwise 1
 #define antclkwise -1
-int texture[0];
+
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -60,6 +60,7 @@ int color_block,speed=50;
 int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
+GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
@@ -74,43 +75,9 @@ void loadSound(char* filename){
 void playSound(){		
 	alSourcePlay(source);		
 }
-//---------------------------------------------
-// Texture timepass
 
-typedef struct Image {
-	unsigned long sizeX;
-	unsigned long sizeY;
-	char *data;
-} Image;
-
-int LoadGLTextures() {
-	/* load an image file directly as a new OpenGL texture */
-    texture[0] = SOIL_load_OGL_texture(	"marble.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
- 
-    if(texture[0] == 0){
-    	printf("Unable to load Texture");
-        return false;
-    }
- 
- 
-    // Typical Texture Generation Using Data From The Bitmap
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
- 
-    return true;                                        // Return Success
-}
 
 void init() {
-	if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
-	{
-		printf("Fucker!\n");
-		// return FALSE;									// If Texture Didn't Load Return FALSE
-	}
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
@@ -129,7 +96,6 @@ void init() {
 	}
 	tetris_board->score=0;
 	glClearColor (0.8, 0.8, 1.0, 1.0);
-	glEnable(GL_TEXTURE_2D);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_NORMALIZE);
@@ -188,12 +154,8 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
 	observe_from_viewer(viewer);
-	glPushMatrix();
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
-		DrawCube();
-	glPopMatrix();
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
-	glFlush();	
+	glFlush();
 	glutSwapBuffers();
 }
 
@@ -378,7 +340,7 @@ void create_new_shape(int type,int color_block)
 	for ( i = 0; i < 4; ++i)
 	{
 		current_block=create_block(squareshape, color_block);
-		current_block=set_block(global_type_block, color_block,current_block);
+		// current_block=set_block(global_type_block, color_block,current_block);
 		tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
 		// view_status[x[i]][y[i]][z[i]]=1;
 	}
@@ -926,7 +888,13 @@ void keypressSpecial(int key, int x, int y){
 		loadSound("./wav/tick.wav"); playSound();
 		// if(!collision())
 		if(allow_movement)
-		move_block_up();
+		{
+			if(viewer->pos[2]<=0 && viewer->pos[0] >= 0 ) move_block_left();
+			if(viewer->pos[2]>=0 && viewer->pos[0] <= 0 ) move_block_right();
+			if(viewer->pos[2]<=0 && viewer->pos[0] <= 0 ) move_block_down();
+			if(viewer->pos[2]>=0 && viewer->pos[0] >= 0 ) move_block_up();
+		}
+		// move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
@@ -947,6 +915,7 @@ void keypressSpecial(int key, int x, int y){
 }
 void mouseMove(int x, int y) 
 { 	
+	printf("viewer pos (%f,%f)\n",viewer->pos[0],viewer->pos[2]);
 	// if (isClicked_left) { 
 	// 	viewer->pos[2]-=0.05;
 	// }
@@ -954,22 +923,10 @@ void mouseMove(int x, int y)
 	// {
 	// 	viewer->pos[2]+=0.05;
 	// }
-	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
-	{
-
-	}
-	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
-	{
-
-	}
-	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
-	{
-
-	}
-	if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
-	{
-
-	}
+	// if(viewer->pos[2]<0 && viewer->pos[0] > 0 )
+	// if(viewer->pos[2]>0 && viewer->pos[0] < 0 )
+	// if(viewer->pos[2]<0 && viewer->pos[0] < 0 )
+	// if(viewer->pos[2]>0 && viewer->pos[0] > 0 )
 }
 void mouseButton(int button, int state, int x, int y) 
 {
@@ -999,12 +956,15 @@ void mouseButton(int button, int state, int x, int y)
 	}
 	if ((button == 3) ) 
 	{
-		if (state == GLUT_UP) return; 
+		// if (state == GLUT_UP) return; 
+		
 		viewer->pos[0]-=0.05;
+		viewer->pos[2]-=0.05;
 	}
 	else if(button == 4)
 	{
 		viewer->pos[0]+=0.05;
+		viewer->pos[2]+=0.05;
 	}
 	printf("viewer == (%f,%f)\n", viewer->pos[0],viewer->pos[2] );
 }
