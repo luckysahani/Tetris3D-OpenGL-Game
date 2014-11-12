@@ -549,6 +549,7 @@ void increment_board_status(int type)
 void update_game()
 {
 	int type,i;
+	printf("entered update game\n");
 	check_game_over();
 	global_type_block=squareshape;
 	if(flag==1)
@@ -598,6 +599,7 @@ void update_game()
 	{
 		move_down();
 	}
+	printf("exited  update game\n");
 }
 
 void move_block_max_down()
@@ -638,6 +640,8 @@ int min(int a , int b)
 void move_block_right()
 {
 	executed=0;
+	printf("moving right\n");
+
 	int i;
 	bool check=true;
 	for ( i = 0; i < 4; ++i)
@@ -663,7 +667,7 @@ void move_block_right()
 			view_status[x[i]][y[i]][z[i]]=1;
 			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
 		}
-		printf("moving right\n");
+		printf("exited moving right\n");
 		update_created_status(1);
 	}
 	executed=1;
