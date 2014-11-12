@@ -1,8 +1,4 @@
 INC = -I./src
-IFLAGS		=	-I/usr/include		\
-			-I/usr/include/GL	\
-			-I/usr/X11R6/include	\
-			-I/usr/X11R6/include/GL
 LDFLAGS = $(INC) -L/usr/lib	-L/usr/X11R6/lib -lX11 -lGL -lGLU -lglut -ljpeg  -lm -lalut `pkg-config --libs freealut` 
 CC = gcc
 main: clean

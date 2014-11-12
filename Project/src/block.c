@@ -175,7 +175,7 @@ Block* set_block(BlockType type, PlayerType player,Block *block2)
 	block->type = type;
 	block->player = player;
 	block->height = 0.1f + ((GLdouble)type/(GLdouble)PAWN_TYPE_COUNT);
-
+	printf("%f\n",block->height);
     char *model_name = _get_model_name(block, player);
 
     /* load the model in case */

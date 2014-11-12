@@ -247,10 +247,42 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 			printf("exited\n");
 		}
 }
+void drawGrid() {
+	glPushMatrix();
+  	// glLoadIdentity();
+  	// glMatrixMode(GL_PROJECTION);
+  	GLdouble x, y, z,step = 0.125;
+	// glLineWidth(2);
+	glBegin(GL_LINES);
+	glDisable(GL_LIGHTING);
+	for(x=-0.5;x<=0.5;x+=0.125) {
+		for(z=-0.5;z<=0.5;z+=0.125) {
+			// Vertical grids
+			glVertex3d(x,0,z);
+			glVertex3d(x,1,z);
+		}
+	}
+	for(x = -0.5; x <=0.5; x+=0.125){
+		for(y = 0; y <=1.0; y+=0.1){
+			// Horizontal x grids
+			glVertex3d(x,y,-0.5);
+			glVertex3d(x,y,0.5);
+		}
+	}
+	for(y = -0; y <=1.0; y+=0.1){
+		for(z = -0.5; z <=0.5; z+=0.1){
+			// Horizontal z grids
+			glVertex3d(-0.5,y,z);
+			glVertex3d(0.5,y,z);
+		}
+	}
+	glEnable(GL_LIGHTING);
+	glEnd();
+	glPopMatrix();
+}
 
 void drawFloor() {
 	glDisable(GL_LIGHTING);
-	// glColor3f(0.4, 0.4 , 0.4);
 	GLdouble x,y,step;
 	step = 0.125;
 	for (x=-0.5f; x<0.5f; x+=step){
@@ -316,7 +348,9 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
     drawFloor();
     glFrontFace(GL_CCW);
     blockdrawer(cboard,board_status,created_status,view_status,placed_status);
+    // drawGrid();
   	glPopMatrix();
+  	// drawGrid();
   	// glutSwapBuffers();
 }
 

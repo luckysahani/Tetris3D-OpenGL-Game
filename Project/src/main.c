@@ -9,6 +9,7 @@
 
 #include "base.h"
 #include "block.h"
+
 // #include "placer.h"
 #include "viewer.h"
 #include "glm.h"
@@ -26,8 +27,8 @@
 #include <time.h>
 
 #define HEIGHT 600
-#define WIDTH 1000
-#define NUM_TEXTURES 2
+#define WIDTH 1200
+
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -40,8 +41,8 @@ GLfloat diffuseLightB[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
 GLfloat specularLightA[4] = { 0.3f, 0.3f, 0.3f, 0.4f };
 GLfloat specularLightB[4] = { 0.0f, 0.0f, 0.0f, 0.4f };
 
-GLfloat lightPositionA[4] = { -100.0f, 100.0f, -100.0f, 1.0f };
-GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 1.0f };
+GLfloat lightPositionA[4] = { -100.0f, 100.0f, -100.0f, 0.5f };
+GLfloat lightPositionB[4] = {  100.0f, 100.0f,  100.0f, 0.5f };
 
 // GLfloat diffuseLightA[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
 //-----------------------------------------------------------------
@@ -62,8 +63,6 @@ int global_type=1,mode,speed_control=250;
 bool allow_movement;
 
 // Some variables for textures
-static float	plane_xy[3] = {1, 0, 0};
-static float	plane_yz[3] = {0, 0, 1};
 
 //---------------------------------------------------------
 void loadSound(char* filename){		
@@ -110,7 +109,6 @@ void init() {
 	glEnable(GL_POLYGON_SMOOTH);
 	glEnable(GL_LINE_SMOOTH);
 	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 }
 //------------------------------------------------------
 void end() {
@@ -120,7 +118,6 @@ void end() {
 //-------------------------------------------------------
 /* Texture experiments going on here */
 
-static GLuint textures[NUM_TEXTURES];
 typedef struct {
 	char* name;
 	int format;
@@ -130,58 +127,9 @@ typedef struct {
 void		Teapot (void)
 {
   // glTranslatef (translate_x, 0, translate_y);
-  glRotatef (-60, 0, 1, 0);
+  // glRotatef (-60, 0, 1, 0);
   glutSolidTeapot (0.4);
 }
-
-/*
-** Function to load a Jpeg file.
-*/
-int		load_texture (const char * filename,
-			      unsigned char * dest,
-			      const int format,
-			      const unsigned int size)
-{
-  FILE *fd;
-  struct jpeg_decompress_struct cinfo;
-  struct jpeg_error_mgr jerr;
-  unsigned char * line;
-
-  cinfo.err = jpeg_std_error (&jerr);
-  jpeg_create_decompress (&cinfo);
-
-  if (0 == (fd = fopen(filename, "rb"))){
-  	printf("Unable to open file: %s\n",filename);
-    return 1;
-  }
-
-  jpeg_stdio_src (&cinfo, fd);
-  jpeg_read_header (&cinfo, TRUE);
-  if ((cinfo.image_width != size) || (cinfo.image_height != size))
-    return 1;
-
-  if (GL_RGB == format)
-    {
-      if (cinfo.out_color_space == JCS_GRAYSCALE)
-	return 1;
-    }
-  else
-    if (cinfo.out_color_space != JCS_GRAYSCALE)
-      return 1;
-
-  jpeg_start_decompress (&cinfo);
-
-  while (cinfo.output_scanline < cinfo.output_height)
-    {
-      line = dest +
-	(GL_RGB == format ? 3 * size : size) * cinfo.output_scanline;
-      jpeg_read_scanlines (&cinfo, &line, 1);
-    }
-  jpeg_finish_decompress (&cinfo);
-  jpeg_destroy_decompress (&cinfo);
-  return 0;
-}
-
 
 //-------------------------------------------------------
 
@@ -230,7 +178,6 @@ void drawText(const char *text, int length, int x, int y){
 //--------------------------------------------
 
 void display() {
-
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear screen and depth buffers
 	glLoadIdentity();
@@ -250,6 +197,7 @@ void display() {
 
 	observe_from_viewer(viewer);
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
+	drawGrid();
 
 	// Now we need orthgraphic view
  	// Lower left window
@@ -267,18 +215,20 @@ void display() {
 	glPopMatrix();
 
 	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
-	glEnable (GL_TEXTURE_GEN_S);
-  	glEnable (GL_TEXTURE_GEN_T);
-  	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	glBindTexture (GL_TEXTURE_2D, textures[0]);
-	glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-	glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-	glTexGenfv (GL_S, GL_EYE_PLANE, plane_xy);
-	glTexGenfv (GL_T, GL_EYE_PLANE, plane_yz);
-	glPushMatrix ();
+	// glPushMatrix ();
 		// glTranslatef (-1, -1, 0);
-		Teapot();
-	glPopMatrix ();
+		// glLoadIdentity();
+		glColor4f(0.2,0.2,0.2,0.6);
+		GLUquadricObj *quadric;
+		quadric = gluNewQuadric();
+		gluQuadricDrawStyle(quadric, GLU_FILL );
+		// glBindTexture (GL_TEXTURE_2D, textures[3]);
+		glTranslatef(-0.45,0,0);
+		gluSphere( quadric , .3 , 36 , 18 );
+		glTranslatef(0.45,0,0);
+		gluSphere( quadric , .3 , 36 , 18 );
+		// Teapot();
+	// glPopMatrix ();
 	glFlush();
 	glutSwapBuffers();
 }
@@ -862,47 +812,13 @@ void mouseButton(int button, int state, int x, int y)
 
 int main(int argc, char** argv) {
 	// First loading texture and doing stuff
-	unsigned char texture[NUM_TEXTURES][3*64*64];
-	unsigned int i;
-	static texture_info_t textures_info[] = {
-		{"marble.jpg", GL_RGB, 64},
-		{0, 0, 0}
-	};
-
 	glutInit(&argc, argv);
 	alutInit (&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize (WIDTH, HEIGHT);
 	glutInitWindowPosition (100,100);
 	glutCreateWindow ("3D-Tetris");
-	// glEnable (GL_CULL_FACE);
- //  	glCullFace (GL_FRONT);
-  	glEnable (GL_BLEND);
-  	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  	// glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-  	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  	glEnable(GL_TEXTURE_2D);
-
-  	/*Texture Loading */
-  	glGenTextures(NUM_TEXTURES, textures);
-  	for(i = 0; textures_info[i].name != 0 ; i++) {
-  		if(load_texture(textures_info[i].name,
-  			texture[i],
-  			textures_info[i].format,
-  			textures_info[i].size) !=0)
-			return 1;
-		glBindTexture(GL_TEXTURE_2D, textures[i]);
-		// gluBuild2DMipMaps(GL_TEXTURE_2D,textures_info[i].format,
-		// textures_info[i].size, textures_info[i].size,
-		// 	 textures_info[i].format,
-		// 	 GL_UNSIGNED_BYTE,  texture[i]);
-
-		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  	}
-
+	init();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keypressed);
@@ -911,7 +827,6 @@ int main(int argc, char** argv) {
 	glutMotionFunc(mouseMove);
 	glutTimerFunc(0,timer,0);
 
-	init();
 	glutMainLoop();
 
 	end();
