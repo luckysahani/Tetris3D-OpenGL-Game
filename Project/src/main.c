@@ -6,7 +6,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-
+#include <SOIL.h>
 #include "base.h"
 #include "block.h"
 // #include "placer.h"
@@ -34,7 +34,7 @@
 #define Z_axis 52
 #define clkwise 1
 #define antclkwise -1
-
+int texture[0];
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -60,7 +60,6 @@ int color_block,speed=50;
 int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
-GLuint texture;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
@@ -75,9 +74,43 @@ void loadSound(char* filename){
 void playSound(){		
 	alSourcePlay(source);		
 }
+//---------------------------------------------
+// Texture timepass
 
+typedef struct Image {
+	unsigned long sizeX;
+	unsigned long sizeY;
+	char *data;
+} Image;
+
+int LoadGLTextures() {
+	/* load an image file directly as a new OpenGL texture */
+    texture[0] = SOIL_load_OGL_texture(	"marble.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[0] == 0){
+    	printf("Unable to load Texture");
+        return false;
+    }
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+ 
+    return true;                                        // Return Success
+}
 
 void init() {
+	if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
+	{
+		printf("Fucker!\n");
+		// return FALSE;									// If Texture Didn't Load Return FALSE
+	}
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
@@ -96,6 +129,7 @@ void init() {
 	}
 	tetris_board->score=0;
 	glClearColor (0.8, 0.8, 1.0, 1.0);
+	glEnable(GL_TEXTURE_2D);
 	glShadeModel (GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glEnable(GL_NORMALIZE);
@@ -154,8 +188,12 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
 	observe_from_viewer(viewer);
+	glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		DrawCube();
+	glPopMatrix();
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
-	glFlush();
+	glFlush();	
 	glutSwapBuffers();
 }
 
