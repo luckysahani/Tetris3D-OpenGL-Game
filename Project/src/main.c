@@ -35,6 +35,7 @@
 #define clkwise 1
 #define antclkwise -1
 
+int texture[5];
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -76,6 +77,35 @@ void playSound(){
 	alSourcePlay(source);		
 }
 
+typedef struct Image {
+	unsigned long sizeX;
+	unsigned long sizeY;
+	char *data;
+} Image;
+
+int LoadGLTextures() {
+	/* load an image file directly as a new OpenGL texture */
+    texture[0] = SOIL_load_OGL_texture(	"marble.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[0] == 0){
+    	printf("Unable to load Texture");
+        return false;
+    }
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+ 
+    return true;                                        // Return Success
+}
 
 void init() {
 	tetris_board = create_tetris_board();
@@ -134,7 +164,11 @@ int save_screenshot(char* filename, int w, int h)
 }
 
 void display() {
-
+	if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
+	{
+		printf("Fucker!\n");
+		// return FALSE;									// If Texture Didn't Load Return FALSE
+	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// glEnable(GL_TEXTURE_2D);
 	// glBindTexture(GL_TEXTURE_2D, texture);
@@ -154,6 +188,11 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
 	observe_from_viewer(viewer);
+	glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		glTranslatef(0.0,0.0,-5.0);
+		DrawCube(viewer);
+	glPopMatrix();
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
 	glFlush();
 	glutSwapBuffers();
@@ -256,6 +295,7 @@ void check_game_over()
 		{
 			printf("Game Over\n");
 			printf("\n\nYour total score is %d\n",tetris_board->score );
+			alutExit();
 			exit(0);
 		}
 	}
@@ -264,6 +304,7 @@ void game_over()
 {
 	printf("Game Over\n");
 	printf("\n\nYour total score is %d\n",tetris_board->score );
+	alutExit();
 	exit(0);
 }
 bool collision()
@@ -862,6 +903,7 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'x') 
 	{ 
 		printf("\n\nYour total score is %d\n",tetris_board->score );
+		alutExit();
 		exit(0);
 	}
 	if( key == ' ')
@@ -989,7 +1031,6 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
-
 	return 0;
 }
 
