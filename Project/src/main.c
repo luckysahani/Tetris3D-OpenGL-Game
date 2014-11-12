@@ -56,7 +56,7 @@ Viewer *viewer;
 int time_status=0,time_count=0,isClicked_right,isClicked_left,flag=1,temp=0;
 float height=0.8;				
 // int x_temp,y_temp;
-int color_block,speed=50;
+int color_block,speed=30;
 int board_status[8][8],view_status[8][8][12],created_status[8][8],placed_status[8][8][12];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
@@ -177,7 +177,7 @@ void init() {
 			{
 				view_status[i][j][k]=0;
 				placed_status[i][j][k]=0;
-				block[i][j][k] = create_block(ishape, 1);
+				// block[i][j][k] = create_block(ishape, 1);
 			}
 		}
 	}
@@ -433,7 +433,7 @@ void create_new_shape(int type,int color_block)
 		x[1]=x[3]=temp_x+1;
 		y[0]=y[1]=temp_y;
 		y[2]=y[3]=temp_y+1;
-		z[0]=z[1]=z[2]=z[3]=12;
+		z[0]=z[1]=z[2]=z[3]=8;
 		// x[4]={temp_x,temp_x+1,temp_x,temp_x+1};
 		// y[4]={temp_y,temp_y,temp_y+1,temp_y+1};
 		// z[4]={8,8,8,8};
@@ -447,7 +447,7 @@ void create_new_shape(int type,int color_block)
 		x[2]=x[3]=temp_x+2;
 		y[3]=temp_y;
 		y[0]=y[1]=y[2]=temp_y+1;
-		z[0]=z[1]=z[2]=z[3]=12;
+		z[0]=z[1]=z[2]=z[3]=8;
 	}
 	else if(type==3)
 	{
@@ -458,7 +458,7 @@ void create_new_shape(int type,int color_block)
 		x[2]=temp_x+2;
 		y[3]=temp_y;
 		y[0]=y[1]=y[2]=temp_y+1;
-		z[0]=z[1]=z[2]=z[3]=12;
+		z[0]=z[1]=z[2]=z[3]=8;
 	}
 	else if(type==4)
 	{
@@ -469,13 +469,14 @@ void create_new_shape(int type,int color_block)
 		x[2]=temp_x + 2;
 		x[3]=temp_x + 3;
 		y[0]=y[1]=y[2]=y[3]=temp_y;
-		z[0]=z[1]=z[2]=z[3]=12;		
+		z[0]=z[1]=z[2]=z[3]=8;		
 	}
 	for ( i = 0; i < 4; ++i)
 	{
-		temp_block=create_block(squareshape, 1);
-		current_block=set_block(global_type_block, color_block,temp_block);
+		current_block=create_block(squareshape, color_block);
+		current_block=set_block(global_type_block, color_block,current_block);
 		tetris_board_place_block(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+		// view_status[x[i]][y[i]][z[i]]=1;
 	}
 
 }
@@ -485,8 +486,8 @@ void move_down()
 	int i,j;
 	check_game_over();
 	printf("moved down 1 step\n");
-	if(executed==1)
-	{
+	// if(executed==1)
+	// {
 		for ( i = 0; i < 4 ; ++i)
 		{
 			if(z[i]==0) return;
@@ -494,14 +495,19 @@ void move_down()
 		for ( i = 0; i < 4 ; ++i)
 		{
 			// while(rotated);
-			current_block=tetris_board->board[CELL(x[i], y[i],z[i])];
+			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
 			view_status[x[i]][y[i]][z[i]]=0;
+		}
+		for ( i = 0; i < 4 ; ++i)
+		{
 			z[i]--;
 			view_status[x[i]][y[i]][z[i]]=1;
 			// current_block=set_block(global_type_block, color_block,current_block);
-			tetris_board_place_block_at_boardvalue(tetris_board,current_block, CELL(x[i], y[i],z[i]),z[i]);
+			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
 		}
-	}
+	printf("view status set 0,moviing completed\n");
+	// }
 
 }
 void fix_block_at_z()
@@ -647,6 +653,8 @@ void move_block_right()
 		for (i=0;i<4;i++)
 		{
 			view_status[x[i]][y[i]][z[i]]=0;
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+			// printf("view status set 0\n");
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
 		}
 		for (i=0;i<4;i++)
@@ -678,6 +686,8 @@ void move_block_left()
 		for (i=0;i<4;i++)
 		{
 			view_status[x[i]][y[i]][z[i]]=0;
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+			// printf("view status set 0\n");
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
 		}
 		for (i=0;i<4;i++)
@@ -709,6 +719,8 @@ void move_block_up()
 		for (i=0;i<4;i++)
 		{
 			view_status[x[i]][y[i]][z[i]]=0;
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+			// printf("view status set 0\n");
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
 		}
 		for (i=0;i<4;i++)
@@ -740,6 +752,8 @@ void move_block_down()
 		for (i=0;i<4;i++)
 		{
 			view_status[x[i]][y[i]][z[i]]=0;
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
+			// printf("view status set 0\n");
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
 		}
 		for (i=0;i<4;i++)
@@ -748,7 +762,7 @@ void move_block_down()
 			view_status[x[i]][y[i]][z[i]]=1;
 			tetris_board_place_block_at_boardvalue(tetris_board,current_block_array[i], CELL(x[i], y[i],z[i]),z[i]);
 		}
-		printf("moving up\n");
+		printf("moving down\n");
 		update_created_status(1);
 	}
 	executed=1;
@@ -809,6 +823,7 @@ void rotate_z()
 		for ( i = 0; i < 4; ++i)
 		{
 			view_status[x[i]][y[i]][z[i]]=0;
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
 		}
 		for ( i = 0; i < 4; ++i)
@@ -868,6 +883,7 @@ void rotate_z()
 			}
 			view_status[x[i]][y[i]][z[i]]=0;
 			current_block_array[i]=tetris_board->board[CELL(x[i], y[i],z[i])];
+			// tetris_board->board[CELL(x[i], y[i],z[i])]=NULL;
 		}
 		for(i=0;i<4;i++)
 		{
@@ -876,6 +892,7 @@ void rotate_z()
 				for ( i = 0; i < 4; ++i)
 				{
 					view_status[x[i]][y[i]][z[i]]=1;
+					tetris_board->board[CELL(x[i], y[i],z[i])]=current_block_array[i];
 					update_created_status(1);
 				}
 				return;
