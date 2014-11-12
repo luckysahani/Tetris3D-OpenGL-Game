@@ -105,12 +105,11 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void DrawCube(Viewer* viewer){
+void DrawCube(Viewer* viewer,int* texture){
 	glBegin(GL_QUADS);
 		// Store the current matrix
    glPushMatrix();
    // Reset and transform the matrix.
-   glTranslatef(0.0,0.0,2.0);
    glLoadIdentity();
    gluLookAt(
        0,0,0,
@@ -125,7 +124,7 @@ void DrawCube(Viewer* viewer){
    // Just in case we set all vertices to white.
    glColor4f(1,1,1,1);
    // Render the front quad
-   // glBindTexture(GL_TEXTURE_2D, _skybox[0]);
+   glBindTexture(GL_TEXTURE_2D, texture[0]);
    glBegin(GL_QUADS);
        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
@@ -133,7 +132,7 @@ void DrawCube(Viewer* viewer){
        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
    glEnd();
    // Render the left quad
-   // glBindTexture(GL_TEXTURE_2D, _skybox[1]);
+   // glBindTexture(GL_TEXTURE_2D, texture[1]);
    glBegin(GL_QUADS);
        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
@@ -141,7 +140,7 @@ void DrawCube(Viewer* viewer){
        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
    glEnd();
    // Render the back quad
-   // glBindTexture(GL_TEXTURE_2D, _skybox[2]);
+   // glBindTexture(GL_TEXTURE_2D, texture[2]);
    glBegin(GL_QUADS);
        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
@@ -149,7 +148,7 @@ void DrawCube(Viewer* viewer){
        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
    glEnd();
    // Render the right quad
-   // glBindTexture(GL_TEXTURE_2D, _skybox[3]);
+   // glBindTexture(GL_TEXTURE_2D, texture[3]);
    glBegin(GL_QUADS);
        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
@@ -157,7 +156,7 @@ void DrawCube(Viewer* viewer){
        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
    glEnd();
    // Render the top quad
-   // glBindTexture(GL_TEXTURE_2D, _skybox[4]);
+   // glBindTexture(GL_TEXTURE_2D, texture[4]);
    glBegin(GL_QUADS);
        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
        glTexCoord2f(0, 0); glVertex3f( -0.5f,  0.5f,  0.5f );
@@ -165,7 +164,7 @@ void DrawCube(Viewer* viewer){
        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
    glEnd();
    // Render the bottom quad
-   // glBindTexture(GL_TEXTURE_2D, _skybox[5]);
+   // glBindTexture(GL_TEXTURE_2D, texture[5]);
    glBegin(GL_QUADS);
        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
        glTexCoord2f(0, 1); glVertex3f( -0.5f, -0.5f,  0.5f );

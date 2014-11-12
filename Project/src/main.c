@@ -85,13 +85,39 @@ typedef struct Image {
 
 int LoadGLTextures() {
 	/* load an image file directly as a new OpenGL texture */
-    texture[0] = SOIL_load_OGL_texture(	"marble.jpg",
+    texture[0] = SOIL_load_OGL_texture(	"texture/front.jpg",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
         );
+    texture[1] = SOIL_load_OGL_texture(	"texture/left.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+    texture[2] = SOIL_load_OGL_texture(	"texture/back.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+    texture[3] = SOIL_load_OGL_texture(	"texture/right.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+    texture[4] = SOIL_load_OGL_texture(	"texture/top.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+    texture[5] = SOIL_load_OGL_texture(	"texture/bottom.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+
  
-    if(texture[0] == 0){
+    if(!(texture[0] && texture[1] && texture[2] && texture[3] && texture[4] && texture[5])) {
     	printf("Unable to load Texture");
         return false;
     }
@@ -103,7 +129,6 @@ int LoadGLTextures() {
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
- 
     return true;                                        // Return Success
 }
 
@@ -164,11 +189,11 @@ int save_screenshot(char* filename, int w, int h)
 }
 
 void display() {
-	if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
-	{
-		printf("Fucker!\n");
-		// return FALSE;									// If Texture Didn't Load Return FALSE
-	}
+	// if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
+	// {
+	// 	printf("Fucker!\n");
+	// 	// return FALSE;									// If Texture Didn't Load Return FALSE
+	// }
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// glEnable(GL_TEXTURE_2D);
 	// glBindTexture(GL_TEXTURE_2D, texture);
@@ -189,9 +214,9 @@ void display() {
 
 	observe_from_viewer(viewer);
 	glPushMatrix();
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		// glBindTexture(GL_TEXTURE_2D, texture[0]);
 		glTranslatef(0.0,0.0,-5.0);
-		DrawCube(viewer);
+		DrawCube(viewer,texture);
 	glPopMatrix();
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
 	glFlush();
