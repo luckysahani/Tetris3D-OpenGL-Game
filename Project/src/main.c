@@ -101,16 +101,13 @@ int LoadGLTextures() {
     glBindTexture(GL_TEXTURE_2D, texture[0]);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
  
     return true;                                        // Return Success
 }
 
 void init() {
-	if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
-	{
-		printf("Fucker!\n");
-		// return FALSE;									// If Texture Didn't Load Return FALSE
-	}
 	tetris_board = create_tetris_board();
 	viewer = create_viewer((Placeable *)tetris_board);
 	int i,j,k;
@@ -168,7 +165,11 @@ int save_screenshot(char* filename, int w, int h)
 }
 
 void display() {
-
+	if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
+	{
+		printf("Fucker!\n");
+		// return FALSE;									// If Texture Didn't Load Return FALSE
+	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// glEnable(GL_TEXTURE_2D);
 	// glBindTexture(GL_TEXTURE_2D, texture);
@@ -190,7 +191,8 @@ void display() {
 	observe_from_viewer(viewer);
 	glPushMatrix();
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
-		DrawCube();
+		glTranslatef(0.0,0.0,-5.0);
+		DrawCube(viewer);
 	glPopMatrix();
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
 	glFlush();	
