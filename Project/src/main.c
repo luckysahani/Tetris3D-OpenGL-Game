@@ -156,6 +156,19 @@ void display() {
 
 	observe_from_viewer(viewer);
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
+
+	glViewport(WIDTH/2+300, 0, 300, HEIGHT);
+	glPushMatrix();
+		char buf[4]={'\0'};
+		sprintf(buf, "%d", 50-speed);
+		glDisable(GL_LIGHTING);
+		drawText("Speed: ",strlen("Score: "),10,180);
+		drawText(buf,strlen(buf), 200, 180);
+		sprintf(buf, "%d", tetris_board->score);
+		drawText("Score: ",strlen("Score: "),10,200);
+		drawText(buf,strlen(buf), 200, 200);
+		glEnable(GL_LIGHTING);
+	glPopMatrix();
 	glFlush();
 	glutSwapBuffers();
 }
@@ -423,7 +436,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		type=1;
+		// type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
