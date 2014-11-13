@@ -35,7 +35,6 @@
 #define clkwise 1
 #define antclkwise -1
 
-int texture[5];
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
 Block *temp_block;
@@ -67,6 +66,7 @@ ALuint buffer, source;
 int x[4],y[4],z[4]; 
 int global_type=1,mode,speed_control=250;		
 bool allow_movement;
+int camera=0;
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -77,60 +77,6 @@ void playSound(){
 	alSourcePlay(source);		
 }
 
-typedef struct Image {
-	unsigned long sizeX;
-	unsigned long sizeY;
-	char *data;
-} Image;
-
-int LoadGLTextures() {
-	/* load an image file directly as a new OpenGL texture */
-    texture[0] = SOIL_load_OGL_texture(	"texture/front.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
-    texture[1] = SOIL_load_OGL_texture(	"texture/left.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
-    texture[2] = SOIL_load_OGL_texture(	"texture/back.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
-    texture[3] = SOIL_load_OGL_texture(	"texture/right.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
-    texture[4] = SOIL_load_OGL_texture(	"texture/top.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
-    texture[5] = SOIL_load_OGL_texture(	"texture/bottom.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-        );
-
- 
-    if(!(texture[0] && texture[1] && texture[2] && texture[3] && texture[4] && texture[5])) {
-    	printf("Unable to load Texture");
-        return false;
-    }
- 
- 
-    // Typical Texture Generation Using Data From The Bitmap
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    return true;                                        // Return Success
-}
 
 void init() {
 	tetris_board = create_tetris_board();
@@ -189,11 +135,7 @@ int save_screenshot(char* filename, int w, int h)
 }
 
 void display() {
-	// if (!LoadGLTextures())								// Jump To Texture Loading Routine ( NEW )
-	// {
-	// 	printf("Fucker!\n");
-	// 	// return FALSE;									// If Texture Didn't Load Return FALSE
-	// }
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// glEnable(GL_TEXTURE_2D);
 	// glBindTexture(GL_TEXTURE_2D, texture);
@@ -213,11 +155,6 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
 	observe_from_viewer(viewer);
-	glPushMatrix();
-		// glBindTexture(GL_TEXTURE_2D, texture[0]);
-		glTranslatef(0.0,0.0,-5.0);
-		DrawCube(viewer,texture);
-	glPopMatrix();
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
 	glFlush();
 	glutSwapBuffers();
@@ -320,7 +257,6 @@ void check_game_over()
 		{
 			printf("Game Over\n");
 			printf("\n\nYour total score is %d\n",tetris_board->score );
-			alutExit();
 			exit(0);
 		}
 	}
@@ -329,7 +265,6 @@ void game_over()
 {
 	printf("Game Over\n");
 	printf("\n\nYour total score is %d\n",tetris_board->score );
-	alutExit();
 	exit(0);
 }
 bool collision()
@@ -928,7 +863,6 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'x') 
 	{ 
 		printf("\n\nYour total score is %d\n",tetris_board->score );
-		alutExit();
 		exit(0);
 	}
 	if( key == ' ')
@@ -950,33 +884,80 @@ void keypressed(unsigned char key, int x, int y) {
 	}
 
 }
+
+void move_camera()
+{
+	if(camera % 4 ==0)
+	{
+		viewer->pos[0]=0.0;
+		viewer->pos[2]=0.85;
+	}
+	else if (camera % 4 == 1)
+	{
+		viewer->pos[0]=-0.85;
+		viewer->pos[2]=0.0;
+	}
+	else if( camera % 4 ==2)
+	{
+		viewer->pos[0]=0.0;
+		viewer->pos[2]=-0.85;
+	}
+	else if( camera % 4 ==3)
+	{
+		viewer->pos[0]=0.85;
+		viewer->pos[2]=0.0;
+	}
+
+}
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
 		// if(!collision())
 		if(allow_movement)
 		{
-			if(viewer->pos[2]<=0 && viewer->pos[0] >= 0 ) move_block_left();
-			if(viewer->pos[2]>=0 && viewer->pos[0] <= 0 ) move_block_right();
-			if(viewer->pos[2]<=0 && viewer->pos[0] <= 0 ) move_block_down();
-			if(viewer->pos[2]>=0 && viewer->pos[0] >= 0 ) move_block_up();
+			if(camera % 4==3 ) move_block_left();
+			else if(camera % 4==1 ) move_block_right();
+			else if (camera % 4==2 ) move_block_down();
+			else if( camera % 4==0 ) move_block_up();
 		}
 		// move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(allow_movement)
+		// move_block_down();
 		if(allow_movement)
-		move_block_down();
+		{
+			if(camera % 4==1 ) move_block_left();
+			else if(camera % 4==3 ) move_block_right();
+			else if (camera % 4==0 ) move_block_down();
+			else if( camera % 4==2 ) move_block_up();
+		}
 	}
 	if (key== GLUT_KEY_LEFT){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(allow_movement)
+		// move_block_left();
 		if(allow_movement)
-		move_block_left();
+		{
+			if(camera % 4==0 ) move_block_left();
+			else if(camera % 4==2 ) move_block_right();
+			else if (camera % 4==3 ) move_block_down();
+			else if( camera % 4==1 ) move_block_up();
+		}
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(allow_movement)
+		// move_block_right();
 		if(allow_movement)
-		move_block_right();
+		{
+			if(camera % 4==2 ) move_block_left();
+			else if(camera % 4==0 ) move_block_right();
+			else if (camera % 4==1 ) move_block_down();
+			else if( camera % 4==3 ) move_block_up();
+		}
+
 	}
 
 }
@@ -1000,8 +981,10 @@ void mouseButton(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON) 
 	{
 		if (state == GLUT_DOWN) { 
-			viewer->pos[2]-=0.05;
-			isClicked_left=1;
+			// viewer->pos[2]-=0.05;
+			// isClicked_left=1;
+			camera++;
+			move_camera();
 		}
 		else  { 
 			isClicked_left = 0; 
@@ -1012,8 +995,10 @@ void mouseButton(int button, int state, int x, int y)
 	{
 		if(state == GLUT_DOWN)
 		{
-			viewer->pos[2]+=0.05;
-			isClicked_right=1;
+			// viewer->pos[2]+=0.05;
+			// isClicked_right=1;
+			camera--;
+			move_camera();
 		}
 		else
 		{
@@ -1026,12 +1011,12 @@ void mouseButton(int button, int state, int x, int y)
 		// if (state == GLUT_UP) return; 
 		
 		viewer->pos[0]-=0.05;
-		viewer->pos[2]-=0.05;
+		// viewer->pos[2]-=0.05;
 	}
 	else if(button == 4)
 	{
 		viewer->pos[0]+=0.05;
-		viewer->pos[2]+=0.05;
+		// viewer->pos[2]+=0.05;
 	}
 	printf("viewer == (%f,%f)\n", viewer->pos[0],viewer->pos[2] );
 }
@@ -1056,6 +1041,7 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
+
 	return 0;
 }
 
