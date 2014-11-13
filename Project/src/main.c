@@ -73,9 +73,34 @@ void loadSound(char* filename){
 	alGenSources(1, &source);		
 	alSourcei(source, AL_BUFFER, buffer);		
 }			
+
 void playSound(){		
 	alSourcePlay(source);		
 }
+
+void drawText(const char *text, int length, int x, int y){
+	 glMatrixMode(GL_PROJECTION); // change the current matrix to PROJECTION
+	 double matrix[16]; // 16 doubles in stack memory
+	 glGetDoublev(GL_PROJECTION_MATRIX, matrix); // get the values from PROJECTION matrix to local variable
+	 glColor3f(0,0,0);
+	 glLoadIdentity(); // reset PROJECTION matrix to identity matrix
+	 glOrtho(0, 800, 0, 600, -5, 5); // orthographic perspective
+	 glMatrixMode(GL_MODELVIEW); // change current matrix to MODELVIEW matrix again
+	 glLoadIdentity(); // reset it to identity matrix
+	 glPushMatrix(); // push current state of MODELVIEW matrix to stack
+	 glLoadIdentity(); // reset it again. (may not be required, but it my convention)
+	 glColor3f(0.0, 0.0, 0.0);
+	 glRasterPos2i(x, y); // raster position in 2D
+	 int i;
+	 for(i=0; i<length; i++){
+	  	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]); // generation of characters in our text with 9 by 15 GLU font
+		}
+	 glPopMatrix(); // get MODELVIEW matrix value from stack
+	 glMatrixMode(GL_PROJECTION); // change current matrix mode to PROJECTION
+	 glLoadMatrixd(matrix); // reset
+	 glMatrixMode(GL_MODELVIEW); // change current matrix mode to MODELVIEW
+}
+
 //---------------------------------------------
 // Texture timepass
 
@@ -237,7 +262,7 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
-	// DrawCube(viewer,texture);
+	glViewport(0, 0, WIDTH/2+200, HEIGHT);
 	observe_from_viewer(viewer);
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
 	glEnable(GL_TEXTURE_2D);
@@ -255,6 +280,34 @@ void display() {
 		// glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+	glViewport(WIDTH/2+300, 0, 300, HEIGHT);
+	glPushMatrix();
+		char buf[4]={'\0'};
+		sprintf(buf, "%d", 50-speed);
+		glDisable(GL_LIGHTING);
+		drawText("Speed: ",strlen("Score: "),10,180);
+		drawText(buf,strlen(buf), 200, 180);
+		sprintf(buf, "%d", tetris_board->score);
+		drawText("Score: ",strlen("Score: "),10,200);
+		drawText(buf,strlen(buf), 200, 200);
+		glEnable(GL_LIGHTING);
+	glPopMatrix();
+	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
+	// glPushMatrix ();
+
+		// glTranslatef (-1, -1, 0);
+		// glLoadIdentity();
+		// glColor4f(0.2,0.2,0.2,0.6);
+		// GLUquadricObj *quadric1;
+		// quadric = gluNewQuadric();
+		// gluQuadricDrawStyle(quadric1, GLU_FILL );
+		// // glBindTexture (GL_TEXTURE_2D, textures[3]);
+		// glTranslatef(-0.45,0,0);
+		// gluSphere( quadric1 , .3 , 36 , 18 );
+		// glTranslatef(0.45,0,0);
+		// gluSphere( quadric1 , .3 , 36 , 18 );
+		glutSolidTeapot(1.0);
+	// glPopMatrix ();
 	glFlush();	
 
 	glutSwapBuffers();
