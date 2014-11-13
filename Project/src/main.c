@@ -423,7 +423,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		// type=1;
+		type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
