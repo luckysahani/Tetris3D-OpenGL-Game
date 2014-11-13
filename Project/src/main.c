@@ -34,6 +34,7 @@
 #define Z_axis 52
 #define clkwise 1
 #define antclkwise -1
+
 int texture[5];
 Tetris_board *tetris_board;
 Block *block[8][8][6]; 
@@ -65,6 +66,7 @@ ALuint buffer, source;
 int x[4],y[4],z[4]; 
 int global_type=1,mode,speed_control=250;		
 bool allow_movement;
+int camera=0;
 
 void loadSound(char* filename){		
 	buffer = alutCreateBufferFromFile(filename);	
@@ -254,6 +256,7 @@ void display() {
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	glFlush();	
+
 	glutSwapBuffers();
 }
 
@@ -354,7 +357,6 @@ void check_game_over()
 		{
 			printf("Game Over\n");
 			printf("\n\nYour total score is %d\n",tetris_board->score );
-			alutExit();
 			exit(0);
 		}
 	}
@@ -363,7 +365,6 @@ void game_over()
 {
 	printf("Game Over\n");
 	printf("\n\nYour total score is %d\n",tetris_board->score );
-	alutExit();
 	exit(0);
 }
 bool collision()
@@ -522,7 +523,7 @@ void update_game()
 		flag=0;
 		// count=height/0.1;
 		type= rand()%4 +1;
-		// type=1;
+		type=1;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
@@ -962,7 +963,6 @@ void keypressed(unsigned char key, int x, int y) {
 	if (key == 'x') 
 	{ 
 		printf("\n\nYour total score is %d\n",tetris_board->score );
-		alutExit();
 		exit(0);
 	}
 	if( key == ' ')
@@ -984,27 +984,80 @@ void keypressed(unsigned char key, int x, int y) {
 	}
 
 }
+
+void move_camera()
+{
+	if(camera % 4 ==0)
+	{
+		viewer->pos[0]=0.0;
+		viewer->pos[2]=0.85;
+	}
+	else if (camera % 4 == 1)
+	{
+		viewer->pos[0]=-0.85;
+		viewer->pos[2]=0.0;
+	}
+	else if( camera % 4 ==2)
+	{
+		viewer->pos[0]=0.0;
+		viewer->pos[2]=-0.85;
+	}
+	else if( camera % 4 ==3)
+	{
+		viewer->pos[0]=0.85;
+		viewer->pos[2]=0.0;
+	}
+
+}
 void keypressSpecial(int key, int x, int y){
 	if (key == GLUT_KEY_UP) {
 		loadSound("./wav/tick.wav"); playSound();
 		// if(!collision())
 		if(allow_movement)
-		move_block_up();
+		{
+			if(camera % 4==3 ) move_block_left();
+			else if(camera % 4==1 ) move_block_right();
+			else if (camera % 4==2 ) move_block_down();
+			else if( camera % 4==0 ) move_block_up();
+		}
+		// move_block_up();
 	}
 	if (key== GLUT_KEY_DOWN){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(allow_movement)
+		// move_block_down();
 		if(allow_movement)
-		move_block_down();
+		{
+			if(camera % 4==1 ) move_block_left();
+			else if(camera % 4==3 ) move_block_right();
+			else if (camera % 4==0 ) move_block_down();
+			else if( camera % 4==2 ) move_block_up();
+		}
 	}
 	if (key== GLUT_KEY_LEFT){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(allow_movement)
+		// move_block_left();
 		if(allow_movement)
-		move_block_left();
+		{
+			if(camera % 4==0 ) move_block_left();
+			else if(camera % 4==2 ) move_block_right();
+			else if (camera % 4==3 ) move_block_down();
+			else if( camera % 4==1 ) move_block_up();
+		}
 	}
 	if (key== GLUT_KEY_RIGHT){
 		loadSound("./wav/tick.wav"); playSound();
+		// if(allow_movement)
+		// move_block_right();
 		if(allow_movement)
-		move_block_right();
+		{
+			if(camera % 4==2 ) move_block_left();
+			else if(camera % 4==0 ) move_block_right();
+			else if (camera % 4==1 ) move_block_down();
+			else if( camera % 4==3 ) move_block_up();
+		}
+
 	}
 
 }
@@ -1039,8 +1092,10 @@ void mouseButton(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON) 
 	{
 		if (state == GLUT_DOWN) { 
-			viewer->pos[2]-=0.05;
-			isClicked_left=1;
+			// viewer->pos[2]-=0.05;
+			// isClicked_left=1;
+			camera++;
+			move_camera();
 		}
 		else  { 
 			isClicked_left = 0; 
@@ -1051,8 +1106,10 @@ void mouseButton(int button, int state, int x, int y)
 	{
 		if(state == GLUT_DOWN)
 		{
-			viewer->pos[2]+=0.05;
-			isClicked_right=1;
+			// viewer->pos[2]+=0.05;
+			// isClicked_right=1;
+			camera--;
+			move_camera();
 		}
 		else
 		{
@@ -1092,6 +1149,7 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	end();
+
 	return 0;
 }
 
