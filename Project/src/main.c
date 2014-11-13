@@ -61,6 +61,8 @@ int color_block,speed=50;
 int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
+// Block *next_block;
+int next_block_type= 1;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
@@ -280,19 +282,77 @@ void display() {
 		// glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+
 	glViewport(WIDTH/2+300, 0, 300, HEIGHT);
 	glPushMatrix();
 		char buf[4]={'\0'};
-		sprintf(buf, "%d", 50-speed);
 		glDisable(GL_LIGHTING);
-		drawText("Speed: ",strlen("Score: "),10,180);
+		
+		sprintf(buf, "%d", 50-speed);
+		drawText("Speed: ",strlen("Score: "),0,180);
 		drawText(buf,strlen(buf), 200, 180);
+		
 		sprintf(buf, "%d", tetris_board->score);
-		drawText("Score: ",strlen("Score: "),10,200);
+		drawText("Score: ",strlen("Score: "),0,200);
 		drawText(buf,strlen(buf), 200, 200);
+
+
+		sprintf(buf, "%d", next_block_type);
+		drawText("Next Block Type: ",strlen("Next Block Type: "),0,220);
+		drawText(buf,strlen(buf), 500, 220);
+
+		// sprintf(buf, "%d", next_block_type);
+		drawText("Camera : Keyboard(ASWD)",strlen("Camera : Keyboard(ASWD)"),0,40);
+		// drawText(buf,strlen(buf), 500, 220);
+
+		// sprintf(buf, "%d", next_block_type);
+		drawText("Camera:Mouse(Lft & Rht Click",strlen("Camera:Mouse(Lft & Rht)"),0,60);
+		// drawText(buf,strlen(buf), 500, 260);
+		drawText("Screenshot : Z",strlen("Screenshot : Z"),0,80);
+		drawText("Rotation(R,T,Y)",strlen("Rotation(R,T,Y)"),0,100);
+		drawText("Exit : X",strlen("Exit : X"),0,160);
+		drawText("Move Down : Spacebar",strlen("Move Down : Spacebar"),0,140);
+		drawText("Music : M",strlen("Music : M"),0,120);
+
+
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
+	Block *block;
+	BlockType temp;
+	// if(temp)
+	if(next_block_type==0)
+	{
+		temp=type1;
+	}
+	else if(next_block_type==1)
+	{
+		temp=type2;
+	}
+	else if(next_block_type==2)
+	{
+		temp=type3;
+	}
+	else if( next_block_type==3)
+	{
+		temp=type4;
+	}
+	block=create_block(squareshape,color_block);
+	glScalef(2,2,2);
 	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
+	glPushMatrix();
+
+    /* draw block*/
+    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
+	glScalef(block->width, block->height, block->width);
+
+    if (block->model) {
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
+			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+        glmDraw(block->model, GLM_SMOOTH);
+    }
+    glPopMatrix();
 	// glPushMatrix ();
 
 		// glTranslatef (-1, -1, 0);
@@ -306,7 +366,7 @@ void display() {
 		// gluSphere( quadric1 , .3 , 36 , 18 );
 		// glTranslatef(0.45,0,0);
 		// gluSphere( quadric1 , .3 , 36 , 18 );
-		glutSolidTeapot(1.0);
+		// glutSolidTeapot(1.0);
 	// glPopMatrix ();
 	glFlush();	
 
@@ -575,8 +635,9 @@ void update_game()
 		printf("\n\n");
 		flag=0;
 		// count=height/0.1;
-		type= rand()%4 +1;
-		type=1;
+		type= next_block_type;
+		next_block_type= rand()%4 +1;
+		// type=2;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");

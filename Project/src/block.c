@@ -19,12 +19,28 @@ char* _get_model_name(Block *block, PlayerType player)
 		// 	model_name = "objs/sqtshape.obj";
 		// 	block->height = 0.05;
 		// break;
-		// case cube: 
-		// 	model_name = "objs/3dsquare.obj";
-		// 	block->height = 0.05;
-		// break;
+		case cube: 
+			model_name = "objs/3dsquare.obj";
+			block->height = 0.05;
+		break;
         case squareshape: 
 			model_name = "objs/squareshape.obj";
+			block->height = 0.04;
+		break;
+		case type1:
+			model_name = "objs/square.obj";
+			block->height = 0.04;
+		break;
+		case type2:
+			model_name = "objs/lshape.obj";
+			block->height = 0.04;
+		break;
+		case type3:
+			model_name = "objs/tshape.obj";
+			block->height = 0.04;
+		break;
+		case type4:
+			model_name = "objs/ishape.obj";
 			block->height = 0.04;
 		break;
         
