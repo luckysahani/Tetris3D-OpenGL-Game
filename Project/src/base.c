@@ -106,6 +106,8 @@ Block *get_block(Tetris_board* c, int cell) {
 }
 
 void DrawBase() {
+	GLfloat color[4]={0.2,0.2,0.2,0.1};
+	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION, color);
 	glBegin(GL_QUADS);
 		glNormal3f(0.0,0.0,1.0);
 		glTexCoord2f(0,0); glVertex3d(-0.5, 0, -0.5);
