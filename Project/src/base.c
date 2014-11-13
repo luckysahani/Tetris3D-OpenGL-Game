@@ -105,82 +105,93 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void DrawCube(Viewer* viewer,int* texture){
+void DrawBase() {
 	glBegin(GL_QUADS);
-		// Store the current matrix
-   glPushMatrix();
-   // Reset and transform the matrix.
-   glLoadIdentity();
-   gluLookAt(
-       0,0,0,
-       viewer->pos[0],viewer->pos[1],viewer->pos[2],
-       0,1,0);
-   // Enable/Disable features
-   glPushAttrib(GL_ENABLE_BIT);
-   glEnable(GL_TEXTURE_2D);
-   glDisable(GL_DEPTH_TEST);
-   glDisable(GL_LIGHTING);
-   glDisable(GL_BLEND);
-   // Just in case we set all vertices to white.
-   glColor4f(1,1,1,1);
-   // Render the front quad
-   glBindTexture(GL_TEXTURE_2D, texture[0]);
-   glBegin(GL_QUADS);
-       glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-       glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-       glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-       glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-   glEnd();
-   // Render the left quad
-   // glBindTexture(GL_TEXTURE_2D, texture[1]);
-   glBegin(GL_QUADS);
-       glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-       glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-       glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-       glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-   glEnd();
-   // Render the back quad
-   // glBindTexture(GL_TEXTURE_2D, texture[2]);
-   glBegin(GL_QUADS);
-       glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-       glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-       glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-       glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-   glEnd();
-   // Render the right quad
-   // glBindTexture(GL_TEXTURE_2D, texture[3]);
-   glBegin(GL_QUADS);
-       glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-       glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-       glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-       glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-   glEnd();
-   // Render the top quad
-   // glBindTexture(GL_TEXTURE_2D, texture[4]);
-   glBegin(GL_QUADS);
-       glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-       glTexCoord2f(0, 0); glVertex3f( -0.5f,  0.5f,  0.5f );
-       glTexCoord2f(1, 0); glVertex3f(  0.5f,  0.5f,  0.5f );
-       glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-   glEnd();
-   // Render the bottom quad
-   // glBindTexture(GL_TEXTURE_2D, texture[5]);
-   glBegin(GL_QUADS);
-       glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-       glTexCoord2f(0, 1); glVertex3f( -0.5f, -0.5f,  0.5f );
-       glTexCoord2f(1, 1); glVertex3f(  0.5f, -0.5f,  0.5f );
-       glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-   glEnd();
-   // Restore enable bits and matrix
-   glPopAttrib();
-   glPopMatrix();
+		glNormal3f(0.0,0.0,1.0);
+		glTexCoord2f(0,0); glVertex3d(-0.5, 0, -0.5);
+		glTexCoord2f(0,1); glVertex3d(-0.5, 0, 0.5);
+		glTexCoord2f(1,1); glVertex3d(0.5, 0, 0.5);
+		glTexCoord2f(1,0); glVertex3d(0.5, 0, -0.5);
+	glEnd();
 }
+
+// void DrawCube(Viewer* viewer,int* texture){
+// 	glBegin(GL_QUADS);
+// 		// Store the current matrix
+//    glPushMatrix();
+//    // Reset and transform the matrix.
+//    glLoadIdentity();
+//    gluLookAt(
+//        0,0,0,
+//        viewer->pos[0],viewer->pos[1],viewer->pos[2],
+//        0,1,0);
+//    // Enable/Disable features
+//    glPushAttrib(GL_ENABLE_BIT);
+//    // glEnable(GL_TEXTURE_2D);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+//    glDisable(GL_BLEND);
+//    glScalef(10,10,10);
+//    // Just in case we set all vertices to white.
+//    glColor4f(1,1,1,1);
+//    // Render the front quad
+//    glBindTexture(GL_TEXTURE_2D, texture[0]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
+//        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+//    glEnd();
+//    // Render the left quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[1]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+//        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+//    glEnd();
+//    // Render the back quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[2]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
+//    glEnd();
+//    // Render the right quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[3]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
+//    glEnd();
+//    // Render the top quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[4]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+//    glEnd();
+//    // Render the bottom quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[5]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+//    glEnd();
+//    // Restore enable bits and matrix
+//    // glDisable(GL_TEXTURE_2D);
+//    glPopAttrib();
+//    glPopMatrix();
+// }
 void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
 	glPushMatrix();
 	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
 	GLdouble x, y;
 	int color = 0;
-
 	int xcell = -1;
 	int ycell;
 	int zcell=0;
@@ -222,13 +233,13 @@ void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int create
 			}
 
     		/* draw cell */
-			glBegin(GL_QUADS);
-			glNormal3f(0.0,0.0,1.0);
-			glVertex3d(x, 0, y);
-			glVertex3d(x+step, 0, y);
-			glVertex3d(x+step, 0, y+step);
-			glVertex3d(x, 0, y+step);
-			glEnd();
+			// glBegin(GL_QUADS);
+			// glNormal3f(0.0,0.0,1.0);
+			// glVertex3d(x, 0, y);
+			// glVertex3d(x+step, 0, y);
+			// glVertex3d(x+step, 0, y+step);
+			// glVertex3d(x, 0, y+step);
+			// glEnd();
 
 			/* draw block at cell */
 
