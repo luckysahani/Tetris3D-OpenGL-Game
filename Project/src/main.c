@@ -346,11 +346,11 @@ void display() {
 	glScalef(block->width, block->height, block->width);
 
     if (block->model) {
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
-			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
-        glmDraw(block->model, GLM_SMOOTH);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
+			// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+        	glmDraw(block->model, GLM_SMOOTH);
     }
     glPopMatrix();
 	// glPushMatrix ();
