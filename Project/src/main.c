@@ -317,42 +317,42 @@ void display() {
 
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
-	Block *block;
-	BlockType temp;
-	// if(temp)
-	if(next_block_type==0)
-	{
-		temp=type1;
-	}
-	else if(next_block_type==1)
-	{
-		temp=type2;
-	}
-	else if(next_block_type==2)
-	{
-		temp=type3;
-	}
-	else if( next_block_type==3)
-	{
-		temp=type4;
-	}
-	block=create_block(squareshape,color_block);
-	glScalef(2,2,2);
+	// Block *block;
+	// BlockType temp;
+	// // if(temp)
+	// if(next_block_type==0)
+	// {
+	// 	temp=type1;
+	// }
+	// else if(next_block_type==1)
+	// {
+	// 	temp=type2;
+	// }
+	// else if(next_block_type==2)
+	// {
+	// 	temp=type3;
+	// }
+	// else if( next_block_type==3)
+	// {
+	// 	temp=type4;
+	// }
+	// block=create_block(squareshape,color_block);
+	// glScalef(2,2,2);
 	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
 	glPushMatrix();
 
-    /* draw block*/
-    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
-	glScalef(block->width, block->height, block->width);
+ //    /* draw block*/
+ //    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
+	// glScalef(block->width, block->height, block->width);
 
-    if (block->model) {
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
-			// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
-        	glmDraw(block->model, GLM_SMOOTH);
-    }
-    glPopMatrix();
+ //    if (block->model) {
+	// 		// glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
+	// 		// glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
+	// 		// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
+	// 		// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+ //        	glmDraw(block->model, GLM_SMOOTH);
+ //    }
+ //    glPopMatrix();
 	// glPushMatrix ();
 
 		// glTranslatef (-1, -1, 0);
@@ -366,8 +366,8 @@ void display() {
 		// gluSphere( quadric1 , .3 , 36 , 18 );
 		// glTranslatef(0.45,0,0);
 		// gluSphere( quadric1 , .3 , 36 , 18 );
-		// glutSolidTeapot(1.0);
-	// glPopMatrix ();
+		glutSolidTeapot(0.5);
+	glPopMatrix ();
 	glFlush();	
 
 	glutSwapBuffers();
