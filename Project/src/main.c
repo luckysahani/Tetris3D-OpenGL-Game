@@ -61,6 +61,8 @@ int color_block,speed=50;
 int board_status[8][8],view_status[8][8][10],created_status[8][8],placed_status[8][8][10];
 int music=1,is_ready_to_update_status_of_block=1,executed=1;
 Block *current_block, *current_block_array[4];
+// Block *next_block;
+int next_block_type= 1;
 BlockType global_type_block;
 ALuint buffer, source;
 int x[4],y[4],z[4]; 
@@ -73,9 +75,34 @@ void loadSound(char* filename){
 	alGenSources(1, &source);		
 	alSourcei(source, AL_BUFFER, buffer);		
 }			
+
 void playSound(){		
 	alSourcePlay(source);		
 }
+
+void drawText(const char *text, int length, int x, int y){
+	 glMatrixMode(GL_PROJECTION); // change the current matrix to PROJECTION
+	 double matrix[16]; // 16 doubles in stack memory
+	 glGetDoublev(GL_PROJECTION_MATRIX, matrix); // get the values from PROJECTION matrix to local variable
+	 glColor3f(0,0,0);
+	 glLoadIdentity(); // reset PROJECTION matrix to identity matrix
+	 glOrtho(0, 800, 0, 600, -5, 5); // orthographic perspective
+	 glMatrixMode(GL_MODELVIEW); // change current matrix to MODELVIEW matrix again
+	 glLoadIdentity(); // reset it to identity matrix
+	 glPushMatrix(); // push current state of MODELVIEW matrix to stack
+	 glLoadIdentity(); // reset it again. (may not be required, but it my convention)
+	 glColor3f(0.0, 0.0, 0.0);
+	 glRasterPos2i(x, y); // raster position in 2D
+	 int i;
+	 for(i=0; i<length; i++){
+	  	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]); // generation of characters in our text with 9 by 15 GLU font
+		}
+	 glPopMatrix(); // get MODELVIEW matrix value from stack
+	 glMatrixMode(GL_PROJECTION); // change current matrix mode to PROJECTION
+	 glLoadMatrixd(matrix); // reset
+	 glMatrixMode(GL_MODELVIEW); // change current matrix mode to MODELVIEW
+}
+
 //---------------------------------------------
 // Texture timepass
 
@@ -237,24 +264,112 @@ void display() {
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLightB);
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPositionB);
 
-	// DrawCube(viewer,texture);
+	glViewport(0, 0, WIDTH/2+200, HEIGHT);
 	observe_from_viewer(viewer);
 	display_tetris_board(tetris_board,board_status,created_status,view_status,placed_status);
+	glEnable(GL_TEXTURE_2D);
+	glPushMatrix();
+		// glTranslatef(0.0,0.0,-2.0);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		GLUquadricObj *quadric = gluNewQuadric();
+		gluQuadricDrawStyle(quadric, GLU_FILL );
+		gluQuadricNormals(quadric, GLU_SMOOTH);
+		gluQuadricTexture(quadric, GL_TRUE);
+		// glEnable(GL_TEXTURE_2D);
+		gluSphere( quadric ,20, 16 , 9 );
+		glBindTexture(GL_TEXTURE_2D, texture[1]);
+		DrawBase();
+		// glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
 	glViewport(WIDTH/2+300, 0, 300, HEIGHT);
 	glPushMatrix();
 		char buf[4]={'\0'};
-		sprintf(buf, "%d", 50-speed);
 		glDisable(GL_LIGHTING);
-		drawText("Speed: ",strlen("Score: "),10,180);
+		
+		sprintf(buf, "%d", 50-speed);
+		drawText("Speed: ",strlen("Score: "),0,180);
 		drawText(buf,strlen(buf), 200, 180);
+		
 		sprintf(buf, "%d", tetris_board->score);
-		drawText("Score: ",strlen("Score: "),10,200);
+		drawText("Score: ",strlen("Score: "),0,200);
 		drawText(buf,strlen(buf), 200, 200);
+
+
+		sprintf(buf, "%d", next_block_type);
+		drawText("Next Block Type: ",strlen("Next Block Type: "),0,220);
+		drawText(buf,strlen(buf), 500, 220);
+
+		// sprintf(buf, "%d", next_block_type);
+		drawText("Camera : Keyboard(ASWD)",strlen("Camera : Keyboard(ASWD)"),0,40);
+		// drawText(buf,strlen(buf), 500, 220);
+
+		// sprintf(buf, "%d", next_block_type);
+		drawText("Camera:Mouse(Lft & Rht Click",strlen("Camera:Mouse(Lft & Rht)"),0,60);
+		// drawText(buf,strlen(buf), 500, 260);
+		drawText("Screenshot : Z",strlen("Screenshot : Z"),0,80);
+		drawText("Rotation(R,T,Y)",strlen("Rotation(R,T,Y)"),0,100);
+		drawText("Exit : X",strlen("Exit : X"),0,160);
+		drawText("Move Down : Spacebar",strlen("Move Down : Spacebar"),0,140);
+		drawText("Music : M",strlen("Music : M"),0,120);
+
+
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
-	glFlush();
-	
+	Block *block;
+	BlockType temp;
+	// if(temp)
+	if(next_block_type==0)
+	{
+		temp=type1;
+	}
+	else if(next_block_type==1)
+	{
+		temp=type2;
+	}
+	else if(next_block_type==2)
+	{
+		temp=type3;
+	}
+	else if( next_block_type==3)
+	{
+		temp=type4;
+	}
+	block=create_block(squareshape,color_block);
+	glScalef(2,2,2);
+	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
+	glPushMatrix();
+
+    /* draw block*/
+    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
+	glScalef(block->width, block->height, block->width);
+
+    if (block->model) {
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
+			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+        glmDraw(block->model, GLM_SMOOTH);
+    }
+    glPopMatrix();
+	// glPushMatrix ();
+
+		// glTranslatef (-1, -1, 0);
+		// glLoadIdentity();
+		// glColor4f(0.2,0.2,0.2,0.6);
+		// GLUquadricObj *quadric1;
+		// quadric = gluNewQuadric();
+		// gluQuadricDrawStyle(quadric1, GLU_FILL );
+		// // glBindTexture (GL_TEXTURE_2D, textures[3]);
+		// glTranslatef(-0.45,0,0);
+		// gluSphere( quadric1 , .3 , 36 , 18 );
+		// glTranslatef(0.45,0,0);
+		// gluSphere( quadric1 , .3 , 36 , 18 );
+		// glutSolidTeapot(1.0);
+	// glPopMatrix ();
+	glFlush();	
+
 	glutSwapBuffers();
 }
 
@@ -520,8 +635,9 @@ void update_game()
 		printf("\n\n");
 		flag=0;
 		// count=height/0.1;
-		type= rand()%4 +1;
-		// type=1;
+		type= next_block_type;
+		next_block_type= rand()%4 +1;
+		// type=2;
 		global_type=type;
 		color_block=rand()%3;
 		printf("Creating the blocks\n");
