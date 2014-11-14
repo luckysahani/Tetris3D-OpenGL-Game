@@ -290,12 +290,33 @@ void display() {
 	glViewport(WIDTH/2+300, 0, 300, HEIGHT);
 	glPushMatrix();
 		char buf[4]={'\0'};
+		char out[6];
 		glDisable(GL_LIGHTING);
 		
 		sprintf(buf, "%d", 50-speed);
 		drawText("Speed: ",strlen("Score: "),0,180);
 		drawText(buf,strlen(buf), 200, 180);
 		
+		// if(next_block_type==0)
+		// {
+		// 	// block_temp=block[0];
+			
+		// }
+		// else if(next_block_type==1)
+		// {
+		// 	block_temp=block[1];
+		// 	// temp=type2;
+		// }
+		// else if(next_block_type==2)
+		// {
+		// 	block_temp=block[2];
+		// 	// temp=type3;
+		// }
+		// else if( next_block_type==3)
+		// {
+		// 	block_temp=block[3];
+		// 	// temp=type4;
+		// }
 		sprintf(buf, "%d", tetris_board->score);
 		drawText("Score: ",strlen("Score: "),0,200);
 		drawText(buf,strlen(buf), 200, 200);
@@ -304,6 +325,10 @@ void display() {
 		sprintf(buf, "%d", next_block_type);
 		drawText("Next Block Type: ",strlen("Next Block Type: "),0,220);
 		drawText(buf,strlen(buf), 500, 220);
+
+		// sprintf(buf, "", next_block_type);
+		// drawText("Next Block Name: ",strlen("Next Block Name: "),0,240);
+		// drawText(buf,strlen(buf), 500, 240);
 
 		// sprintf(buf, "%d", next_block_type);
 		drawText("Camera : Keyboard(ASWD)",strlen("Camera : Keyboard(ASWD)"),0,40);
@@ -321,44 +346,25 @@ void display() {
 
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
-	Block *block_temp;
-	// BlockType temp;
-	// // if(temp)
-	if(next_block_type==0)
-	{
-		block_temp=block[0];
-	}
-	else if(next_block_type==1)
-	{
-		block_temp=block[1];
-		// temp=type2;
-	}
-	else if(next_block_type==2)
-	{
-		block_temp=block[2];
-		// temp=type3;
-	}
-	else if( next_block_type==3)
-	{
-		block_temp=block[3];
-		// temp=type4;
-	}
-	// block=create_block(squareshape,color_block);
-	// glScalef(2,2,2);
+	// Block *block_temp;
+	// // BlockType temp;
+	// // // if(temp)
+	// // block=create_block(squareshape,color_block);
+	// // glScalef(2,2,2);
 	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
 	glPushMatrix();
 
-    /* draw block*/
-    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
-	glScalef(block_temp->width, block_temp->height, block_temp->width);
+ //     draw block
+ //    glTranslated(block_temp->pos[0], block_temp->pos[1], block_temp->pos[2]);
+	// glScalef(block_temp->width, block_temp->height, block_temp->width);
 
-    if (block_temp->model) {
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block_temp->color);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block_temp->color);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block_temp->color);
-			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
-        	glmDraw(block_temp->model, GLM_SMOOTH);
-    }
+ //    if (block_temp->model) {
+	// 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block_temp->color);
+	// 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block_temp->color);
+	// 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block_temp->color);
+	// 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+ //        	glmDraw(block_temp->model, GLM_SMOOTH);
+ //    }
     glPopMatrix();
 	// glPushMatrix ();
 
@@ -644,6 +650,7 @@ void update_game()
 		// count=height/0.1;
 		type= next_block_type;
 		next_block_type= rand()%4 +1;
+		// next_block_type=1;
 		// type=2;
 		global_type=type;
 		color_block=rand()%3;
