@@ -37,7 +37,7 @@
 
 int texture[5];
 Tetris_board *tetris_board;
-Block *block[8][8][6]; 
+Block *block[4]; 
 Block *temp_block;
 GLfloat ambientLightA[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 GLfloat diffuseLightA[4] = { 0.0f, 0.0f, 0.3f, 1.0f };
@@ -199,10 +199,14 @@ void init() {
 			{
 				view_status[i][j][k]=0;
 				placed_status[i][j][k]=0;
-				block[i][j][k] = create_block(ishape, 1);
+				// block[i][j][k] = create_block(ishape, 1);
 			}
 		}
 	}
+	block[0]=create_block(type1,color_block);
+	block[1]=create_block(type2,color_block);
+	block[2]=create_block(type3,color_block);
+	block[3]=create_block(type4,color_block);
 	tetris_board->score=0;
 	glClearColor (0.8, 0.8, 1.0, 1.0);
 	glEnable(GL_TEXTURE_2D);
@@ -317,57 +321,60 @@ void display() {
 
 		glEnable(GL_LIGHTING);
 	glPopMatrix();
-	// Block *block;
+	Block *block_temp;
 	// BlockType temp;
 	// // if(temp)
-	// if(next_block_type==0)
-	// {
-	// 	temp=type1;
-	// }
-	// else if(next_block_type==1)
-	// {
-	// 	temp=type2;
-	// }
-	// else if(next_block_type==2)
-	// {
-	// 	temp=type3;
-	// }
-	// else if( next_block_type==3)
-	// {
-	// 	temp=type4;
-	// }
+	if(next_block_type==0)
+	{
+		block_temp=block[0];
+	}
+	else if(next_block_type==1)
+	{
+		block_temp=block[1];
+		// temp=type2;
+	}
+	else if(next_block_type==2)
+	{
+		block_temp=block[2];
+		// temp=type3;
+	}
+	else if( next_block_type==3)
+	{
+		block_temp=block[3];
+		// temp=type4;
+	}
 	// block=create_block(squareshape,color_block);
 	// glScalef(2,2,2);
 	glViewport(WIDTH/2+200, HEIGHT/2, 300, HEIGHT/2);
 	glPushMatrix();
 
- //    /* draw block*/
- //    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
-	// glScalef(block->width, block->height, block->width);
+    /* draw block*/
+    // glTranslated(block->pos[0], block->pos[1], block->pos[2]);
+	glScalef(block_temp->width, block_temp->height, block_temp->width);
 
- //    if (block->model) {
-	// 		// glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block->color);
-	// 		// glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block->color);
-	// 		// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block->color);
-	// 		// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
- //        	glmDraw(block->model, GLM_SMOOTH);
- //    }
- //    glPopMatrix();
+    if (block_temp->model) {
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, block_temp->color);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, block_temp->color);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, block_temp->color);
+			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 1.5f);
+        	glmDraw(block_temp->model, GLM_SMOOTH);
+    }
+    glPopMatrix();
 	// glPushMatrix ();
 
-		// glTranslatef (-1, -1, 0);
-		// glLoadIdentity();
-		// glColor4f(0.2,0.2,0.2,0.6);
-		// GLUquadricObj *quadric1;
-		// quadric = gluNewQuadric();
-		// gluQuadricDrawStyle(quadric1, GLU_FILL );
-		// // glBindTexture (GL_TEXTURE_2D, textures[3]);
-		// glTranslatef(-0.45,0,0);
-		// gluSphere( quadric1 , .3 , 36 , 18 );
-		// glTranslatef(0.45,0,0);
-		// gluSphere( quadric1 , .3 , 36 , 18 );
-		glutSolidTeapot(0.5);
-	glPopMatrix ();
+	// 	glTranslatef (-1, -1, 0);
+	// 	glLoadIdentity();
+	// 	glColor4f(0.2,0.2,0.2,0.6);
+	// 	GLUquadricObj *quadric1;
+	// 	quadric = gluNewQuadric();
+	// 	gluQuadricDrawStyle(quadric1, GLU_FILL );
+	// 	// glBindTexture (GL_TEXTURE_2D, textures[3]);
+	// 	glTranslatef(-0.45,0,0);
+	// 	gluSphere( quadric1 , .3 , 36 , 18 );
+	// 	glTranslatef(0.45,0,0);
+	// 	gluSphere( quadric1 , .3 , 36 , 18 );
+		// glutSolidTeapot(0.5);
+	// glPopMatrix ();
 	glFlush();	
 
 	glutSwapBuffers();
