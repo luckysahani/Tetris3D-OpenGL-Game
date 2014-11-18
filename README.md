@@ -72,6 +72,22 @@ Z : Screenshot
 
 X : Exit
 
+M: Music (On/Off)
+
+Left : Move Block Left
+
+Right : Move Block Right
+
+Top : Move Block Up
+
+Down : Move Block Down
+
+R : Rotate around X-axis
+
+T : Rotate around Y-axis
+
+Y : Rotate around Z-axis
+
 Arrow Keys : Sample sound for block move (implemented as test for now)
 
 Mouse Left Click & Right Click (Hold) and drag : Navigate camera
@@ -90,3 +106,81 @@ Mouse Left Click & Right Click (Hold) and drag : Navigate camera
 8.	(Optional gameplay element) Add the concept of powers. Bonuses that will destroy large volumes of blocks in single turn.
 9.	Add sound effects to game
 10.	Create a background score - either digital (launchpad or some other application) or create instrumental recordings.  
+
+---------------------------------------------------------------------------
+
+Guidelines for the Game
+
+ Player starts out with an empty game volume.
+ Bricks falls at fixed intervals. Every next block is chosen randomly from the set of available blocks.
+ A brick freezes in its position and orientation once it touches the base of the game volume.
+ Player can rotate the bricks along all 3 axes. All possible space orientations of the block are achievable using these combination of rotations.
+ A horizontal level is cleared if it contains no holes.
+ A player loses if the top of any block touches the ceiling of the game volume.
+ The fall speed of the blocks increases with time.
+
+---------------------------------------------------------------------------
+
+Basic Object Rendering:
+
+Game Board
+The game board is rendered using basic rasterization techniques.
+Blocks / Shapes
+• All the blocks are rendered from their respective object files.
+• The objects are designed in Blender.
+• Wrote a .obj file parser, that supports multiple object rendering.
+
+----------------------------------------------------------------------------
+
+Geometric Transformations
+
+Game Board
+• Board rotation is devised using viewport settings.
+• Every time user wants to rotate the board, camera direction is changed.
+
+Blocks / Shapes
+• Block rotations were enabled using Transformation Techniques.
+• Translation to the block's center, rotation along one axis, then translating it back to its original coordinates using Homogeneous Coordinate Matrix.
+• Changed coordinates were rendered every time on the respective key presses.
+
+----------------------------------------------------------------------------
+
+Colors and Lightings
+
+Lighting
+• Lighting in the game is done using Blinn-Phong Model.
+• Light source is kept very far from the board to ensure uniform illumination.
+
+Coloring
+• Coloring of blocks is done using glMaterialfv() .
+• There are two lights in the frame, and they have all the three components, i.e. diffused, specular & ambient.
+
+----------------------------------------------------------------------------
+
+Textures
+Game Board
+• 2D texture mapping is registered on the game board.
+
+Sky-Dome
+• Sky-Dome implementation with a texture map on its inner surface gives a unique look to the game.
+
+----------------------------------------------------------------------------
+
+Some More Cool Features
+
+• Screenshot can be taken at any point in the game, to give a chance to the user to brag about his expertise later.
+• Background score is implemented, a pleasant music makes our life so easy & enjoyable.
+• Multiple Viewports are implemented, one having the main game frame, other having a HUD for the game.
+• Navigable Camera is implemented using mouse drags to ensure a better user experience.
+
+-------------------------------------------------------------------------------
+
+Scoring System
+• Whenever a block touches the base board and freezes, 5 points are added to the user score.
+• Whenever a complete coat is found and deleted, 100 points are added to the user score.
+
+------------------------------------------------------------------------------
+
+Ester-Eggs
+
+If a block strikes lower left corner of the game frame, the surrounding ambience changes.

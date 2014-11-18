@@ -19,12 +19,28 @@ char* _get_model_name(Block *block, PlayerType player)
 		// 	model_name = "objs/sqtshape.obj";
 		// 	block->height = 0.05;
 		// break;
-		// case cube: 
-		// 	model_name = "objs/3dsquare.obj";
-		// 	block->height = 0.05;
-		// break;
+		case cube: 
+			model_name = "objs/3dsquare.obj";
+			block->height = 0.05;
+		break;
         case squareshape: 
 			model_name = "objs/squareshape.obj";
+			block->height = 0.04;
+		break;
+		case type1:
+			model_name = "objs/square.obj";
+			block->height = 0.04;
+		break;
+		case type2:
+			model_name = "objs/lshape.obj";
+			block->height = 0.04;
+		break;
+		case type3:
+			model_name = "objs/tshape.obj";
+			block->height = 0.04;
+		break;
+		case type4:
+			model_name = "objs/ishape.obj";
 			block->height = 0.04;
 		break;
         
@@ -94,9 +110,6 @@ Block* create_block(BlockType type, PlayerType player)
 	block->color_selected[R] = block->color[R];
 	block->color_selected[G] = block->color[G]; 
 	block->color_selected[B] = block->color[B];
-	block->color_specular[R] = block->color[R];
-	block->color_specular[G] = block->color[G]; 
-	block->color_specular[B] = block->color[B];
 
 	block->type = type;
 	block->player = player;

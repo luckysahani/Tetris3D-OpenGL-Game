@@ -39,6 +39,10 @@ typedef enum block_type_t {
 	cube,
 	ishape,
 	PAWN_TYPE_COUNT,
+	type1,
+	type2,
+	type3,
+	type4
 } BlockType;
 
 typedef struct {
