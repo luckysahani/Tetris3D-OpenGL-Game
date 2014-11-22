@@ -4,12 +4,13 @@
 #include <limits.h>
 #include "base.h" 
 #include <stdbool.h>
-
+#include "viewer.h"
 void destroy_tetris_board(Tetris_board *cboard)
 {
 	free(cboard->board); cboard->board = NULL;
 	free(cboard);        cboard = NULL;
 }
+
 
 Tetris_board * create_tetris_board()
 {
@@ -58,7 +59,7 @@ void tetris_board_place_block_at_boardvalue(Tetris_board *cboard, Block *p, int 
 void tetris_board_place_block(Tetris_board *cboard, Block *p, int cell,int z ) {
 	/* invert the position of the pieces along the y-axis */
 	p->pos[0] = ((GLdouble)CELLX(cell)/NUM_CELLS) - 0.5f + cboard->cell_width/2;
-	p->pos[1] = 1.2;//((double) rand() / (RAND_MAX))/8;
+	p->pos[1] = 1;//((double) rand() / (RAND_MAX))/8;
 	p->pos[2] = ((GLdouble)(NUM_CELLS-CELLY(cell)-1)/NUM_CELLS) - 0.5f + cboard->cell_height/2;
 	// printf("Block placed at x=%f,y=%f and z=%f\n",p->pos[0],p->pos[2],p->pos[1] );
 
@@ -104,13 +105,99 @@ Block *get_block(Tetris_board* c, int cell) {
 	return c->board[cell];
 }
 
-void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
+void DrawBase() {
+	GLfloat color[4]={0.2,0.2,0.2,0.1};
+	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION, color);
+	glBegin(GL_QUADS);
+		glNormal3f(0.0,0.0,1.0);
+		glTexCoord2f(0,0); glVertex3d(-0.5, 0, -0.5);
+		glTexCoord2f(0,1); glVertex3d(-0.5, 0, 0.5);
+		glTexCoord2f(1,1); glVertex3d(0.5, 0, 0.5);
+		glTexCoord2f(1,0); glVertex3d(0.5, 0, -0.5);
+	glEnd();
+}
+
+// void DrawCube(Viewer* viewer,int* texture){
+// 	glBegin(GL_QUADS);
+// 		// Store the current matrix
+//    glPushMatrix();
+//    // Reset and transform the matrix.
+//    glLoadIdentity();
+//    gluLookAt(
+//        0,0,0,
+//        viewer->pos[0],viewer->pos[1],viewer->pos[2],
+//        0,1,0);
+//    // Enable/Disable features
+//    glPushAttrib(GL_ENABLE_BIT);
+//    // glEnable(GL_TEXTURE_2D);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+//    glDisable(GL_BLEND);
+//    glScalef(10,10,10);
+//    // Just in case we set all vertices to white.
+//    glColor4f(1,1,1,1);
+//    // Render the front quad
+//    glBindTexture(GL_TEXTURE_2D, texture[0]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
+//        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+//    glEnd();
+//    // Render the left quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[1]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+//        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+//    glEnd();
+//    // Render the back quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[2]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
+//    glEnd();
+//    // Render the right quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[3]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
+//    glEnd();
+//    // Render the top quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[4]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f,  0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+//    glEnd();
+//    // Render the bottom quad
+//    // glBindTexture(GL_TEXTURE_2D, texture[5]);
+//    glBegin(GL_QUADS);
+//        glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
+//        glTexCoord2f(0, 1); glVertex3f( -0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 1); glVertex3f(  0.5f, -0.5f,  0.5f );
+//        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+//    glEnd();
+//    // Restore enable bits and matrix
+//    // glDisable(GL_TEXTURE_2D);
+//    glPopAttrib();
+//    glPopMatrix();
+// }
+void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
+	glPushMatrix();
+	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
 	GLdouble x, y;
 	int color = 0;
 	int xcell = -1;
 	int ycell;
 	int zcell=0;
-	int i;
+	int i,j;
 	GLdouble step = cboard->cell_width;
 	for (x=-0.5f; x<0.5f; x+=step){
 		xcell++;
@@ -119,8 +206,11 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 		color = 1 - color;
 		for (y=-0.5f; y<0.5f; y+=step){
 			ycell--;
+
+
     		/* flip color */
 			color = 1 - color;
+
     		/* choose material color */
 			if (cboard->cell_highlighted == CELL(xcell, ycell,zcell)) {
 				printf("\n\nshould not enter\n");
@@ -143,6 +233,7 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 					glMaterialf(GL_FRONT, GL_SHININESS, 120.0f);
 				}
 			}
+
     		/* draw cell */
 			// glBegin(GL_QUADS);
 			// glNormal3f(0.0,0.0,1.0);
@@ -151,7 +242,9 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 			// glVertex3d(x+step, 0, y+step);
 			// glVertex3d(x, 0, y+step);
 			// glEnd();
+
 			/* draw block at cell */
+
 			for ( i = 0; i < 9; i++)
 			{
 				if ((view_status[xcell][ycell][i]==1)) {
@@ -170,154 +263,109 @@ void blockdrawer(Tetris_board *cboard,int board_status[8][8],int created_status[
 		}
 	}
 		// printf("\n");
-		xcell=-1;
-		int check=1;
-		int count=0;
+		int check[9];
+		// int check=1;
+		int count[9];
+		for ( i = 0; i < 9; ++i)
+		{
+			check[i]=1;
+			count[i]=0;
+		}
 		bool check_2=false;
 		Block *block;
-		for (x=-0.5f; x<0.5f; x+=step)
+		for (j = 0; j < 9; ++j)
 		{
-			xcell++;
-			ycell = NUM_CELLS;
-			// count=0;
-			for (y=-0.5f; y<0.5f; y+=step)
-			{
-				ycell--;
-				// if(board_status[xcell][ycell]>0)
-				// {
-					if (view_status[xcell][ycell][0]==1)
-					{
-						count++;
-					}
-					else
-					{
-						check=0;
-					}
-			}	
-
-		}	
-		if(check==1)
-		{
-			printf("\n\nLooks like its fully occupied: Well done dude\n\n");
-			cboard->score+=100;
 			xcell=-1;
 			for (x=-0.5f; x<0.5f; x+=step)
 			{
 				xcell++;
 				ycell = NUM_CELLS;
+				// count=0;
 				for (y=-0.5f; y<0.5f; y+=step)
 				{
 					ycell--;
+					// if(board_status[xcell][ycell]>0)
+					// {
 					for ( i = 0; i < 9; ++i)
 					{
-						if(view_status[xcell][ycell][i]==1)
+						if (view_status[xcell][ycell][j]==1)
 						{
-							check_2=true;
+							count[i]++;
+							// printf("count==%d\n",count );
+
+						}
+						else
+						{
+
+							check[i]=0;
 						}
 					}
-					if(check_2==true)
-					{
-						board_status[xcell][ycell]--;
-					}
-					for ( i = 0; i < 9; ++i)
-					{
-						if((view_status[xcell][ycell][i]==1) && (cboard->board[CELL(xcell, ycell,i)]))
-						{
-							if(i==0)
-							{
-								// cboard->board[CELL(xcell, ycell,i)]=NULL;
-								view_status[xcell][ycell][0]=0;
-								// board_status[xcell][ycell]--;
-							}
-							else
-							{
-								printf("xcell=%d,ycell=%d,z_old=%d and z_new=%d\n",xcell,ycell,i,(i-1) );
-								block=cboard->board[CELL(xcell, ycell,i)];
-								view_status[xcell][ycell][i]=0;
-								view_status[xcell][ycell][(i-1)]=1;
-								tetris_board_place_block_at_boardvalue(cboard,block, CELL(xcell, ycell,(i-1)),(i-1));
-								cboard->board[CELL(xcell, ycell,(i-1))]=block;
-								printf("Cell_prev=%d,Cell_new =%d,x=%d,y=%d,z=%d\n",CELL(xcell, ycell,i),CELL(xcell, ycell,(i-1)),xcell,ycell,(i-1));
-							}
-						}
-					}
-					
-				}
+						// if(count>2){printf("count is > 2\n");}
+					// }
+
+
+				}	
+
 			}
-			printf("exited\n");
+		}	
+		// check=1;
+		// if(count[1]>10){check[1]=1;}
+
+		// printf("count==%d\n",count );
+		for (j = 0; j < 9; ++j)
+		{
+
+			if(check[j]==1)
+			{
+				printf("\n\nLooks like its fully occupied: Well done dude\n\n");
+				cboard->score+=100;
+				check_2=false;
+				xcell=-1;
+				for (x=-0.5f; x<0.5f; x+=step)
+				{
+					xcell++;
+					ycell = NUM_CELLS;
+					for (y=-0.5f; y<0.5f; y+=step)
+					{
+						ycell--;
+						for ( i = j; i < 9; ++i)
+						{
+							if(view_status[xcell][ycell][i]==1)
+							{
+								check_2=true;
+							}
+						}
+						if(check_2==true)
+						{
+							board_status[xcell][ycell]--;
+						}
+						
+						for ( i = j; i < 9; ++i)
+						{
+							if((view_status[xcell][ycell][i]==1) && (cboard->board[CELL(xcell, ycell,i)]))
+							{
+								if(i==j)
+								{
+									view_status[xcell][ycell][j]=0;
+								}
+								else
+								{
+									printf("xcell=%d,ycell=%d,z_old=%d and z_new=%d\n",xcell,ycell,i,(i-1) );
+									block=cboard->board[CELL(xcell, ycell,i)];
+									view_status[xcell][ycell][i]=0;
+									view_status[xcell][ycell][(i-1)]=1;
+									tetris_board_place_block_at_boardvalue(cboard,block, CELL(xcell, ycell,(i-1)),(i-1));
+									cboard->board[CELL(xcell, ycell,(i-1))]=block;
+									printf("Cell_prev=%d,Cell_new =%d,x=%d,y=%d,z=%d\n",CELL(xcell, ycell,i),CELL(xcell, ycell,(i-1)),xcell,ycell,(i-1));
+								}
+							}
+						}
+					}
+				}
+				printf("exited\n");
+			}
 		}
-}
-
-void drawFloor() {
-	glDisable(GL_LIGHTING);
-	// glColor3f(0.4, 0.4 , 0.4);
-	GLdouble x,y,step;
-	step = 0.125;
-	for (x=-0.5f; x<0.5f; x+=step){
-		for (y = -0.5f; y < 0.5f; y += step){
-			glBegin(GL_QUADS);
-				glNormal3f(0.0,0.0,1.0);
-				glVertex3d(x, 0, y);
-				glVertex3d(x+step, 0, y);
-				glVertex3d(x+step, 0, y+step);
-				glVertex3d(x, 0, y+step);
-			glEnd();
-		}
-	}
-	glEnable(GL_LIGHTING);
-}
-void display_tetris_board(Tetris_board *cboard,int board_status[8][8],int created_status[8][8],int view_status[8][8][10],int placed_status[8][8][10]) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glPushMatrix();
-	glColor3f(1.0,1.0,1.0);
-	glTranslatef(cboard->pos[0], cboard->pos[1], cboard->pos[2]);
-
-	//----------------------------
-	// Reflection Tests going on here
-	/* Don't update color or depth. */
-      glDisable(GL_DEPTH_TEST);
-      glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
-
-      /* Draw 1 into the stencil buffer. */
-      glEnable(GL_STENCIL_TEST);
-      glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-      glStencilFunc(GL_ALWAYS, 1, 0xffffffff);
-
-      /* Now render floor; floor pixels just get their stencil set to 1. */
-	drawFloor();
-
-	/* Re-enable update of color and depth. */ 
-      glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-      glEnable(GL_DEPTH_TEST);
-
-      /* Now, only render where stencil is set to 1. */
-      glStencilFunc(GL_EQUAL, 1, 0xffffffff);  /* draw if ==1 */
-      glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-	//----------------------------
-    glPushMatrix();
-	    glScalef(1.0, -1.0, 1.0);
-	    // glEnable(GL_NORMALIZE);
-	    // glCullFace(GL_FRONT);
-	    blockdrawer(cboard,board_status,created_status,view_status,placed_status);
-	    // glDisable(GL_NORMALIZE);
-	    // glCullFace(GL_BACK);
 	glPopMatrix();
-	glDisable(GL_STENCIL_TEST);
-
-	/* Draw "top" of floor.  Use blending to blend in reflection. */
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4f(0.7, 0.7, 0.7, 0.7);
-    drawFloor();
-    glDisable(GL_BLEND);
-
-    /* Draw "bottom" of floor in blue. */
-    glFrontFace(GL_CW);  /* Switch face orientation. */
-    drawFloor();
-    glFrontFace(GL_CCW);
-    blockdrawer(cboard,board_status,created_status,view_status,placed_status);
-  	glPopMatrix();
-  	// glutSwapBuffers();
 }
 
 void set_turn(Tetris_board *cboard, PlayerType player) {
