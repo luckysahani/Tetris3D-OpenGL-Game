@@ -184,3 +184,6 @@ Scoring System
 Ester-Eggs
 
 If a block strikes lower left corner of the game frame, the surrounding ambience changes.
+
+------------------------------------------------------
+I TAKE NO GUARENTEE IF ANYONE COPIES THIS CODE ... THIS CODE IS FOR INFORMATION PURPOSE ONLY....
